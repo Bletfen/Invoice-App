@@ -4,7 +4,10 @@ export default function Header() {
     <div
       className="bg-header-light
         flex justify-between
-        pr-[2.4rem]"
+        pr-[2.4rem] xl:h-screen xl:flex-col
+        xl:p-[unset] xl:pb-[2.4rem]
+        xl:rounded-r-[2rem]
+        translate-all duration-300"
     >
       <Link to={"/"}>
         <svg
@@ -47,7 +50,7 @@ export default function Header() {
       </Link>
       <div
         className="flex gap-[2.4rem]
-        items-center"
+        items-center xl:flex-col"
       >
         <svg
           width="20"
@@ -62,7 +65,10 @@ export default function Header() {
             fill="#7E88C3"
           />
         </svg>
-        <div className="h-full w-px bg-[#494e6e]"></div>
+        <div
+          className="h-full w-px bg-[#494e6e]
+            xl:w-full xl:h-px"
+        ></div>
         <div
           className="w-[3.2rem] h-[3.2rem]
                     cursor-pointer"

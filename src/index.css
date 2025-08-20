@@ -7,4 +7,9 @@ html {
 
 @theme {
   --color-header-light: #373b53;
+  --color-invoiceHeaderText-light: #0c0e16;
+  --color-invoicePText-light: #888eb0;
+  --color-paidButton-light: #33d69f;
+  --color-pendingButton-light: #ff8f00;
+  --color-draftButton-light: #383b53;
 }

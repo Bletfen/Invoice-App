@@ -7,7 +7,7 @@ export default function Layout() {
       <div
         className="px-[2.4rem]
         bg-[#f8f8f8] min-h-screen
-        pb-[10.5rem] min-w-screen"
+        pb-[10.5rem] w-full"
       >
         <Outlet />
       </div>

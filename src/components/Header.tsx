@@ -4,7 +4,7 @@ export default function Header() {
     <div
       className="bg-header-light
         flex justify-between
-        pr-[2.4rem] xl:h-screen xl:flex-col
+        pr-[2.4rem] xl:h-screen xl:flex-col xl:sticky xl:top-0
         xl:p-[unset] xl:pb-[2.4rem]
         xl:rounded-r-[2rem]
         translate-all duration-300"

@@ -1,12 +1,26 @@
 import { Link } from "react-router-dom";
 import Filter from "../components/Filter";
 import dataBase from "../../data.json";
+import { useState } from "react";
 export default function Invoices() {
+  const [filter, setFilter] = useState<IFilter>({
+    draft: false,
+    pending: false,
+    paid: false,
+  });
+  const filteredDataBase = dataBase.filter((item) => {
+    if (!filter.draft && !filter.pending && !filter.paid) return true;
+    return (
+      (filter.draft && item.status.toLowerCase() === "draft") ||
+      (filter.pending && item.status.toLowerCase() === "pending") ||
+      (filter.paid && item.status.toLowerCase() === "paid")
+    );
+  });
   return (
     <div>
-      <Filter />
+      <Filter setFilter={setFilter} />
       <div className="flex flex-col gap-[1.6rem]">
-        {dataBase.map((item) => (
+        {filteredDataBase.map((item) => (
           <Link key={item.id} to={item.id}>
             <div
               className="pt-[2.4rem] pb-[2.2rem]

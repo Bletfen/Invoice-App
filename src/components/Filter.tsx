@@ -1,4 +1,11 @@
-export default function () {
+// import { useState } from "react";
+
+export default function ({
+  setFilter,
+}: {
+  setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
+}) {
+  //   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <div
       className="flex justify-between
@@ -22,29 +29,67 @@ export default function () {
         className="flex items-center
         gap-[1.9rem]"
       >
-        <div
-          className="flex gap-[1.2rem]
+        <div>
+          <div
+            className="flex gap-[1.2rem]
             items-center cursor-pointer"
-        >
-          <span
-            className="text-[1.5rem] font-bold tracking-[-0.25px]
+          >
+            <span
+              className="text-[1.5rem] font-bold tracking-[-0.25px]
             leading-[1.5rem] text-invoiceHeaderText-light"
+            >
+              Filter
+            </span>
+            <svg
+              width="10"
+              height="7"
+              viewBox="0 0 10 7"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 1L5.2279 5.2279L9.4558 1"
+                stroke="#7C5DFA"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+          <div
+            className="cursor-pointer"
+            onClick={() =>
+              setFilter((prev) => ({
+                ...prev,
+                draft: !prev.draft,
+              }))
+            }
           >
-            Filter
-          </span>
-          <svg
-            width="10"
-            height="7"
-            viewBox="0 0 10 7"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+            <div className="w-[1.6rem] h-[1.6rem] bg-[#dfe3fa] rounded-[0.2rem]"></div>
+            <span>Draft</span>
+          </div>
+          <div
+            className="cursor-pointer"
+            onClick={() =>
+              setFilter((prev) => ({
+                ...prev,
+                pending: !prev.pending,
+              }))
+            }
           >
-            <path
-              d="M1 1L5.2279 5.2279L9.4558 1"
-              stroke="#7C5DFA"
-              stroke-width="2"
-            />
-          </svg>
+            <div className="w-[1.6rem] h-[1.6rem] bg-[#dfe3fa] rounded-[0.2rem]"></div>
+            <span>Pending</span>
+          </div>
+          <div
+            className="cursor-pointer"
+            onClick={() =>
+              setFilter((prev) => ({
+                ...prev,
+                paid: !prev.paid,
+              }))
+            }
+          >
+            <div className="w-[1.6rem] h-[1.6rem] bg-[#dfe3fa] rounded-[0.2rem]"></div>
+            <span>Paid</span>
+          </div>
         </div>
         <button
           className="flex

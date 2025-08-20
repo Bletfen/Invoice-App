@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @theme {
   --color-header-light: #373b53;
   --color-invoiceHeaderText-light: #0c0e16;

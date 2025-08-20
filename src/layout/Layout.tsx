@@ -4,7 +4,13 @@ export default function Layout() {
   return (
     <div className="flex flex-col xl:flex-row">
       <Header />
-      <Outlet />
+      <div
+        className="px-[2.4rem]
+        bg-[#f8f8f8] min-h-screen
+        pb-[10.5rem] min-w-screen"
+      >
+        <Outlet />
+      </div>
     </div>
   );
 }

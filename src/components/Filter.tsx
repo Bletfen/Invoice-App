@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function ({
   filter,
   setFilter,
@@ -6,6 +8,7 @@ export default function ({
   setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
 }) {
   const filterWords = ["Draft", "Pending", "Paid"];
+  const [showFilter, setShowFilter] = useState<boolean>(false);
   return (
     <div
       className="flex justify-between
@@ -27,51 +30,83 @@ export default function ({
       </div>
       <div
         className="flex items-center
-        gap-[1.9rem]"
+        gap-[1.9rem] relative"
       >
-        <div>
-          <div
-            className="flex gap-[1.2rem]
+        <div
+          className="flex gap-[1.2rem]
             items-center cursor-pointer"
+          onClick={() => setShowFilter((prev) => !prev)}
+        >
+          <p
+            className="text-[1.5rem] font-bold tracking-[-0.25px]
+              leading-[1.5rem] text-invoiceHeaderText-light
+              flex gap-[0.3rem]"
           >
-            <span
-              className="text-[1.5rem] font-bold tracking-[-0.25px]
-            leading-[1.5rem] text-invoiceHeaderText-light"
-            >
-              Filter
-            </span>
-            <svg
-              width="10"
-              height="7"
-              viewBox="0 0 10 7"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            Filter <span className="hidden xl:block">by status</span>
+          </p>
+          <svg
+            width="10"
+            height="7"
+            viewBox="0 0 10 7"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {!showFilter ? (
               <path
                 d="M1 1L5.2279 5.2279L9.4558 1"
                 stroke="#7C5DFA"
                 stroke-width="2"
               />
-            </svg>
-          </div>
-          {filterWords.map((item) => (
-            <div key={item} className="cursor-pointer">
-              <input
-                type="checkbox"
-                id={`"checkbox-${item}`}
-                className="w-[1.6rem] h-[1.6rem] bg-[#dfe3fa] rounded-[0.2rem]"
-                checked={!!filter[item as keyof IFilter]}
-                onChange={() =>
-                  setFilter((prev) => ({
-                    ...prev,
-                    [item]: !prev[item as keyof IFilter],
-                  }))
-                }
+            ) : (
+              <path
+                d="M1 6.22754L5.2279 1.99964L9.4558 6.22754"
+                stroke="#7C5DFA"
+                stroke-width="2"
               />
-              <label htmlFor={`checkbox-${item}`}>{item}</label>
-            </div>
-          ))}
+            )}
+          </svg>
         </div>
+        {showFilter ? (
+          <div
+            className="absolute
+              py-[2.4rem] pl-[2.4rem] pr-[8.8rem]
+              bg-white top-20 -left-10 rounded-[0.8rem]
+              shadow-[0_10px_20px_0_rgba(72,84,159,0.25)]
+              flex flex-col gap-[1.5rem]
+              "
+          >
+            {filterWords.map((item) => (
+              <div
+                key={item}
+                className="
+                flex gap-[1.3rem] items-center
+                text-invoiceHeaderText-light
+                text-[1.5rem] font-bold leading-[1.5rem]
+                tracking-[-0.25px]"
+              >
+                <input
+                  type="checkbox"
+                  id={`checkbox-${item}`}
+                  className="w-[1.6rem] h-[1.6rem]
+    bg-[#dfe3fa] rounded-[0.2rem] cursor-pointer
+    border border-transparent outline-none
+    hover:border-[#7c6dfa]
+    accent-[#7c5dfa]"
+                  checked={!!filter[item as keyof IFilter]}
+                  onChange={() =>
+                    setFilter((prev) => ({
+                      ...prev,
+                      [item]: !prev[item as keyof IFilter],
+                    }))
+                  }
+                />
+                <label htmlFor={`checkbox-${item}`} className="cursor-pointer">
+                  {item}
+                </label>
+              </div>
+            ))}
+          </div>
+        ) : null}
         <button
           className="flex
             py-[0.6rem] pl-[0.6rem] pr-[1.5rem]

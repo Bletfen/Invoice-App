@@ -17,7 +17,6 @@ export default function Invoices() {
       (filter.Paid && item.status.toLowerCase() === "paid")
     );
   });
-  console.log(data);
   return (
     <div>
       <Filter filter={filter} setFilter={setFilter} />

@@ -87,7 +87,7 @@ export default function Invoices() {
                     £{item.total}
                   </p>
                 </div>
-                <button
+                <div
                   className={`px-[3rem] pt-[1.4rem] pb-[1.1rem]
                   rounded-[0.6rem]
                   text-[1.5rem] font-bold leading-[1.5rem]
@@ -102,16 +102,16 @@ export default function Invoices() {
                 >
                   <div
                     className={`w-[0.8rem] h-[0.8rem] 
-                    bg-black rounded-full ${
-                      item.status.toLowerCase() === "paid"
-                        ? "bg-paidButton-light"
-                        : item.status.toLowerCase() === "pending"
-                        ? "bg-pendingButton-light"
-                        : "bg-header-light"
-                    }`}
+                      bg-black rounded-full ${
+                        item.status.toLowerCase() === "paid"
+                          ? "bg-paidButton-light"
+                          : item.status.toLowerCase() === "pending"
+                          ? "bg-pendingButton-light"
+                          : "bg-header-light"
+                      }`}
                   ></div>
                   {item.status}
-                </button>
+                </div>
               </div>
             </div>
           </Link>

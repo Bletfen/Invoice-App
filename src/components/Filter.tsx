@@ -88,10 +88,9 @@ export default function ({
                   type="checkbox"
                   id={`checkbox-${item}`}
                   className="w-[1.6rem] h-[1.6rem]
-    bg-[#dfe3fa] rounded-[0.2rem] cursor-pointer
-    border border-transparent outline-none
-    hover:border-[#7c6dfa]
-    accent-[#7c5dfa]"
+                  bg-[#dfe3fa] rounded-[0.2rem] cursor-pointer
+                  border-0 outline-none
+                  hover:border hover:border-[#7c6dfa]"
                   checked={!!filter[item as keyof IFilter]}
                   onChange={() =>
                     setFilter((prev) => ({

@@ -1,11 +1,11 @@
-// import { useState } from "react";
-
 export default function ({
+  filter,
   setFilter,
 }: {
+  filter: IFilter;
   setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
 }) {
-  //   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const filterWords = ["Draft", "Pending", "Paid"];
   return (
     <div
       className="flex justify-between
@@ -54,42 +54,23 @@ export default function ({
               />
             </svg>
           </div>
-          <div
-            className="cursor-pointer"
-            onClick={() =>
-              setFilter((prev) => ({
-                ...prev,
-                draft: !prev.draft,
-              }))
-            }
-          >
-            <div className="w-[1.6rem] h-[1.6rem] bg-[#dfe3fa] rounded-[0.2rem]"></div>
-            <span>Draft</span>
-          </div>
-          <div
-            className="cursor-pointer"
-            onClick={() =>
-              setFilter((prev) => ({
-                ...prev,
-                pending: !prev.pending,
-              }))
-            }
-          >
-            <div className="w-[1.6rem] h-[1.6rem] bg-[#dfe3fa] rounded-[0.2rem]"></div>
-            <span>Pending</span>
-          </div>
-          <div
-            className="cursor-pointer"
-            onClick={() =>
-              setFilter((prev) => ({
-                ...prev,
-                paid: !prev.paid,
-              }))
-            }
-          >
-            <div className="w-[1.6rem] h-[1.6rem] bg-[#dfe3fa] rounded-[0.2rem]"></div>
-            <span>Paid</span>
-          </div>
+          {filterWords.map((item) => (
+            <div key={item} className="cursor-pointer">
+              <input
+                type="checkbox"
+                id={`"checkbox-${item}`}
+                className="w-[1.6rem] h-[1.6rem] bg-[#dfe3fa] rounded-[0.2rem]"
+                checked={!!filter[item as keyof IFilter]}
+                onChange={() =>
+                  setFilter((prev) => ({
+                    ...prev,
+                    [item]: !prev[item as keyof IFilter],
+                  }))
+                }
+              />
+              <label htmlFor={`checkbox-${item}`}>{item}</label>
+            </div>
+          ))}
         </div>
         <button
           className="flex

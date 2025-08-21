@@ -5,6 +5,7 @@ import Layout from "./layout/Layout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Invoices from "./pages/Invoices";
 import Invoice from "./pages/Invoice";
+import InvoicesProvider from "./context/InvoicesContext";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <InvoicesProvider>
+      <RouterProvider router={router} />
+    </InvoicesProvider>
   </StrictMode>
 );

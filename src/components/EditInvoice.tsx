@@ -1,5 +1,7 @@
 import { useDataContext } from "../context/InvoicesContext";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import Calendar from "./Calendar";
+import { useState } from "react";
 export default function EditInvoice({
   invoiceId,
   goBack,
@@ -10,6 +12,7 @@ export default function EditInvoice({
   setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { data, setData } = useDataContext();
+  const [isOpenCalendar, setIsOpenCalendar] = useState<boolean>(false);
   const updateInvoice = (id: string, updated: IInvoice) => {
     setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
   };
@@ -46,7 +49,7 @@ export default function EditInvoice({
       className="absolute -top-13 left-0
         bg-white pt-[3.3rem]
         px-[2.4rem] w-full
-        h-screen"
+        min-h-screen"
     >
       <div
         className="flex gap-[2.3rem]
@@ -330,7 +333,7 @@ export default function EditInvoice({
           Country
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]"
           >
             <input
               type="text"
@@ -344,9 +347,14 @@ export default function EditInvoice({
             />
           </div>
         </label>
-        <div>
+        <div className="flex flex-col gap-[0.9rem] mb-[2.5rem]">
           <span>Invoice Date</span>
-          <div>
+          <div
+            className="flex justify-between items-center
+            px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+            onClick={() => setIsOpenCalendar((prev) => !prev)}
+          >
             <span>{invoice?.createdAt}</span>
             <svg
               width="16"
@@ -363,10 +371,15 @@ export default function EditInvoice({
               />
             </svg>
           </div>
+          {isOpenCalendar ? <Calendar /> : null}
         </div>
-        <div>
+        <div className="flex flex-col gap-[0.9rem] mb-[2.5rem]">
           <span>Payment Terms</span>
-          <div>
+          <div
+            className="flex justify-between items-center
+            px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+          >
             Net 30 Days
             <svg
               width="11"

@@ -18,7 +18,10 @@ export default function Invoices() {
     );
   });
   return (
-    <div className="px-[2.4rem]">
+    <div
+      className="px-[2.4rem]
+      pb-[10.5rem]"
+    >
       <Filter filter={filter} setFilter={setFilter} />
       <div className="flex flex-col gap-[1.6rem]">
         {filteredDataBase.map((item) => (

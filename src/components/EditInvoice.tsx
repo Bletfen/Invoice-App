@@ -3,15 +3,16 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 export default function EditInvoice({
   invoiceId,
   goBack,
-  updateInvoice,
   setShowEdit,
 }: {
   invoiceId: string;
   goBack: () => void;
-  updateInvoice: (id: string, updated: IInvoice) => void;
   setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { data } = useDataContext();
+  const { data, setData } = useDataContext();
+  const updateInvoice = (id: string, updated: IInvoice) => {
+    setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
+  };
   const invoice = data.find((item) => item.id === invoiceId);
   if (!invoice) return;
   type Inputs = {
@@ -43,12 +44,14 @@ export default function EditInvoice({
   return (
     <div
       className="absolute -top-13 left-0
-        bg-white pt-[3.3rem]"
+        bg-white pt-[3.3rem]
+        px-[2.4rem] w-full
+        h-screen"
     >
       <div
         className="flex gap-[2.3rem]
         items-center cursor-pointer
-        px-[2.4rem] mb-[2.6rem]"
+        mb-[2.6rem]"
         onClick={goBack}
       >
         <svg
@@ -71,15 +74,32 @@ export default function EditInvoice({
           Go back
         </span>
       </div>
-      <h6>Edit #{invoice?.id}</h6>
+      <h6
+        className="text-[2.4rem]
+        font-bold leading-[3.2rem] tracking-[-0.5px]
+        mb-[2.2rem]"
+      >
+        Edit #{invoice?.id}
+      </h6>
       <form
         id="editInvoiceForm"
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col w-screen
-        min-h-screen"
+        className="flex flex-col"
       >
-        <span>Bill From</span>
-        <label htmlFor="address">
+        <span
+          className="text-[1.5rem]
+          font-bold leading-[1.5rem]
+          tracking-[-0.25px] text-[#7c5dfa]
+          mb-[2.4rem]"
+        >
+          Bill From
+        </span>
+        <label
+          htmlFor="address"
+          className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3]"
+        >
           Street Address
           <input
             type="text"

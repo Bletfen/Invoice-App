@@ -7,7 +7,7 @@ export default function Layout() {
       <div
         className="
         bg-[#f8f8f8] min-h-screen
-        pb-[10.5rem] w-full"
+        w-full"
       >
         <Outlet />
       </div>

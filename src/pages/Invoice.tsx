@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDataContext } from "../context/InvoicesContext";
 import EditInvoice from "../components/EditInvoice";
 import { useState } from "react";
-import Calendar from "../components/Calendar";
 export default function Invoice() {
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -16,7 +15,7 @@ export default function Invoice() {
   return (
     <div
       className="bg-[#f8f8fb]
-      relative"
+      relative min-h-screen"
     >
       <div
         className="mt-[3.3rem]
@@ -202,7 +201,6 @@ export default function Invoice() {
       {showEdit ? (
         <EditInvoice invoiceId={getInvoice.id} goBack={goBack} />
       ) : null}
-      <Calendar />
     </div>
   );
 }

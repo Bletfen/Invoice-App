@@ -1,20 +1,45 @@
 import { useDataContext } from "../context/InvoicesContext";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 export default function EditInvoice({
   invoiceId,
   goBack,
+  updateInvoice,
+  setShowEdit,
 }: {
   invoiceId: string;
   goBack: () => void;
+  updateInvoice: (id: string, updated: IInvoice) => void;
+  setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { data } = useDataContext();
   const invoice = data.find((item) => item.id === invoiceId);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  if (!invoice) return;
+  type Inputs = {
+    senderAddress: {
+      street: string;
+      city: string;
+      postCode: string;
+      country: string;
+    };
+    clientName: string;
+    clientEmail: string;
+    clientAddress: {
+      street: string;
+      city: string;
+      postCode: string;
+      country: string;
+    };
+    description: string;
+  };
+  const { register, handleSubmit } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (formData) => {
+    const updatedInvoice = {
+      ...invoice,
+      senderAddress: formData.senderAddress,
+    };
+    updateInvoice(invoiceId, updatedInvoice);
+    setShowEdit(false);
+  };
   return (
     <div
       className="absolute -top-13 left-0
@@ -48,13 +73,19 @@ export default function EditInvoice({
       </div>
       <h6>Edit #{invoice?.id}</h6>
       <form
+        id="editInvoiceForm"
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col w-screen
         min-h-screen"
       >
         <span>Bill From</span>
         <label htmlFor="address">
           Street Address
-          <input type="text" id="address" />
+          <input
+            type="text"
+            id="address"
+            {...register("senderAddress.street")}
+          />
         </label>
         <div>
           <label htmlFor="city">
@@ -137,6 +168,9 @@ export default function EditInvoice({
             </svg>
           </div>
         </div>
+        <button type="submit" form="editInvoiceForm">
+          Save
+        </button>
       </form>
     </div>
   );

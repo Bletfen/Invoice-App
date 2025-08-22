@@ -6,11 +6,14 @@ export default function Invoice() {
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data } = useDataContext();
+  const { data, setData } = useDataContext();
   const getInvoice = data.find((item) => item.id === id)!;
   console.log(getInvoice);
   const goBack = () => {
     navigate(-1);
+  };
+  const updateInvoice = (id: string, updated: IInvoice) => {
+    setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
   };
   return (
     <div
@@ -199,7 +202,12 @@ export default function Invoice() {
         </div>
       </div>
       {showEdit ? (
-        <EditInvoice invoiceId={getInvoice.id} goBack={goBack} />
+        <EditInvoice
+          invoiceId={getInvoice.id}
+          goBack={goBack}
+          updateInvoice={updateInvoice}
+          setShowEdit={setShowEdit}
+        />
       ) : null}
     </div>
   );

@@ -1,6 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useDataContext } from "../context/InvoicesContext";
+import EditInvoice from "../components/EditInvoice";
+import { useState } from "react";
+import Calendar from "../components/Calendar";
 export default function Invoice() {
+  const [showEdit, setShowEdit] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { data } = useDataContext();
@@ -10,7 +14,10 @@ export default function Invoice() {
     navigate(-1);
   };
   return (
-    <div className="bg-[#f8f8fb]">
+    <div
+      className="bg-[#f8f8fb]
+      relative"
+    >
       <div
         className="mt-[3.3rem]
       px-[2.4rem]"
@@ -164,7 +171,9 @@ export default function Invoice() {
             bg-[#f9fafe]
             pl-[2.4rem] pr-[2.3rem]
             rounded-[2.4rem]
-            text-[#7e88c3]"
+            text-[#7e88c3]
+            cursor-pointer"
+            onClick={() => setShowEdit((prev) => !prev)}
           >
             Edit
           </button>
@@ -173,7 +182,8 @@ export default function Invoice() {
             pt-[1.8rem] pb-[1.5rem]
             bg-[#ec5757]
             pl-[2.5rem] pr-[2.4rem]
-            rounded-[2.4rem]"
+            rounded-[2.4rem]
+            cursor-pointer"
           >
             Delete
           </button>
@@ -182,12 +192,17 @@ export default function Invoice() {
             pt-[1.8rem] pb-[1.5rem]
             bg-[#7c5dfa]
             pl-[2.7rem] pr-[2.8rem]
-            rounded-[2.4rem]"
+            rounded-[2.4rem]
+            cursor-pointer"
           >
             Mark as Paid
           </button>
         </div>
       </div>
+      {showEdit ? (
+        <EditInvoice invoiceId={getInvoice.id} goBack={goBack} />
+      ) : null}
+      <Calendar />
     </div>
   );
 }

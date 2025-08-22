@@ -98,56 +98,251 @@ export default function EditInvoice({
           htmlFor="address"
           className="flex flex-col
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3]"
+          text-[#7e88c3]
+          gap-[0.9rem] mb-[2.5rem]"
         >
           Street Address
-          <input
-            type="text"
-            id="address"
-            {...register("senderAddress.street")}
-          />
+          <div
+            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+          >
+            <input
+              type="text"
+              id="address"
+              defaultValue={invoice.senderAddress.street}
+              {...register("senderAddress.street")}
+              className="text-[1.5rem]
+            font-bold leading-[1.5rem]
+            tracking-[-0.25px]
+            text-[#0c0e16] outline-none"
+            />
+          </div>
         </label>
-        <div>
-          <label htmlFor="city">
+        <div
+          className="grid grid-cols-2 gap-[2.3rem]
+          mb-[2.5rem]"
+        >
+          <label
+            htmlFor="city"
+            className="flex flex-col
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3] gap-[0.9rem]"
+          >
             City
-            <input type="text" id="city" />
+            <div
+              className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+            >
+              <input
+                type="text"
+                id="city"
+                defaultValue={invoice.senderAddress.city}
+                {...register("senderAddress.city")}
+                className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none"
+              />
+            </div>
           </label>
-          <label htmlFor="postCode">
+          <label
+            htmlFor="postCode"
+            className="flex flex-col
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3] gap-[0.9rem]"
+          >
             Post Code
-            <input type="text" id="postCode" />
+            <div
+              className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+            >
+              <input
+                type="text"
+                id="postCode"
+                defaultValue={invoice.senderAddress.postCode}
+                {...register("senderAddress.postCode")}
+                className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none"
+              />
+            </div>
           </label>
         </div>
-        <label htmlFor="country">
+        <label
+          htmlFor="country"
+          className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[4.1rem]"
+        >
           Country
-          <input type="text" id="country" />
+          <div
+            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+          >
+            <input
+              type="text"
+              id="country"
+              defaultValue={invoice.senderAddress.country}
+              {...register("senderAddress.country")}
+              className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none"
+            />
+          </div>
         </label>
 
-        <span>Bill To</span>
-        <label htmlFor="clientName">
+        <span
+          className="text-[1.5rem]
+          font-bold leading-[1.5rem]
+          tracking-[-0.25px] text-[#7c5dfa]
+          mb-[2.4rem]"
+        >
+          Bill To
+        </span>
+        <label
+          htmlFor="clientName"
+          className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
+        >
           Client's Name
-          <input type="text" id="clientName" />
+          <div
+            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+          >
+            <input
+              type="text"
+              id="clientName"
+              defaultValue={invoice.clientName}
+              {...register("clientName")}
+              className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none"
+            />
+          </div>
         </label>
-        <label htmlFor="email">
+        <label
+          htmlFor="email"
+          className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
+        >
           Client's Email
-          <input type="text" id="email" />
+          <div
+            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+          >
+            <input
+              type="text"
+              id="email"
+              defaultValue={invoice.clientEmail}
+              {...register("clientEmail")}
+              className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none"
+            />
+          </div>
         </label>
-        <label htmlFor="clientAddress">
+        <label
+          htmlFor="clientAddress"
+          className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
+        >
           Street Address
-          <input type="text" id="clientAddress" />
+          <div
+            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+          >
+            <input
+              type="text"
+              id="clientAddress"
+              defaultValue={invoice.clientAddress.street}
+              {...register("clientAddress.street")}
+              className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none"
+            />
+          </div>
         </label>
-        <div>
-          <label htmlFor="clientCity">
+        <div
+          className="grid grid-cols-2 gap-[2.3rem]
+          mb-[2.5rem]"
+        >
+          <label
+            htmlFor="clientCity"
+            className="flex flex-col
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3] gap-[0.9rem]"
+          >
             City
-            <input type="text" id="clientCity" />
+            <div
+              className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+            >
+              <input
+                type="text"
+                id="clientCity"
+                defaultValue={invoice.clientAddress.city}
+                {...register("clientAddress.city")}
+                className="text-[1.5rem]
+                font-bold leading-[1.5rem]
+                tracking-[-0.25px]
+                text-[#0c0e16]"
+              />
+            </div>
           </label>
-          <label htmlFor="clientPostCode">
+          <label
+            htmlFor="clientPostCode"
+            className="flex flex-col
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3] gap-[0.9rem]"
+          >
             Post Code
-            <input type="text" id="clientPostCode" />
+            <div
+              className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+            >
+              <input
+                type="text"
+                id="clientPostCode"
+                defaultValue={invoice.clientAddress.postCode}
+                {...register("clientAddress.postCode")}
+                className="text-[1.5rem]
+                font-bold leading-[1.5rem]
+                tracking-[-0.25px]
+                text-[#0c0e16]"
+              />
+            </div>
           </label>
         </div>
-        <label htmlFor="clientCountry">
+        <label
+          htmlFor="clientCountry"
+          className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
+        >
           Country
-          <input type="text" id="clientCountry" />
+          <div
+            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+          >
+            <input
+              type="text"
+              id="clientCountry"
+              defaultValue={invoice.clientAddress.country}
+              {...register("clientAddress.country")}
+              className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16]"
+            />
+          </div>
         </label>
         <div>
           <span>Invoice Date</span>

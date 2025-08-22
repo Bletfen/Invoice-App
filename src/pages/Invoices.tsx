@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Filter from "../components/Filter";
-import { useDataContext } from "../context/InvoicesContext";
+import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useState } from "react";
 export default function Invoices() {
   const [filter, setFilter] = useState<IFilter>({
@@ -9,6 +9,7 @@ export default function Invoices() {
     Paid: false,
   });
   const { data } = useDataContext();
+  const { formDate } = useFormDate();
   const filteredDataBase = data.filter((item) => {
     if (!filter.Draft && !filter.Pending && !filter.Paid) return true;
     return (
@@ -17,6 +18,7 @@ export default function Invoices() {
       (filter.Paid && item.status.toLowerCase() === "paid")
     );
   });
+
   return (
     <div
       className="px-[2.4rem]
@@ -55,7 +57,7 @@ export default function Invoices() {
                     hidden"
                   >
                     <span className="text-[#888eb0]">Due </span>
-                    {item.createdAt}
+                    {formDate(item.createdAt)}
                   </p>
                 </div>
                 <span
@@ -80,7 +82,7 @@ export default function Invoices() {
                     text-invoicePText-light"
                   >
                     <span className="text-[#888eb0]">Due </span>
-                    {item.createdAt}
+                    {formDate(item.createdAt)}
                   </p>
                   <p
                     className="text-[1.5rem]

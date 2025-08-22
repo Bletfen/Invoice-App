@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useDataContext } from "../context/InvoicesContext";
+import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import EditInvoice from "../components/EditInvoice";
 import { useState } from "react";
 export default function Invoice() {
@@ -7,6 +7,7 @@ export default function Invoice() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data } = useDataContext();
+  const { formDate } = useFormDate();
   const getInvoice = data.find((item) => item.id === id)!;
   console.log(getInvoice);
   const goBack = () => {
@@ -141,7 +142,7 @@ export default function Invoice() {
                     leading-[2rem] tracking-[-0.25px]
                     text-[#0c0e16]"
                   >
-                    {getInvoice.createdAt}
+                    {formDate(getInvoice.createdAt)}
                   </span>
                 </div>
                 <div className="flex flex-col gap-[1.3rem]">
@@ -157,7 +158,7 @@ export default function Invoice() {
                     leading-[2rem] tracking-[-0.25px]
                     text-[#0c0e16]"
                   >
-                    {getInvoice.paymentDue}
+                    {formDate(getInvoice.paymentDue)}
                   </span>
                 </div>
               </div>

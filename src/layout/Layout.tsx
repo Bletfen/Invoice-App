@@ -5,7 +5,7 @@ export default function Layout() {
     <div className="flex flex-col xl:flex-row">
       <Header />
       <div
-        className="px-[2.4rem]
+        className="
         bg-[#f8f8f8] min-h-screen
         pb-[10.5rem] w-full"
       >

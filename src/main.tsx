@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Invoices from "./pages/Invoices";
 import Invoice from "./pages/Invoice";
 import InvoicesProvider from "./context/InvoicesContext";
+import EditInvoice from "./pages/EditInvoice";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
       {
         path: "/:id",
         element: <Invoice />,
+        children: [{ path: "edit", element: <EditInvoice /> }],
       },
     ],
   },

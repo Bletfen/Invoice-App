@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-const Calendar = () => {
+const Calendar = ({
+  setIsOpenCalendar,
+}: {
+  setIsOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const year = currentDate.getFullYear();
@@ -30,12 +34,16 @@ const Calendar = () => {
   return (
     <div
       className="w-full pt-[2.6rem] pl-[1.95rem] 
-      pr-[1.85rem] pb-[3.1rem] bg-white shadow rounded-[0.8rem]
+      pr-[1.85rem] pb-[3.1rem] bg-white rounded-[0.8rem]
       shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
       transition-all duration-300"
     >
       <div className="flex justify-between items-center mb-[3.2rem]">
-        <button onClick={() => setCurrentDate(new Date(year, month - 1, 1))}>
+        <button
+          onClick={() => {
+            setCurrentDate(new Date(year, month - 1, 1));
+          }}
+        >
           <svg
             width="6"
             height="11"
@@ -98,6 +106,10 @@ const Calendar = () => {
             font-bold leading-[1.5rem] tracking-[-0.25px]
             text-[#0c0e16] cursor-pointer
             hover:text-[#7c5dfa]"
+            onClick={() => {
+              setCurrentDate(new Date(year, month, day));
+              setIsOpenCalendar(false);
+            }}
           >
             {day}
           </div>

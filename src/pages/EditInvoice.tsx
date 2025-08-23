@@ -1,23 +1,34 @@
 import { useDataContext } from "../context/InvoicesContext";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import Calendar from "./Calendar";
+import Calendar from "../components/Calendar";
 import { useState } from "react";
-export default function EditInvoice({
-  invoiceId,
-  goBack,
-  setShowEdit,
-}: {
-  invoiceId: string;
-  goBack: () => void;
-  setShowEdit: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+import { useNavigate, useParams } from "react-router-dom";
+export default function EditInvoice() {
   const { data, setData } = useDataContext();
   const [isOpenCalendar, setIsOpenCalendar] = useState<boolean>(false);
+  const [isOpenNetDay, setIsOpenNetDay] = useState<boolean>(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate(-1);
+  };
+  const invoice = data.find((item) => item.id === id);
+  if (!invoice) return;
   const updateInvoice = (id: string, updated: IInvoice) => {
     setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
   };
-  const invoice = data.find((item) => item.id === invoiceId);
-  if (!invoice) return;
+  const onSubmit: SubmitHandler<Inputs> = (values) => {
+    if (!invoice) return;
+    const updatedInvoice: IInvoice = {
+      ...invoice,
+      senderAddress: values.senderAddress,
+      clientName: values.clientName,
+      clientEmail: values.clientEmail,
+      clientAddress: values.clientAddress,
+      description: values.description,
+    };
+    updateInvoice(invoice.id, updatedInvoice);
+  };
   type Inputs = {
     senderAddress: {
       street: string;
@@ -34,27 +45,27 @@ export default function EditInvoice({
       country: string;
     };
     description: string;
+    items: itemsInput[];
+  };
+  type itemsInput = {
+    name: string;
+    quantity: number;
+    price: number;
+    total: number;
   };
   const { register, handleSubmit } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (formData) => {
-    const updatedInvoice = {
-      ...invoice,
-      senderAddress: formData.senderAddress,
-    };
-    updateInvoice(invoiceId, updatedInvoice);
-    setShowEdit(false);
-  };
+  const paymentTermsArray: number[] = [1, 7, 14, 30];
   return (
     <div
       className="absolute -top-13 left-0
         bg-white pt-[3.3rem]
-        px-[2.4rem] w-full
+        w-full
         min-h-screen"
     >
       <div
         className="flex gap-[2.3rem]
         items-center cursor-pointer
-        mb-[2.6rem]"
+        mb-[2.6rem] px-[2.4rem]"
         onClick={goBack}
       >
         <svg
@@ -80,14 +91,14 @@ export default function EditInvoice({
       <h6
         className="text-[2.4rem]
         font-bold leading-[3.2rem] tracking-[-0.5px]
-        mb-[2.2rem]"
+        mb-[2.2rem] px-[2.4rem]"
       >
         Edit #{invoice?.id}
       </h6>
       <form
         id="editInvoiceForm"
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col"
+        className="flex flex-col px-[2.4rem]"
       >
         <span
           className="text-[1.5rem]
@@ -347,8 +358,13 @@ export default function EditInvoice({
             />
           </div>
         </label>
-        <div className="flex flex-col gap-[0.9rem] mb-[2.5rem]">
-          <span>Invoice Date</span>
+        <div className="relative flex flex-col gap-[0.9rem] mb-[2.5rem]">
+          <span
+            className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3]"
+          >
+            Invoice Date
+          </span>
           <div
             className="flex justify-between items-center
             px-[2rem] pt-[1.8rem] pb-[1.5rem]
@@ -371,10 +387,21 @@ export default function EditInvoice({
               />
             </svg>
           </div>
-          {isOpenCalendar ? <Calendar /> : null}
+          {isOpenCalendar ? (
+            <Calendar setIsOpenCalendar={setIsOpenCalendar} />
+          ) : null}
         </div>
-        <div className="flex flex-col gap-[0.9rem] mb-[2.5rem]">
-          <span>Payment Terms</span>
+        <div
+          className="relative 
+          flex flex-col gap-[0.9rem] mb-[2.5rem] cursor-pointer"
+          onClick={() => setIsOpenNetDay((prev) => !prev)}
+        >
+          <span
+            className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3]"
+          >
+            Payment Terms
+          </span>
           <div
             className="flex justify-between items-center
             px-[2rem] pt-[1.8rem] pb-[1.5rem]
@@ -395,11 +422,220 @@ export default function EditInvoice({
               />
             </svg>
           </div>
+          {isOpenNetDay ? (
+            <div
+              className="
+              flex flex-col py-[1.6rem]
+              bg-white rounded-[0.8rem]
+              shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
+              text-[1.5rem] font-bold leading-[1.5rem]
+              tracking-[-0.25px] text-[#0c0e16]
+              z-[1] gap-[1.5rem]"
+            >
+              {paymentTermsArray.map((net, index) => (
+                <div key={net}>
+                  <p className="pl-[2.4rem]">Net {net} Day</p>
+                  {index < paymentTermsArray.length - 1 ? (
+                    <div className="w-full h-px bg-[#dfe3fa] mt-[1.5rem]"></div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
-        <button type="submit" form="editInvoiceForm">
-          Save
-        </button>
+        <label
+          htmlFor="description"
+          className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+        >
+          Project Description
+          <div
+            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+          >
+            <input
+              type="text"
+              id="description"
+              defaultValue={invoice.description}
+              {...register("description")}
+              className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16]"
+            />
+          </div>
+        </label>
+        <span
+          className="text-[1.8rem] font-bold
+          leading-[3.2rem] tracking-[-0.375px]
+          text-[#777f98] mb-[2.2rem]"
+        >
+          Item List
+        </span>
+        <div className="mb-[4.8rem]">
+          {invoice.items.map((item) => (
+            <div>
+              <label
+                htmlFor="item-name"
+                className="flex flex-col
+              text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+              text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+              >
+                Item Name
+                <div
+                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                border border-[#dfe3fa] rounded-[0.4rem]"
+                >
+                  <input
+                    type="text"
+                    id="item-name"
+                    defaultValue={item.name}
+                    {...register("items.name")}
+                    className="text-[1.5rem]
+                  font-bold leading-[1.5rem]
+                  tracking-[-0.25px]
+                  text-[#0c0e16]"
+                  />
+                </div>
+              </label>
+              <div className="flex gap-[1.6rem]">
+                <label
+                  htmlFor="item-quantity"
+                  className="flex flex-col
+                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                >
+                  Qty.
+                  <div
+                    className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                    border border-[#dfe3fa] rounded-[0.4rem]
+                    w-[6.4rem]"
+                  >
+                    <input
+                      type="item-quantity"
+                      id="clientCountry"
+                      defaultValue={item.quantity}
+                      {...register("description")}
+                      className="text-[1.5rem]
+                      font-bold leading-[1.5rem]
+                      tracking-[-0.25px]
+                      text-[#0c0e16]
+                      w-full"
+                    />
+                  </div>
+                </label>
+
+                <label
+                  htmlFor="item-price"
+                  className="flex flex-col
+                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                >
+                  Price
+                  <div
+                    className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                    border border-[#dfe3fa] rounded-[0.4rem]
+                    w-[10rem]"
+                  >
+                    <input
+                      type="text"
+                      id="item-price"
+                      defaultValue={item.price}
+                      {...register("description")}
+                      className="text-[1.5rem]
+                      font-bold leading-[1.5rem]
+                      tracking-[-0.25px]
+                      text-[#0c0e16]
+                      w-full"
+                    />
+                  </div>
+                </label>
+                <div
+                  className="flex flex-col gap-[0.9rem]
+                ml-[1.6rem]"
+                >
+                  <span
+                    className="
+                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                  text-[#7e88c3]"
+                  >
+                    Total
+                  </span>
+                  <div
+                    className="pt-[1.8rem] pb-[1.5rem]
+                    text-[1.5rem] font-bold leading-[1.5rem]
+                    tracking-[-0.25px] text-[#888eb0]
+                    flex items-center gap-[5.5rem]"
+                  >
+                    <span>{(item.quantity * item.price).toFixed(2)}</span>
+                    <svg
+                      width="13"
+                      height="16"
+                      viewBox="0 0 13 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="cursor-pointer"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M8.44442 0L9.33333 0.888875H12.4444V2.66667H0V0.888875H3.11108L4 0H8.44442ZM2.66667 16C1.68442 16 0.888875 15.2045 0.888875 14.2222V3.55554H11.5555V14.2222C11.5555 15.2045 10.76 16 9.77779 16H2.66667Z"
+                        fill="#888EB0"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div
+          className="flex justify-center
+          pt-[1.8rem] pb-[1.5rem]
+          bg-[#f9fafe] rounded-[2.4rem]
+          text-[1.5rem] font-bold leading-[1.5rem]
+          tracking-[-0.25px] text-[#7e88c3] mb-[2.4rem]
+          cursor-pointer"
+        >
+          + Add New Item
+        </div>
       </form>
+      <div
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%)",
+        }}
+        className="w-full h-[6.4rem]
+          "
+      ></div>
+      <div
+        className="flex justify-end
+        pt-[2.1rem] pb-[2.2rem] pr-[2.4rem]
+        gap-[0.8rem]"
+      >
+        <button
+          className="flex items-center
+          pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
+          bg-[#f9fafe] rounded-[2.4rem]
+          text-[1.5rem] font-bold leading-[1.5rem]
+          tracking-[-0.25px] text-[#7e88c3]"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          form="editInvoiceForm"
+          onClick={goBack}
+          className="flex items-center
+          pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
+          bg-[#7c5dfa] rounded-[2.4rem]
+          text-[1.5rem] font-bold leading-[1.5rem]
+          tracking-[-0.25px] text-white"
+        >
+          Save Changes
+        </button>
+      </div>
     </div>
   );
 }

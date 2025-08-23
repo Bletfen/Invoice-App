@@ -1,9 +1,6 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
-import EditInvoice from "../components/EditInvoice";
-import { useState } from "react";
 export default function Invoice() {
-  const [showEdit, setShowEdit] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { data } = useDataContext();
@@ -11,10 +8,8 @@ export default function Invoice() {
   const getInvoice = data.find((item) => item.id === id)!;
   console.log(getInvoice);
   const goBack = () => {
-    navigate(-1);
+    navigate("/");
   };
-  const itemTotal = getInvoice.items.map((item) => item.quantity * item.price);
-  console.log(itemTotal);
   return (
     <div
       className="bg-[#f8f8fb]
@@ -287,7 +282,8 @@ export default function Invoice() {
           leading-[1.5rem] tracking-[-0.25px]
           text-white"
         >
-          <button
+          <Link
+            to={"edit"}
             className="
             pt-[1.8rem] pb-[1.5rem]
             bg-[#f9fafe]
@@ -295,10 +291,9 @@ export default function Invoice() {
             rounded-[2.4rem]
             text-[#7e88c3]
             cursor-pointer"
-            onClick={() => setShowEdit((prev) => !prev)}
           >
             Edit
-          </button>
+          </Link>
           <button
             className="
             pt-[1.8rem] pb-[1.5rem]
@@ -321,13 +316,7 @@ export default function Invoice() {
           </button>
         </div>
       </div>
-      {showEdit ? (
-        <EditInvoice
-          invoiceId={getInvoice.id}
-          goBack={goBack}
-          setShowEdit={setShowEdit}
-        />
-      ) : null}
+      <Outlet />
     </div>
   );
 }

@@ -34,8 +34,9 @@ const Calendar = ({
   );
 
   const formatDate = (year: number, month: number, day: number): string => {
-    const date = new Date(year, month, day);
-    return date.toISOString().split("T")[0];
+    const monthStr = (month + 1).toString().padStart(2, "0");
+    const dayStr = day.toString().padStart(2, "0");
+    return `${year}-${monthStr}-${dayStr}`;
   };
 
   const handleDateSelect = (year: number, month: number, day: number) => {
@@ -62,9 +63,11 @@ const Calendar = ({
       pr-[1.85rem] pb-[3.1rem] bg-white rounded-[0.8rem]
       shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
       transition-all duration-300"
+      onClick={(e) => e.stopPropagation}
     >
       <div className="flex justify-between items-center mb-[3.2rem]">
         <button
+          type="button"
           onClick={() => {
             setCurrentDate(new Date(year, month - 1, 1));
           }}
@@ -80,7 +83,7 @@ const Calendar = ({
             <path
               d="M4.3418 0.88623L0.113895 5.11413L4.3418 9.34203"
               stroke="#7C5DFA"
-              stroke-width="2"
+              strokeWidth="2"
             />
           </svg>
         </button>
@@ -93,7 +96,10 @@ const Calendar = ({
             year: "numeric",
           })}
         </h2>
-        <button onClick={() => setCurrentDate(new Date(year, month + 1, 1))}>
+        <button
+          type="button"
+          onClick={() => setCurrentDate(new Date(year, month + 1, 1))}
+        >
           <svg
             width="6"
             height="11"
@@ -105,7 +111,7 @@ const Calendar = ({
             <path
               d="M1.11377 0.88623L5.34167 5.11413L1.11377 9.34203"
               stroke="#7C5DFA"
-              stroke-width="2"
+              strokeWidth="2"
             />
           </svg>
         </button>

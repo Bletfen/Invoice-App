@@ -1,10 +1,11 @@
-import { useDataContext } from "../context/InvoicesContext";
+import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 export default function EditInvoice() {
   const { data, setData } = useDataContext();
+  const { formDate } = useFormDate();
   const [isOpenCalendar, setIsOpenCalendar] = useState<boolean>(false);
   const [isOpenNetDay, setIsOpenNetDay] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -427,7 +428,7 @@ export default function EditInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem] tracking-[-0.25px]"
             >
-              {selectedDate || invoice?.createdAt}
+              {formDate(selectedDate || invoice?.createdAt) || "Select Date"}
             </span>
             <svg
               width="16"
@@ -705,7 +706,9 @@ export default function EditInvoice() {
           pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
           bg-[#f9fafe] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#7e88c3]"
+          tracking-[-0.25px] text-[#7e88c3]
+          cursor-pointer"
+          onClick={goBack}
         >
           Cancel
         </button>
@@ -716,7 +719,8 @@ export default function EditInvoice() {
           pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
           bg-[#7c5dfa] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-white"
+          tracking-[-0.25px] text-white
+          cursor-pointer"
         >
           Save Changes
         </button>

@@ -17,8 +17,12 @@ export default function InvoicesProvider({
   children: ReactNode;
 }) {
   const [data, setData] = useState<IInvoice[]>(DataBase);
-  const formDate = (dateStr: string) => {
+  const formDate = (dateStr: string | undefined) => {
+    if (!dateStr) return "";
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) {
+      return "";
+    }
     return date.toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",

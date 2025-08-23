@@ -1,19 +1,56 @@
+import { useNavigate } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-export default function EditInvoice() {
-  const { data, setData } = useDataContext();
+
+type Inputs = {
+  senderAddress: {
+    street: string;
+    city: string;
+    postCode: string;
+    country: string;
+  };
+  clientName: string;
+  clientEmail: string;
+  clientAddress: {
+    street: string;
+    city: string;
+    postCode: string;
+    country: string;
+  };
+  description: string;
+  items: ItemsInput[];
+};
+
+type ItemsInput = {
+  name: string;
+  quantity: number;
+  price: number;
+  total: number;
+};
+
+export default function NewInvoice() {
+  const { setData } = useDataContext();
   const { formDate } = useFormDate();
   const [isOpenCalendar, setIsOpenCalendar] = useState<boolean>(false);
   const [isOpenNetDay, setIsOpenNetDay] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedPaymentTerms, setSelectedPaymentTerms] = useState<number>(30);
-  const { id } = useParams();
+
   const navigate = useNavigate();
+
   const goBack = () => {
     navigate(-1);
+  };
+
+  const generateInvoiceId = (): string => {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const randomLetters =
+      letters.charAt(Math.floor(Math.random() * letters.length)) +
+      letters.charAt(Math.floor(Math.random() * letters.length));
+    const randomNumbers = Math.floor(1000 + Math.random() * 9000);
+    return randomLetters + randomNumbers;
   };
 
   const calculatePaymentDue = (
@@ -26,78 +63,67 @@ export default function EditInvoice() {
     return dueDate.toISOString().split("T")[0];
   };
 
-  const invoice = data.find((item) => item.id === id);
-  if (!invoice) return;
-  const updateInvoice = (id: string, updated: IInvoice) => {
-    setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
-  };
   const onSubmit: SubmitHandler<Inputs> = (values) => {
-    if (!invoice) return;
     const newTotal = values.items.reduce(
       (sum, item) => sum + item.quantity * item.price,
       0
     );
-    const invoiceDate = selectedDate || invoice.createdAt;
+
+    const invoiceDate = selectedDate || new Date().toISOString().split("T")[0];
     const paymentDue = calculatePaymentDue(invoiceDate, selectedPaymentTerms);
-    const updatedInvoice: IInvoice = {
-      ...invoice,
-      senderAddress: values.senderAddress,
+
+    const newInvoice: IInvoice = {
+      id: generateInvoiceId(),
+      createdAt: invoiceDate,
+      paymentDue: paymentDue,
+      description: values.description,
+      paymentTerms: selectedPaymentTerms,
       clientName: values.clientName,
       clientEmail: values.clientEmail,
+      status: "pending",
+      senderAddress: values.senderAddress,
       clientAddress: values.clientAddress,
-      description: values.description,
       items: values.items,
       total: newTotal,
-      createdAt: selectedDate || invoice.createdAt,
-      paymentTerms: selectedPaymentTerms,
-      paymentDue: paymentDue,
     };
-    updateInvoice(invoice.id, updatedInvoice);
-    navigate(-1);
+
+    setData((prev) => [newInvoice, ...prev]);
+    navigate("/");
   };
-  type Inputs = {
-    senderAddress: {
-      street: string;
-      city: string;
-      postCode: string;
-      country: string;
-    };
-    clientName: string;
-    clientEmail: string;
-    clientAddress: {
-      street: string;
-      city: string;
-      postCode: string;
-      country: string;
-    };
-    description: string;
-    items: itemsInput[];
-  };
-  type itemsInput = {
-    name: string;
-    quantity: number;
-    price: number;
-    total: number;
-  };
+
   const { register, control, handleSubmit, watch } = useForm<Inputs>({
     defaultValues: {
-      senderAddress: invoice.senderAddress,
-      clientName: invoice.clientName,
-      clientEmail: invoice.clientEmail,
-      clientAddress: invoice.clientAddress,
-      description: invoice.description,
-      items: invoice.items, // Initialize with existing items
+      senderAddress: {
+        street: "19 Union Terrace",
+        city: "London",
+        postCode: "E1 3EZ",
+        country: "United Kingdom",
+      },
+      clientName: "Alex Grim",
+      clientEmail: "alexgrim@mail.com",
+      clientAddress: {
+        street: "84 Church Way",
+        city: "Bradford",
+        postCode: "BD1 9PB",
+        country: "United Kingdom",
+      },
+      description: "Graphic Design",
+      items: [{ name: "", quantity: 1, price: 0, total: 0 }],
     },
   });
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
   });
+
   const paymentTermsArray: number[] = [1, 7, 14, 30];
+
   const handlePaymentTermSelect = (terms: number) => {
     setSelectedPaymentTerms(terms);
     setIsOpenNetDay(false);
   };
+
   return (
     <div
       className="absolute top-0 left-0
@@ -136,10 +162,10 @@ export default function EditInvoice() {
         font-bold leading-[3.2rem] tracking-[-0.5px]
         mb-[2.2rem] px-[2.4rem]"
       >
-        Edit #{invoice?.id}
+        New Invoice
       </h6>
       <form
-        id="editInvoiceForm"
+        id="newInvoiceForm"
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col px-[2.4rem]"
       >
@@ -166,7 +192,7 @@ export default function EditInvoice() {
             <input
               type="text"
               id="address"
-              defaultValue={invoice.senderAddress.street}
+              defaultValue="19 Union Terrace"
               {...register("senderAddress.street")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -194,7 +220,7 @@ export default function EditInvoice() {
               <input
                 type="text"
                 id="city"
-                defaultValue={invoice.senderAddress.city}
+                defaultValue="London"
                 {...register("senderAddress.city")}
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
@@ -218,7 +244,7 @@ export default function EditInvoice() {
               <input
                 type="text"
                 id="postCode"
-                defaultValue={invoice.senderAddress.postCode}
+                defaultValue="E1 3EZ"
                 {...register("senderAddress.postCode")}
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
@@ -243,7 +269,7 @@ export default function EditInvoice() {
             <input
               type="text"
               id="country"
-              defaultValue={invoice.senderAddress.country}
+              defaultValue="United Kingdom"
               {...register("senderAddress.country")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -276,7 +302,7 @@ export default function EditInvoice() {
             <input
               type="text"
               id="clientName"
-              defaultValue={invoice.clientName}
+              defaultValue="Alex Grim"
               {...register("clientName")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -298,9 +324,9 @@ export default function EditInvoice() {
             border border-[#dfe3fa] rounded-[0.4rem]"
           >
             <input
-              type="text"
+              type="email"
               id="email"
-              defaultValue={invoice.clientEmail}
+              defaultValue="alexgrim@mail.com"
               {...register("clientEmail")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -324,7 +350,7 @@ export default function EditInvoice() {
             <input
               type="text"
               id="clientAddress"
-              defaultValue={invoice.clientAddress.street}
+              defaultValue="84 Church Way"
               {...register("clientAddress.street")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -352,7 +378,7 @@ export default function EditInvoice() {
               <input
                 type="text"
                 id="clientCity"
-                defaultValue={invoice.clientAddress.city}
+                defaultValue="Bradford"
                 {...register("clientAddress.city")}
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
@@ -376,7 +402,7 @@ export default function EditInvoice() {
               <input
                 type="text"
                 id="clientPostCode"
-                defaultValue={invoice.clientAddress.postCode}
+                defaultValue="BD1 9PB"
                 {...register("clientAddress.postCode")}
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
@@ -401,7 +427,7 @@ export default function EditInvoice() {
             <input
               type="text"
               id="clientCountry"
-              defaultValue={invoice.clientAddress.country}
+              defaultValue="United Kingdom"
               {...register("clientAddress.country")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -428,7 +454,7 @@ export default function EditInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem] tracking-[-0.25px]"
             >
-              {formDate(selectedDate || invoice?.createdAt) || "Select Date"}
+              {formDate(selectedDate) || "Select Date"}
             </span>
             <svg
               width="16"
@@ -529,7 +555,7 @@ export default function EditInvoice() {
             <input
               type="text"
               id="description"
-              defaultValue={invoice.description}
+              defaultValue="Graphic Design"
               {...register("description")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -581,17 +607,17 @@ export default function EditInvoice() {
                   <label
                     htmlFor={`item-quantity-${index}`}
                     className="flex flex-col
-                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                    text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                    text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
                   >
                     Qty.
                     <div
                       className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                    border border-[#dfe3fa] rounded-[0.4rem]
-                    w-[6.4rem]"
+                      border border-[#dfe3fa] rounded-[0.4rem]
+                      w-[6.4rem]"
                     >
                       <input
-                        type={`item-quantity-${index}`}
+                        type="number"
                         id="clientCountry"
                         defaultValue={item.quantity}
                         {...register(`items.${index}.quantity`, {
@@ -610,8 +636,8 @@ export default function EditInvoice() {
                   <label
                     htmlFor={`item-price-${index}`}
                     className="flex flex-col
-                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                    text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                    text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
                   >
                     Price
                     <div
@@ -620,7 +646,7 @@ export default function EditInvoice() {
                     w-[10rem]"
                     >
                       <input
-                        type="text"
+                        type="number"
                         id={`item-price-${index}`}
                         defaultValue={item.price}
                         {...register(`items.${index}.price`, {
@@ -637,12 +663,12 @@ export default function EditInvoice() {
                   </label>
                   <div
                     className="flex flex-col gap-[0.9rem]
-                  ml-[1.6rem]"
+                    ml-[1.6rem]"
                   >
                     <span
                       className="
-                    text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                    text-[#7e88c3]"
+                      text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                      text-[#7e88c3]"
                     >
                       Total
                     </span>

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDataContext } from "../context/InvoicesContext";
+import { Link } from "react-router-dom";
 
 export default function ({
   filter,
@@ -7,6 +9,7 @@ export default function ({
   filter: IFilter;
   setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
 }) {
+  const { data } = useDataContext();
   const filterWords = ["Draft", "Pending", "Paid"];
   const [showFilter, setShowFilter] = useState<boolean>(false);
   return (
@@ -25,7 +28,7 @@ export default function ({
           className="text-[1.3rem] font-[500] leading-[1.5rem]
             tracking-[-0.1px] text-[#888eb0]"
         >
-          7 invoices
+          {data.length} invoices
         </span>
       </div>
       <div
@@ -106,7 +109,9 @@ export default function ({
             ))}
           </div>
         ) : null}
-        <button
+        <Link
+          // ამაზე გავჩერდი
+          to={"create-new-invoice"}
           className="flex
             py-[0.6rem] pl-[0.6rem] pr-[1.5rem]
             bg-[#7c6dfa] rounded-[2.4rem]
@@ -133,7 +138,7 @@ export default function ({
             </svg>
           </div>
           New
-        </button>
+        </Link>
       </div>
     </div>
   );

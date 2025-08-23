@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import Filter from "../components/Filter";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export default function Invoices() {
   return (
     <div
       className="px-[2.4rem]
-      pb-[10.5rem]"
+      pb-[10.5rem] relative"
     >
       <Filter filter={filter} setFilter={setFilter} />
       <div className="flex flex-col gap-[1.6rem]">
@@ -123,6 +123,7 @@ export default function Invoices() {
           </Link>
         ))}
       </div>
+      <Outlet />
     </div>
   );
 }

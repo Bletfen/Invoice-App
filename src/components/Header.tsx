@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 export default function Header() {
+  const location = useLocation();
+  const isEditPage = location.pathname.includes("/edit");
   return (
     <div
-      className="bg-header-light
+      className={`bg-header-light
         flex justify-between
-        pr-[2.4rem] xl:min-h-screen xl:flex-col xl:top-0
+        pr-[2.4rem] xl:flex-col xl:top-0
         xl:p-[unset] xl:pb-[2.4rem]
         xl:rounded-r-[2rem]
-        translate-all duration-300"
+        transition-all duration-300 ${
+          isEditPage ? "xl:h-full" : "xl:min-h-screen"
+        }`}
     >
       <Link to={"/"}>
         <svg

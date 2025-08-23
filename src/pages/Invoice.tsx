@@ -13,7 +13,8 @@ export default function Invoice() {
   return (
     <div
       className="bg-[#f8f8fb]
-      relative"
+      relative min-h-screen flex flex-col
+      justify-between"
     >
       <div
         className="mt-[3.3rem]
@@ -273,7 +274,7 @@ export default function Invoice() {
       </div>
       <div
         className="bg-white py-[2.1rem]
-        flex justify-center mt-[5.6rem]"
+        flex justify-center mt-[5.6rem] items-center"
       >
         <div
           className="px-[2.4rem]

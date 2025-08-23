@@ -1,8 +1,10 @@
 import { useState } from "react";
 
 const Calendar = ({
+  setSelectedDate,
   setIsOpenCalendar,
 }: {
+  setSelectedDate: React.Dispatch<React.SetStateAction<string>>;
   setIsOpenCalendar: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -30,6 +32,29 @@ const Calendar = ({
     { length: 42 - (prevMonthDates.length + currentMonthDates.length) },
     (_, i) => i + 1
   );
+
+  const formatDate = (year: number, month: number, day: number): string => {
+    const date = new Date(year, month, day);
+    return date.toISOString().split("T")[0];
+  };
+
+  const handleDateSelect = (year: number, month: number, day: number) => {
+    const selectedDateString = formatDate(year, month, day);
+    setSelectedDate(selectedDateString);
+    setIsOpenCalendar(false);
+  };
+
+  const handlePrevMonthDateSelect = (day: number) => {
+    const prevMonth = month === 0 ? 11 : month - 1;
+    const prevYear = month === 0 ? year - 1 : year;
+    handleDateSelect(prevYear, prevMonth, day);
+  };
+
+  const handleNextMonthDateSelect = (day: number) => {
+    const nextMonth = month === 11 ? 0 : month + 1;
+    const nextYear = month === 11 ? year + 1 : year;
+    handleDateSelect(nextYear, nextMonth, day);
+  };
 
   return (
     <div
@@ -94,6 +119,7 @@ const Calendar = ({
             font-bold leading-[1.5rem] tracking-[-0.25px]
             text-[#0c0e16] opacity-[0.0814] cursor-pointer
             hover:text-[#7c5dfa] hover:opacity-[1]"
+            onClick={() => handlePrevMonthDateSelect(day)}
           >
             {day}
           </div>
@@ -106,10 +132,7 @@ const Calendar = ({
             font-bold leading-[1.5rem] tracking-[-0.25px]
             text-[#0c0e16] cursor-pointer
             hover:text-[#7c5dfa]"
-            onClick={() => {
-              setCurrentDate(new Date(year, month, day));
-              setIsOpenCalendar(false);
-            }}
+            onClick={() => handleDateSelect(year, month, day)}
           >
             {day}
           </div>
@@ -122,6 +145,7 @@ const Calendar = ({
             font-bold leading-[1.5rem] tracking-[-0.25px]
             text-[#0c0e16] opacity-[0.0814] cursor-pointer
             hover:text-[#7c5dfa] hover:opacity-[1]"
+            onClick={() => handleNextMonthDateSelect(day)}
           >
             {day}
           </div>

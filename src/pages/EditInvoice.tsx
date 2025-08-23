@@ -1,5 +1,5 @@
 import { useDataContext } from "../context/InvoicesContext";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,11 +7,24 @@ export default function EditInvoice() {
   const { data, setData } = useDataContext();
   const [isOpenCalendar, setIsOpenCalendar] = useState<boolean>(false);
   const [isOpenNetDay, setIsOpenNetDay] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedPaymentTerms, setSelectedPaymentTerms] = useState<number>(30);
   const { id } = useParams();
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
+
+  const calculatePaymentDue = (
+    createdAt: string,
+    paymentTerms: number
+  ): string => {
+    const createdDate = new Date(createdAt);
+    const dueDate = new Date(createdDate);
+    dueDate.setDate(createdDate.getDate() + paymentTerms);
+    return dueDate.toISOString().split("T")[0];
+  };
+
   const invoice = data.find((item) => item.id === id);
   if (!invoice) return;
   const updateInvoice = (id: string, updated: IInvoice) => {
@@ -19,6 +32,12 @@ export default function EditInvoice() {
   };
   const onSubmit: SubmitHandler<Inputs> = (values) => {
     if (!invoice) return;
+    const newTotal = values.items.reduce(
+      (sum, item) => sum + item.quantity * item.price,
+      0
+    );
+    const invoiceDate = selectedDate || invoice.createdAt;
+    const paymentDue = calculatePaymentDue(invoiceDate, selectedPaymentTerms);
     const updatedInvoice: IInvoice = {
       ...invoice,
       senderAddress: values.senderAddress,
@@ -26,8 +45,14 @@ export default function EditInvoice() {
       clientEmail: values.clientEmail,
       clientAddress: values.clientAddress,
       description: values.description,
+      items: values.items,
+      total: newTotal,
+      createdAt: selectedDate || invoice.createdAt,
+      paymentTerms: selectedPaymentTerms,
+      paymentDue: paymentDue,
     };
     updateInvoice(invoice.id, updatedInvoice);
+    navigate(-1);
   };
   type Inputs = {
     senderAddress: {
@@ -53,8 +78,25 @@ export default function EditInvoice() {
     price: number;
     total: number;
   };
-  const { register, handleSubmit } = useForm<Inputs>();
+  const { register, control, handleSubmit, watch } = useForm<Inputs>({
+    defaultValues: {
+      senderAddress: invoice.senderAddress,
+      clientName: invoice.clientName,
+      clientEmail: invoice.clientEmail,
+      clientAddress: invoice.clientAddress,
+      description: invoice.description,
+      items: invoice.items, // Initialize with existing items
+    },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "items",
+  });
   const paymentTermsArray: number[] = [1, 7, 14, 30];
+  const handlePaymentTermSelect = (terms: number) => {
+    setSelectedPaymentTerms(terms);
+    setIsOpenNetDay(false);
+  };
   return (
     <div
       className="absolute -top-13 left-0
@@ -126,9 +168,10 @@ export default function EditInvoice() {
               defaultValue={invoice.senderAddress.street}
               {...register("senderAddress.street")}
               className="text-[1.5rem]
-            font-bold leading-[1.5rem]
-            tracking-[-0.25px]
-            text-[#0c0e16] outline-none"
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none
+              w-full"
             />
           </div>
         </label>
@@ -153,9 +196,10 @@ export default function EditInvoice() {
                 defaultValue={invoice.senderAddress.city}
                 {...register("senderAddress.city")}
                 className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none"
+                font-bold leading-[1.5rem]
+                tracking-[-0.25px]
+                text-[#0c0e16] outline-none
+                w-full"
               />
             </div>
           </label>
@@ -176,9 +220,10 @@ export default function EditInvoice() {
                 defaultValue={invoice.senderAddress.postCode}
                 {...register("senderAddress.postCode")}
                 className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none"
+                font-bold leading-[1.5rem]
+                tracking-[-0.25px]
+                text-[#0c0e16] outline-none
+                w-full"
               />
             </div>
           </label>
@@ -202,7 +247,8 @@ export default function EditInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
               tracking-[-0.25px]
-              text-[#0c0e16] outline-none"
+              text-[#0c0e16] outline-none
+              w-full"
             />
           </div>
         </label>
@@ -234,7 +280,8 @@ export default function EditInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
               tracking-[-0.25px]
-              text-[#0c0e16] outline-none"
+              text-[#0c0e16] outline-none
+              w-full"
             />
           </div>
         </label>
@@ -257,7 +304,8 @@ export default function EditInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
               tracking-[-0.25px]
-              text-[#0c0e16] outline-none"
+              text-[#0c0e16] outline-none
+              w-full"
             />
           </div>
         </label>
@@ -280,7 +328,8 @@ export default function EditInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
               tracking-[-0.25px]
-              text-[#0c0e16] outline-none"
+              text-[#0c0e16] outline-none
+              w-full"
             />
           </div>
         </label>
@@ -307,7 +356,8 @@ export default function EditInvoice() {
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
                 tracking-[-0.25px]
-                text-[#0c0e16]"
+                text-[#0c0e16] outline-none
+                w-full"
               />
             </div>
           </label>
@@ -330,7 +380,8 @@ export default function EditInvoice() {
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
                 tracking-[-0.25px]
-                text-[#0c0e16]"
+                text-[#0c0e16] outline-none
+                w-full"
               />
             </div>
           </label>
@@ -354,7 +405,8 @@ export default function EditInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
               tracking-[-0.25px]
-              text-[#0c0e16]"
+              text-[#0c0e16] outline-none
+              w-full"
             />
           </div>
         </label>
@@ -371,7 +423,12 @@ export default function EditInvoice() {
             border border-[#dfe3fa] rounded-[0.4rem]"
             onClick={() => setIsOpenCalendar((prev) => !prev)}
           >
-            <span>{invoice?.createdAt}</span>
+            <span
+              className="text-[1.5rem]
+              font-bold leading-[1.5rem] tracking-[-0.25px]"
+            >
+              {selectedDate || invoice?.createdAt}
+            </span>
             <svg
               width="16"
               height="16"
@@ -388,7 +445,10 @@ export default function EditInvoice() {
             </svg>
           </div>
           {isOpenCalendar ? (
-            <Calendar setIsOpenCalendar={setIsOpenCalendar} />
+            <Calendar
+              setSelectedDate={setSelectedDate}
+              setIsOpenCalendar={setIsOpenCalendar}
+            />
           ) : null}
         </div>
         <div
@@ -405,9 +465,11 @@ export default function EditInvoice() {
           <div
             className="flex justify-between items-center
             px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]
+            text-[1.5rem]
+            font-bold leading-[1.5rem] tracking-[-0.25px]"
           >
-            Net 30 Days
+            Net {selectedPaymentTerms} Days
             <svg
               width="11"
               height="7"
@@ -434,7 +496,16 @@ export default function EditInvoice() {
             >
               {paymentTermsArray.map((net, index) => (
                 <div key={net}>
-                  <p className="pl-[2.4rem]">Net {net} Day</p>
+                  <p
+                    className="pl-[2.4rem] hover:text-[#7c5dfa] hover:opacity-[1]
+                    "
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePaymentTermSelect(net);
+                    }}
+                  >
+                    Net {net} Day{net !== 1 ? "s" : ""}
+                  </p>
                   {index < paymentTermsArray.length - 1 ? (
                     <div className="w-full h-px bg-[#dfe3fa] mt-[1.5rem]"></div>
                   ) : null}
@@ -462,7 +533,8 @@ export default function EditInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
               tracking-[-0.25px]
-              text-[#0c0e16]"
+              text-[#0c0e16] outline-none
+              w-full"
             />
           </div>
         </label>
@@ -474,121 +546,134 @@ export default function EditInvoice() {
           Item List
         </span>
         <div className="mb-[4.8rem]">
-          {invoice.items.map((item) => (
-            <div>
-              <label
-                htmlFor="item-name"
-                className="flex flex-col
-              text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-              text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
-              >
-                Item Name
-                <div
-                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                border border-[#dfe3fa] rounded-[0.4rem]"
-                >
-                  <input
-                    type="text"
-                    id="item-name"
-                    defaultValue={item.name}
-                    {...register("items.name")}
-                    className="text-[1.5rem]
-                  font-bold leading-[1.5rem]
-                  tracking-[-0.25px]
-                  text-[#0c0e16]"
-                  />
-                </div>
-              </label>
-              <div className="flex gap-[1.6rem]">
+          {fields.map((item, index) => {
+            const watchedQuantity = watch(`items.${index}.quantity`) || 0;
+            const watchedPrice = watch(`items.${index}.price`) || 0;
+            const itemTotal = watchedQuantity * watchedPrice;
+            return (
+              <div key={item.id}>
                 <label
-                  htmlFor="item-quantity"
+                  htmlFor={`item-name-${index}`}
                   className="flex flex-col
                 text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
                 text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
                 >
-                  Qty.
+                  Item Name
                   <div
                     className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                    border border-[#dfe3fa] rounded-[0.4rem]
-                    w-[6.4rem]"
-                  >
-                    <input
-                      type="item-quantity"
-                      id="clientCountry"
-                      defaultValue={item.quantity}
-                      {...register("description")}
-                      className="text-[1.5rem]
-                      font-bold leading-[1.5rem]
-                      tracking-[-0.25px]
-                      text-[#0c0e16]
-                      w-full"
-                    />
-                  </div>
-                </label>
-
-                <label
-                  htmlFor="item-price"
-                  className="flex flex-col
-                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
-                >
-                  Price
-                  <div
-                    className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                    border border-[#dfe3fa] rounded-[0.4rem]
-                    w-[10rem]"
+                  border border-[#dfe3fa] rounded-[0.4rem]"
                   >
                     <input
                       type="text"
-                      id="item-price"
-                      defaultValue={item.price}
-                      {...register("description")}
+                      id={`item-name-${index}`}
+                      defaultValue={item.name}
+                      {...register(`items.${index}.name`)}
                       className="text-[1.5rem]
-                      font-bold leading-[1.5rem]
-                      tracking-[-0.25px]
-                      text-[#0c0e16]
-                      w-full"
+                    font-bold leading-[1.5rem]
+                    tracking-[-0.25px]
+                    text-[#0c0e16] outline-none
+                    w-full"
                     />
                   </div>
                 </label>
-                <div
-                  className="flex flex-col gap-[0.9rem]
-                ml-[1.6rem]"
-                >
-                  <span
-                    className="
+                <div className="flex gap-[1.6rem]">
+                  <label
+                    htmlFor={`item-quantity-${index}`}
+                    className="flex flex-col
                   text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                  text-[#7e88c3]"
+                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
                   >
-                    Total
-                  </span>
+                    Qty.
+                    <div
+                      className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                    border border-[#dfe3fa] rounded-[0.4rem]
+                    w-[6.4rem]"
+                    >
+                      <input
+                        type={`item-quantity-${index}`}
+                        id="clientCountry"
+                        defaultValue={item.quantity}
+                        {...register(`items.${index}.quantity`, {
+                          valueAsNumber: true,
+                        })}
+                        className="text-[1.5rem]
+                      font-bold leading-[1.5rem]
+                      tracking-[-0.25px]
+                      text-[#0c0e16]
+                      outline-none
+                      w-full"
+                      />
+                    </div>
+                  </label>
+
+                  <label
+                    htmlFor={`item-price-${index}`}
+                    className="flex flex-col
+                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                  >
+                    Price
+                    <div
+                      className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                    border border-[#dfe3fa] rounded-[0.4rem]
+                    w-[10rem]"
+                    >
+                      <input
+                        type="text"
+                        id={`item-price-${index}`}
+                        defaultValue={item.price}
+                        {...register(`items.${index}.price`, {
+                          valueAsNumber: true,
+                        })}
+                        className="text-[1.5rem]
+                      font-bold leading-[1.5rem]
+                      tracking-[-0.25px]
+                      text-[#0c0e16]
+                      outline-none
+                      w-full"
+                      />
+                    </div>
+                  </label>
                   <div
-                    className="pt-[1.8rem] pb-[1.5rem]
+                    className="flex flex-col gap-[0.9rem]
+                  ml-[1.6rem]"
+                  >
+                    <span
+                      className="
+                    text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                    text-[#7e88c3]"
+                    >
+                      Total
+                    </span>
+                    <div
+                      className="pt-[1.8rem] pb-[1.5rem]
                     text-[1.5rem] font-bold leading-[1.5rem]
                     tracking-[-0.25px] text-[#888eb0]
                     flex items-center gap-[5.5rem]"
-                  >
-                    <span>{(item.quantity * item.price).toFixed(2)}</span>
-                    <svg
-                      width="13"
-                      height="16"
-                      viewBox="0 0 13 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="cursor-pointer"
                     >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M8.44442 0L9.33333 0.888875H12.4444V2.66667H0V0.888875H3.11108L4 0H8.44442ZM2.66667 16C1.68442 16 0.888875 15.2045 0.888875 14.2222V3.55554H11.5555V14.2222C11.5555 15.2045 10.76 16 9.77779 16H2.66667Z"
-                        fill="#888EB0"
-                      />
-                    </svg>
+                      <span>{itemTotal.toFixed(2)}</span>
+                      <svg
+                        width="13"
+                        height="16"
+                        viewBox="0 0 13 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="cursor-pointer"
+                        onClick={() => remove(index)}
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M8.44442 0L9.33333 0.888875H12.4444V2.66667H0V0.888875H3.11108L4 0H8.44442ZM2.66667 16C1.68442 16 0.888875 15.2045 0.888875 14.2222V3.55554H11.5555V14.2222C11.5555 15.2045 10.76 16 9.77779 16H2.66667Z"
+                          fill="#888EB0"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div
           className="flex justify-center
@@ -597,6 +682,7 @@ export default function EditInvoice() {
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-[#7e88c3] mb-[2.4rem]
           cursor-pointer"
+          onClick={() => append({ name: "", quantity: 1, price: 0, total: 0 })}
         >
           + Add New Item
         </div>
@@ -626,7 +712,6 @@ export default function EditInvoice() {
         <button
           type="submit"
           form="editInvoiceForm"
-          onClick={goBack}
           className="flex items-center
           pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
           bg-[#7c5dfa] rounded-[2.4rem]

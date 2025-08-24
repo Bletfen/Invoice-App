@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useState } from "react";
 import Delete from "../components/Delete";
@@ -341,7 +341,6 @@ export default function Invoice() {
           <Delete invoiceId={getInvoice.id} setShowDelete={setShowDelete} />
         </div>
       )}
-      <Outlet />
     </div>
   );
 }

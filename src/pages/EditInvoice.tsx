@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Invoice from "./Invoice";
 export default function EditInvoice() {
   const { data, setData } = useDataContext();
   const { formDate } = useFormDate();
@@ -15,7 +16,7 @@ export default function EditInvoice() {
   const { id } = useParams();
   const navigate = useNavigate();
   const goBack = () => {
-    navigate("/");
+    navigate(-1);
   };
 
   const calculatePaymentDue = (
@@ -87,632 +88,650 @@ export default function EditInvoice() {
     setIsOpenNetDay(false);
   };
   return (
-    <div
-      className="absolute top-0 left-0
-        bg-white pt-[3.3rem]
-        w-full
-        min-h-full"
-    >
+    <>
+      <Invoice />
       <div
-        className="flex gap-[2.3rem]
-        items-center cursor-pointer
-        mb-[2.6rem] px-[2.4rem]"
-        onClick={goBack}
+        className="fixed w-full bg-black/50 inset-0
+        overflow-y-auto
+        h-screen z-50
+        "
       >
-        <svg
-          width="6"
-          height="11"
-          viewBox="0 0 6 11"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M4.3418 0.885742L0.113895 5.11364L4.3418 9.34155"
-            stroke="#7C5DFA"
-            strokeWidth="2"
-          />
-        </svg>
-        <span
-          className="text-[1.5rem] text-invoiceHeaderText-light
-          font-bold leading-[1.5rem] tracking-[-0.25px]"
-        >
-          Go back
-        </span>
-      </div>
-      <h6
-        className="text-[2.4rem]
-        font-bold leading-[3.2rem] tracking-[-0.5px]
-        mb-[2.2rem] px-[2.4rem]"
-      >
-        Edit #{invoice?.id}
-      </h6>
-      <form
-        id="editInvoiceForm"
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col px-[2.4rem]"
-      >
-        <span
-          className="text-[1.5rem]
-          font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#7c5dfa]
-          mb-[2.4rem]"
-        >
-          Bill From
-        </span>
-        <label
-          htmlFor="address"
-          className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3]
-          gap-[0.9rem] mb-[2.5rem]"
-        >
-          Street Address
-          <div
-            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-          >
-            <input
-              type="text"
-              id="address"
-              defaultValue={invoice.senderAddress.street}
-              {...register("senderAddress.street")}
-              className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-            />
-          </div>
-        </label>
         <div
-          className="grid grid-cols-2 gap-[2.3rem]
-          mb-[2.5rem]"
+          className="absolute
+          bg-white pt-[3.3rem]
+          w-full
+          min-h-screen md:w-[61.6rem]
+          md:rounded-r-[2rem]
+          transition-all duration-300
+          top-29
+          xl:top-0 xl:left-29
+          xl:w-[71.9rem]"
         >
-          <label
-            htmlFor="city"
-            className="flex flex-col
-            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3] gap-[0.9rem]"
-          >
-            City
-            <div
-              className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
-            >
-              <input
-                type="text"
-                id="city"
-                defaultValue={invoice.senderAddress.city}
-                {...register("senderAddress.city")}
-                className="text-[1.5rem]
-                font-bold leading-[1.5rem]
-                tracking-[-0.25px]
-                text-[#0c0e16] outline-none
-                w-full"
-              />
-            </div>
-          </label>
-          <label
-            htmlFor="postCode"
-            className="flex flex-col
-            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3] gap-[0.9rem]"
-          >
-            Post Code
-            <div
-              className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
-            >
-              <input
-                type="text"
-                id="postCode"
-                defaultValue={invoice.senderAddress.postCode}
-                {...register("senderAddress.postCode")}
-                className="text-[1.5rem]
-                font-bold leading-[1.5rem]
-                tracking-[-0.25px]
-                text-[#0c0e16] outline-none
-                w-full"
-              />
-            </div>
-          </label>
-        </div>
-        <label
-          htmlFor="country"
-          className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[4.1rem]"
-        >
-          Country
           <div
-            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            className="flex gap-[2.3rem]
+          items-center cursor-pointer
+          mb-[2.6rem] px-[2.4rem]"
+            onClick={goBack}
           >
-            <input
-              type="text"
-              id="country"
-              defaultValue={invoice.senderAddress.country}
-              {...register("senderAddress.country")}
-              className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-            />
-          </div>
-        </label>
-
-        <span
-          className="text-[1.5rem]
-          font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#7c5dfa]
-          mb-[2.4rem]"
-        >
-          Bill To
-        </span>
-        <label
-          htmlFor="clientName"
-          className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
-        >
-          Client's Name
-          <div
-            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-          >
-            <input
-              type="text"
-              id="clientName"
-              defaultValue={invoice.clientName}
-              {...register("clientName")}
-              className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-            />
-          </div>
-        </label>
-        <label
-          htmlFor="email"
-          className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
-        >
-          Client's Email
-          <div
-            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-          >
-            <input
-              type="text"
-              id="email"
-              defaultValue={invoice.clientEmail}
-              {...register("clientEmail")}
-              className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-            />
-          </div>
-        </label>
-        <label
-          htmlFor="clientAddress"
-          className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
-        >
-          Street Address
-          <div
-            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-          >
-            <input
-              type="text"
-              id="clientAddress"
-              defaultValue={invoice.clientAddress.street}
-              {...register("clientAddress.street")}
-              className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-            />
-          </div>
-        </label>
-        <div
-          className="grid grid-cols-2 gap-[2.3rem]
-          mb-[2.5rem]"
-        >
-          <label
-            htmlFor="clientCity"
-            className="flex flex-col
-            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3] gap-[0.9rem]"
-          >
-            City
-            <div
-              className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
-            >
-              <input
-                type="text"
-                id="clientCity"
-                defaultValue={invoice.clientAddress.city}
-                {...register("clientAddress.city")}
-                className="text-[1.5rem]
-                font-bold leading-[1.5rem]
-                tracking-[-0.25px]
-                text-[#0c0e16] outline-none
-                w-full"
-              />
-            </div>
-          </label>
-          <label
-            htmlFor="clientPostCode"
-            className="flex flex-col
-            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3] gap-[0.9rem]"
-          >
-            Post Code
-            <div
-              className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
-            >
-              <input
-                type="text"
-                id="clientPostCode"
-                defaultValue={invoice.clientAddress.postCode}
-                {...register("clientAddress.postCode")}
-                className="text-[1.5rem]
-                font-bold leading-[1.5rem]
-                tracking-[-0.25px]
-                text-[#0c0e16] outline-none
-                w-full"
-              />
-            </div>
-          </label>
-        </div>
-        <label
-          htmlFor="clientCountry"
-          className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
-        >
-          Country
-          <div
-            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-          >
-            <input
-              type="text"
-              id="clientCountry"
-              defaultValue={invoice.clientAddress.country}
-              {...register("clientAddress.country")}
-              className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-            />
-          </div>
-        </label>
-        <div className="relative flex flex-col gap-[0.9rem] mb-[2.5rem]">
-          <span
-            className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3]"
-          >
-            Invoice Date
-          </span>
-          <div
-            className="flex justify-between items-center
-            px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-            onClick={() => setIsOpenCalendar((prev) => !prev)}
-          >
-            <span
-              className="text-[1.5rem]
-              font-bold leading-[1.5rem] tracking-[-0.25px]"
-            >
-              {formDate(selectedDate || invoice?.createdAt) || "Select Date"}
-            </span>
             <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
+              width="6"
+              height="11"
+              viewBox="0 0 6 11"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M13.3334 2H14C15.1027 2 16 2.89734 16 4V14C16 15.1027 15.1027 16 14 16H2C0.897339 16 0 15.1027 0 14V4C0 2.89734 0.897339 2 2 2H2.66663V0.666626C2.66663 0.298706 2.96533 0 3.33337 0H4C4.36804 0 4.66663 0.298706 4.66663 0.666626V2H11.3334V0.666626C11.3334 0.298706 11.632 0 12 0H12.6666C13.0347 0 13.3334 0.298706 13.3334 0.666626V2ZM14 14.6666C14.3673 14.6666 14.6666 14.3673 14.6666 14V6.69336H1.33337V14C1.33337 14.3673 1.63269 14.6666 2 14.6666H14Z"
-                fill="#7E88C3"
-              />
-            </svg>
-          </div>
-          {isOpenCalendar ? (
-            <Calendar
-              setSelectedDate={setSelectedDate}
-              setIsOpenCalendar={setIsOpenCalendar}
-            />
-          ) : null}
-        </div>
-        <div
-          className="relative 
-          flex flex-col gap-[0.9rem] mb-[2.5rem] cursor-pointer"
-          onClick={() => setIsOpenNetDay((prev) => !prev)}
-        >
-          <span
-            className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3]"
-          >
-            Payment Terms
-          </span>
-          <div
-            className="flex justify-between items-center
-            px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]
-            text-[1.5rem]
-            font-bold leading-[1.5rem] tracking-[-0.25px]"
-          >
-            Net {selectedPaymentTerms} Days
-            <svg
-              width="11"
-              height="7"
-              viewBox="0 0 11 7"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M1 1L5.2279 5.2279L9.4558 1"
+                d="M4.3418 0.885742L0.113895 5.11364L4.3418 9.34155"
                 stroke="#7C5DFA"
                 strokeWidth="2"
               />
             </svg>
+            <span
+              className="text-[1.5rem] text-invoiceHeaderText-light
+          font-bold leading-[1.5rem] tracking-[-0.25px]"
+            >
+              Go back
+            </span>
           </div>
-          {isOpenNetDay ? (
+          <h6
+            className="text-[2.4rem]
+        font-bold leading-[3.2rem] tracking-[-0.5px]
+        mb-[2.2rem] px-[2.4rem]"
+          >
+            Edit #{invoice?.id}
+          </h6>
+          <form
+            id="editInvoiceForm"
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col px-[2.4rem]"
+          >
+            <span
+              className="text-[1.5rem]
+          font-bold leading-[1.5rem]
+          tracking-[-0.25px] text-[#7c5dfa]
+          mb-[2.4rem]"
+            >
+              Bill From
+            </span>
+            <label
+              htmlFor="address"
+              className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3]
+          gap-[0.9rem] mb-[2.5rem]"
+            >
+              Street Address
+              <div
+                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+              >
+                <input
+                  type="text"
+                  id="address"
+                  defaultValue={invoice.senderAddress.street}
+                  {...register("senderAddress.street")}
+                  className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none
+              w-full"
+                />
+              </div>
+            </label>
             <div
-              className="
+              className="grid grid-cols-2 gap-[2.3rem]
+          mb-[2.5rem]"
+            >
+              <label
+                htmlFor="city"
+                className="flex flex-col
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3] gap-[0.9rem]"
+              >
+                City
+                <div
+                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+                >
+                  <input
+                    type="text"
+                    id="city"
+                    defaultValue={invoice.senderAddress.city}
+                    {...register("senderAddress.city")}
+                    className="text-[1.5rem]
+                font-bold leading-[1.5rem]
+                tracking-[-0.25px]
+                text-[#0c0e16] outline-none
+                w-full"
+                  />
+                </div>
+              </label>
+              <label
+                htmlFor="postCode"
+                className="flex flex-col
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3] gap-[0.9rem]"
+              >
+                Post Code
+                <div
+                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+                >
+                  <input
+                    type="text"
+                    id="postCode"
+                    defaultValue={invoice.senderAddress.postCode}
+                    {...register("senderAddress.postCode")}
+                    className="text-[1.5rem]
+                font-bold leading-[1.5rem]
+                tracking-[-0.25px]
+                text-[#0c0e16] outline-none
+                w-full"
+                  />
+                </div>
+              </label>
+            </div>
+            <label
+              htmlFor="country"
+              className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[4.1rem]"
+            >
+              Country
+              <div
+                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+              >
+                <input
+                  type="text"
+                  id="country"
+                  defaultValue={invoice.senderAddress.country}
+                  {...register("senderAddress.country")}
+                  className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none
+              w-full"
+                />
+              </div>
+            </label>
+
+            <span
+              className="text-[1.5rem]
+          font-bold leading-[1.5rem]
+          tracking-[-0.25px] text-[#7c5dfa]
+          mb-[2.4rem]"
+            >
+              Bill To
+            </span>
+            <label
+              htmlFor="clientName"
+              className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
+            >
+              Client's Name
+              <div
+                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+              >
+                <input
+                  type="text"
+                  id="clientName"
+                  defaultValue={invoice.clientName}
+                  {...register("clientName")}
+                  className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none
+              w-full"
+                />
+              </div>
+            </label>
+            <label
+              htmlFor="email"
+              className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
+            >
+              Client's Email
+              <div
+                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+              >
+                <input
+                  type="text"
+                  id="email"
+                  defaultValue={invoice.clientEmail}
+                  {...register("clientEmail")}
+                  className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none
+              w-full"
+                />
+              </div>
+            </label>
+            <label
+              htmlFor="clientAddress"
+              className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
+            >
+              Street Address
+              <div
+                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+              >
+                <input
+                  type="text"
+                  id="clientAddress"
+                  defaultValue={invoice.clientAddress.street}
+                  {...register("clientAddress.street")}
+                  className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none
+              w-full"
+                />
+              </div>
+            </label>
+            <div
+              className="grid grid-cols-2 gap-[2.3rem]
+          mb-[2.5rem]"
+            >
+              <label
+                htmlFor="clientCity"
+                className="flex flex-col
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3] gap-[0.9rem]"
+              >
+                City
+                <div
+                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+                >
+                  <input
+                    type="text"
+                    id="clientCity"
+                    defaultValue={invoice.clientAddress.city}
+                    {...register("clientAddress.city")}
+                    className="text-[1.5rem]
+                font-bold leading-[1.5rem]
+                tracking-[-0.25px]
+                text-[#0c0e16] outline-none
+                w-full"
+                  />
+                </div>
+              </label>
+              <label
+                htmlFor="clientPostCode"
+                className="flex flex-col
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3] gap-[0.9rem]"
+              >
+                Post Code
+                <div
+                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]"
+                >
+                  <input
+                    type="text"
+                    id="clientPostCode"
+                    defaultValue={invoice.clientAddress.postCode}
+                    {...register("clientAddress.postCode")}
+                    className="text-[1.5rem]
+                font-bold leading-[1.5rem]
+                tracking-[-0.25px]
+                text-[#0c0e16] outline-none
+                w-full"
+                  />
+                </div>
+              </label>
+            </div>
+            <label
+              htmlFor="clientCountry"
+              className="flex flex-col
+          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
+            >
+              Country
+              <div
+                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+              >
+                <input
+                  type="text"
+                  id="clientCountry"
+                  defaultValue={invoice.clientAddress.country}
+                  {...register("clientAddress.country")}
+                  className="text-[1.5rem]
+              font-bold leading-[1.5rem]
+              tracking-[-0.25px]
+              text-[#0c0e16] outline-none
+              w-full"
+                />
+              </div>
+            </label>
+            <div className="relative flex flex-col gap-[0.9rem] mb-[2.5rem]">
+              <span
+                className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3]"
+              >
+                Invoice Date
+              </span>
+              <div
+                className="flex justify-between items-center
+            px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]"
+                onClick={() => setIsOpenCalendar((prev) => !prev)}
+              >
+                <span
+                  className="text-[1.5rem]
+              font-bold leading-[1.5rem] tracking-[-0.25px]"
+                >
+                  {formDate(selectedDate || invoice?.createdAt) ||
+                    "Select Date"}
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M13.3334 2H14C15.1027 2 16 2.89734 16 4V14C16 15.1027 15.1027 16 14 16H2C0.897339 16 0 15.1027 0 14V4C0 2.89734 0.897339 2 2 2H2.66663V0.666626C2.66663 0.298706 2.96533 0 3.33337 0H4C4.36804 0 4.66663 0.298706 4.66663 0.666626V2H11.3334V0.666626C11.3334 0.298706 11.632 0 12 0H12.6666C13.0347 0 13.3334 0.298706 13.3334 0.666626V2ZM14 14.6666C14.3673 14.6666 14.6666 14.3673 14.6666 14V6.69336H1.33337V14C1.33337 14.3673 1.63269 14.6666 2 14.6666H14Z"
+                    fill="#7E88C3"
+                  />
+                </svg>
+              </div>
+              {isOpenCalendar ? (
+                <Calendar
+                  setSelectedDate={setSelectedDate}
+                  setIsOpenCalendar={setIsOpenCalendar}
+                />
+              ) : null}
+            </div>
+            <div
+              className="relative 
+          flex flex-col gap-[0.9rem] mb-[2.5rem] cursor-pointer"
+              onClick={() => setIsOpenNetDay((prev) => !prev)}
+            >
+              <span
+                className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+            text-[#7e88c3]"
+              >
+                Payment Terms
+              </span>
+              <div
+                className="flex justify-between items-center
+            px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            border border-[#dfe3fa] rounded-[0.4rem]
+            text-[1.5rem]
+            font-bold leading-[1.5rem] tracking-[-0.25px]"
+              >
+                Net {selectedPaymentTerms} Days
+                <svg
+                  width="11"
+                  height="7"
+                  viewBox="0 0 11 7"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 1L5.2279 5.2279L9.4558 1"
+                    stroke="#7C5DFA"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </div>
+              {isOpenNetDay ? (
+                <div
+                  className="
               flex flex-col py-[1.6rem]
               bg-white rounded-[0.8rem]
               shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
               text-[1.5rem] font-bold leading-[1.5rem]
               tracking-[-0.25px] text-[#0c0e16]
               z-[1] gap-[1.5rem]"
-            >
-              {paymentTermsArray.map((net, index) => (
-                <div key={net}>
-                  <p
-                    className="pl-[2.4rem] hover:text-[#7c5dfa] hover:opacity-[1]
+                >
+                  {paymentTermsArray.map((net, index) => (
+                    <div key={net}>
+                      <p
+                        className="pl-[2.4rem] hover:text-[#7c5dfa] hover:opacity-[1]
                     "
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePaymentTermSelect(net);
-                    }}
-                  >
-                    Net {net} Day{net !== 1 ? "s" : ""}
-                  </p>
-                  {index < paymentTermsArray.length - 1 ? (
-                    <div className="w-full h-px bg-[#dfe3fa] mt-[1.5rem]"></div>
-                  ) : null}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePaymentTermSelect(net);
+                        }}
+                      >
+                        Net {net} Day{net !== 1 ? "s" : ""}
+                      </p>
+                      {index < paymentTermsArray.length - 1 ? (
+                        <div className="w-full h-px bg-[#dfe3fa] mt-[1.5rem]"></div>
+                      ) : null}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : null}
             </div>
-          ) : null}
-        </div>
-        <label
-          htmlFor="description"
-          className="flex flex-col
+            <label
+              htmlFor="description"
+              className="flex flex-col
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
           text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
-        >
-          Project Description
-          <div
-            className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+            >
+              Project Description
+              <div
+                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
             border border-[#dfe3fa] rounded-[0.4rem]"
-          >
-            <input
-              type="text"
-              id="description"
-              defaultValue={invoice.description}
-              {...register("description")}
-              className="text-[1.5rem]
+              >
+                <input
+                  type="text"
+                  id="description"
+                  defaultValue={invoice.description}
+                  {...register("description")}
+                  className="text-[1.5rem]
               font-bold leading-[1.5rem]
               tracking-[-0.25px]
               text-[#0c0e16] outline-none
               w-full"
-            />
-          </div>
-        </label>
-        <span
-          className="text-[1.8rem] font-bold
+                />
+              </div>
+            </label>
+            <span
+              className="text-[1.8rem] font-bold
           leading-[3.2rem] tracking-[-0.375px]
           text-[#777f98] mb-[2.2rem]"
-        >
-          Item List
-        </span>
-        <div className="mb-[4.8rem]">
-          {fields.map((item, index) => {
-            const watchedQuantity = watch(`items.${index}.quantity`) || 0;
-            const watchedPrice = watch(`items.${index}.price`) || 0;
-            const itemTotal = watchedQuantity * watchedPrice;
-            return (
-              <div key={item.id}>
-                <label
-                  htmlFor={`item-name-${index}`}
-                  className="flex flex-col
+            >
+              Item List
+            </span>
+            <div className="mb-[4.8rem]">
+              {fields.map((item, index) => {
+                const watchedQuantity = watch(`items.${index}.quantity`) || 0;
+                const watchedPrice = watch(`items.${index}.price`) || 0;
+                const itemTotal = watchedQuantity * watchedPrice;
+                return (
+                  <div key={item.id}>
+                    <label
+                      htmlFor={`item-name-${index}`}
+                      className="flex flex-col
                 text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
                 text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
-                >
-                  Item Name
-                  <div
-                    className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                    >
+                      Item Name
+                      <div
+                        className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
                   border border-[#dfe3fa] rounded-[0.4rem]"
-                  >
-                    <input
-                      type="text"
-                      id={`item-name-${index}`}
-                      defaultValue={item.name}
-                      {...register(`items.${index}.name`)}
-                      className="text-[1.5rem]
+                      >
+                        <input
+                          type="text"
+                          id={`item-name-${index}`}
+                          defaultValue={item.name}
+                          {...register(`items.${index}.name`)}
+                          className="text-[1.5rem]
                     font-bold leading-[1.5rem]
                     tracking-[-0.25px]
                     text-[#0c0e16] outline-none
                     w-full"
-                    />
-                  </div>
-                </label>
-                <div className="flex gap-[1.6rem]">
-                  <label
-                    htmlFor={`item-quantity-${index}`}
-                    className="flex flex-col
+                        />
+                      </div>
+                    </label>
+                    <div className="flex gap-[1.6rem]">
+                      <label
+                        htmlFor={`item-quantity-${index}`}
+                        className="flex flex-col
                   text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
                   text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
-                  >
-                    Qty.
-                    <div
-                      className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                      >
+                        Qty.
+                        <div
+                          className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
                     border border-[#dfe3fa] rounded-[0.4rem]
                     w-[6.4rem]"
-                    >
-                      <input
-                        type="text"
-                        id={`item-quantity-${index}`}
-                        defaultValue={item.quantity}
-                        {...register(`items.${index}.quantity`, {
-                          valueAsNumber: true,
-                        })}
-                        className="text-[1.5rem]
+                        >
+                          <input
+                            type="text"
+                            id={`item-quantity-${index}`}
+                            defaultValue={item.quantity}
+                            {...register(`items.${index}.quantity`, {
+                              valueAsNumber: true,
+                            })}
+                            className="text-[1.5rem]
                       font-bold leading-[1.5rem]
                       tracking-[-0.25px]
                       text-[#0c0e16]
                       outline-none
                       w-full"
-                      />
-                    </div>
-                  </label>
+                          />
+                        </div>
+                      </label>
 
-                  <label
-                    htmlFor={`item-price-${index}`}
-                    className="flex flex-col
+                      <label
+                        htmlFor={`item-price-${index}`}
+                        className="flex flex-col
                   text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
                   text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
-                  >
-                    Price
-                    <div
-                      className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                      >
+                        Price
+                        <div
+                          className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
                     border border-[#dfe3fa] rounded-[0.4rem]
                     w-[10rem]"
-                    >
-                      <input
-                        type="text"
-                        id={`item-price-${index}`}
-                        defaultValue={item.price}
-                        {...register(`items.${index}.price`, {
-                          valueAsNumber: true,
-                        })}
-                        className="text-[1.5rem]
+                        >
+                          <input
+                            type="text"
+                            id={`item-price-${index}`}
+                            defaultValue={item.price}
+                            {...register(`items.${index}.price`, {
+                              valueAsNumber: true,
+                            })}
+                            className="text-[1.5rem]
                       font-bold leading-[1.5rem]
                       tracking-[-0.25px]
                       text-[#0c0e16]
                       outline-none
                       w-full"
-                      />
-                    </div>
-                  </label>
-                  <div
-                    className="flex flex-col gap-[0.9rem]
+                          />
+                        </div>
+                      </label>
+                      <div
+                        className="flex flex-col gap-[0.9rem]
                   ml-[1.6rem]"
-                  >
-                    <span
-                      className="
+                      >
+                        <span
+                          className="
                     text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
                     text-[#7e88c3]"
-                    >
-                      Total
-                    </span>
-                    <div
-                      className="pt-[1.8rem] pb-[1.5rem]
+                        >
+                          Total
+                        </span>
+                        <div
+                          className="pt-[1.8rem] pb-[1.5rem]
                     text-[1.5rem] font-bold leading-[1.5rem]
                     tracking-[-0.25px] text-[#888eb0]
                     flex items-center gap-[5.5rem]"
-                    >
-                      <span>{itemTotal.toFixed(2)}</span>
-                      <svg
-                        width="13"
-                        height="16"
-                        viewBox="0 0 13 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="cursor-pointer"
-                        onClick={() => remove(index)}
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M8.44442 0L9.33333 0.888875H12.4444V2.66667H0V0.888875H3.11108L4 0H8.44442ZM2.66667 16C1.68442 16 0.888875 15.2045 0.888875 14.2222V3.55554H11.5555V14.2222C11.5555 15.2045 10.76 16 9.77779 16H2.66667Z"
-                          fill="#888EB0"
-                        />
-                      </svg>
+                        >
+                          <span>{itemTotal.toFixed(2)}</span>
+                          <svg
+                            width="13"
+                            height="16"
+                            viewBox="0 0 13 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="cursor-pointer"
+                            onClick={() => remove(index)}
+                          >
+                            <path
+                              fillRule="evenodd"
+                              clipRule="evenodd"
+                              d="M8.44442 0L9.33333 0.888875H12.4444V2.66667H0V0.888875H3.11108L4 0H8.44442ZM2.66667 16C1.68442 16 0.888875 15.2045 0.888875 14.2222V3.55554H11.5555V14.2222C11.5555 15.2045 10.76 16 9.77779 16H2.66667Z"
+                              fill="#888EB0"
+                            />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div
-          className="flex justify-center
+                );
+              })}
+            </div>
+            <div
+              className="flex justify-center
           pt-[1.8rem] pb-[1.5rem]
           bg-[#f9fafe] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-[#7e88c3] mb-[2.4rem]
           cursor-pointer"
-          onClick={() => append({ name: "", quantity: 1, price: 0, total: 0 })}
-        >
-          + Add New Item
-        </div>
-      </form>
-      <div
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%)",
-        }}
-        className="w-full h-[6.4rem]
+              onClick={() =>
+                append({ name: "", quantity: 1, price: 0, total: 0 })
+              }
+            >
+              + Add New Item
+            </div>
+          </form>
+          <div
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%)",
+            }}
+            className="w-full h-[6.4rem]
           "
-      ></div>
-      <div
-        className="flex justify-end
+          ></div>
+          <div
+            className="flex justify-end
         pt-[2.1rem] pb-[2.2rem] pr-[2.4rem]
         gap-[0.8rem]"
-      >
-        <button
-          className="flex items-center
+          >
+            <button
+              className="flex items-center
           pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
           bg-[#f9fafe] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-[#7e88c3]
           cursor-pointer"
-          onClick={goBack}
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          form="editInvoiceForm"
-          className="flex items-center
+              onClick={goBack}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              form="editInvoiceForm"
+              className="flex items-center
           pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
           bg-[#7c5dfa] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-white
           cursor-pointer"
-        >
-          Save Changes
-        </button>
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

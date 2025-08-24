@@ -9,9 +9,9 @@ export default function Header() {
         pr-[2.4rem] xl:flex-col xl:top-0
         xl:p-[unset] xl:pb-[2.4rem]
         xl:rounded-r-[2rem]
-        transition-all duration-300 ${
-          isEditPage ? "xl:h-full" : "xl:min-h-screen"
-        }`}
+        transition-all duration-300
+        relative z-[100]
+        ${isEditPage ? "xl:h-full" : "xl:min-h-screen"}`}
     >
       <Link to={"/"}>
         <svg

@@ -17,17 +17,18 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Invoices />,
-        children: [
-          {
-            path: "create-new-invoice",
-            element: <NewInvoice />,
-          },
-        ],
+      },
+      {
+        path: "create-new-invoice",
+        element: <NewInvoice />,
       },
       {
         path: "/:id",
         element: <Invoice />,
-        children: [{ path: "edit", element: <EditInvoice /> }],
+      },
+      {
+        path: "/:id/edit",
+        element: <EditInvoice />,
       },
     ],
   },

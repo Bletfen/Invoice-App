@@ -14,6 +14,20 @@ export default function Invoice() {
     setData((prev) => prev.filter((invoiceObj) => invoiceObj.id !== id));
     navigate("/");
   };
+  const handleMarkAsPaid = (invoiceId: string) => {
+    setData((prev) =>
+      prev.map(
+        (invoice): IInvoice =>
+          invoice.id === invoiceId
+            ? {
+                ...invoice,
+                status: "Paid",
+                paymentDue: new Date().toISOString().split("T")[0], // Add paid date
+              }
+            : invoice
+      )
+    );
+  };
   return (
     <div
       className="bg-[#f8f8fb]
@@ -317,6 +331,7 @@ export default function Invoice() {
             pl-[2.7rem] pr-[2.8rem]
             rounded-[2.4rem]
             cursor-pointer"
+            onClick={() => handleMarkAsPaid(getInvoice.id)}
           >
             Mark as Paid
           </button>

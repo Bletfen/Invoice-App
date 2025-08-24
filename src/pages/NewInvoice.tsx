@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
-import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
 import { useState } from "react";
 
@@ -37,7 +37,7 @@ export default function NewInvoice() {
     return dueDate.toISOString().split("T")[0];
   };
 
-  const onSubmit: SubmitHandler<Inputs> = (values) => {
+  const onSubmit = (values: Inputs, status: "Pending" | "Draft") => {
     const newTotal = values.items.reduce(
       (sum, item) => sum + item.quantity * item.price,
       0
@@ -54,7 +54,7 @@ export default function NewInvoice() {
       paymentTerms: selectedPaymentTerms,
       clientName: values.clientName,
       clientEmail: values.clientEmail,
-      status: "pending",
+      status: status,
       senderAddress: values.senderAddress,
       clientAddress: values.clientAddress,
       items: values.items,
@@ -82,7 +82,7 @@ export default function NewInvoice() {
         country: "",
       },
       description: "",
-      items: [{ name: "", quantity: 1, price: 0, total: 0 }],
+      items: [{ name: "", quantity: 0, price: 0, total: 0 }],
     },
   });
 
@@ -96,6 +96,14 @@ export default function NewInvoice() {
   const handlePaymentTermSelect = (terms: number) => {
     setSelectedPaymentTerms(terms);
     setIsOpenNetDay(false);
+  };
+
+  const handleSaveAsDraft = () => {
+    handleSubmit((values) => onSubmit(values, "Draft"))();
+  };
+
+  const handleSaveAndSend = () => {
+    handleSubmit((values) => onSubmit(values, "Pending"))();
   };
 
   return (
@@ -138,11 +146,7 @@ export default function NewInvoice() {
       >
         New Invoice
       </h6>
-      <form
-        id="newInvoiceForm"
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col px-[2.4rem]"
-      >
+      <form id="newInvoiceForm" className="flex flex-col px-[2.4rem]">
         <span
           className="text-[1.5rem]
           font-bold leading-[1.5rem]
@@ -161,7 +165,8 @@ export default function NewInvoice() {
           Street Address
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]
+            focus-within:border-[#9277ff]"
           >
             <input
               type="text"
@@ -189,7 +194,8 @@ export default function NewInvoice() {
             City
             <div
               className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
+              border border-[#dfe3fa] rounded-[0.4rem]
+              focus-within:border-[#9277ff]"
             >
               <input
                 type="text"
@@ -213,7 +219,8 @@ export default function NewInvoice() {
             Post Code
             <div
               className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
+              border border-[#dfe3fa] rounded-[0.4rem]
+              focus-within:border-[#9277ff]"
             >
               <input
                 type="text"
@@ -238,7 +245,8 @@ export default function NewInvoice() {
           Country
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]
+            focus-within:border-[#9277ff]"
           >
             <input
               type="text"
@@ -271,7 +279,8 @@ export default function NewInvoice() {
           Client's Name
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]
+            focus-within:border-[#9277ff]"
           >
             <input
               type="text"
@@ -295,7 +304,8 @@ export default function NewInvoice() {
           Client's Email
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]
+            focus-within:border-[#9277ff]"
           >
             <input
               type="email"
@@ -319,7 +329,8 @@ export default function NewInvoice() {
           Street Address
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]
+            focus-within:border-[#9277ff]"
           >
             <input
               type="text"
@@ -347,7 +358,8 @@ export default function NewInvoice() {
             City
             <div
               className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
+              border border-[#dfe3fa] rounded-[0.4rem]
+              focus-within:border-[#9277ff]"
             >
               <input
                 type="text"
@@ -371,7 +383,8 @@ export default function NewInvoice() {
             Post Code
             <div
               className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
+              border border-[#dfe3fa] rounded-[0.4rem]
+              focus-within:border-[#9277ff]"
             >
               <input
                 type="text"
@@ -396,7 +409,8 @@ export default function NewInvoice() {
           Country
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]
+            focus-within:border-[#9277ff]"
           >
             <input
               type="text"
@@ -419,9 +433,12 @@ export default function NewInvoice() {
             Invoice Date
           </span>
           <div
-            className="flex justify-between items-center
+            className={`flex justify-between items-center
             px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border rounded-[0.4rem]
+            cursor-pointer ${
+              isOpenCalendar ? "border-[#9277ff]" : "border-[#dfe3fa]"
+            }`}
             onClick={() => setIsOpenCalendar((prev) => !prev)}
           >
             <span
@@ -458,8 +475,7 @@ export default function NewInvoice() {
         </div>
         <div
           className="relative 
-          flex flex-col gap-[0.9rem] mb-[2.5rem] cursor-pointer"
-          onClick={() => setIsOpenNetDay((prev) => !prev)}
+          flex flex-col gap-[0.9rem] mb-[2.5rem]"
         >
           <span
             className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
@@ -468,11 +484,15 @@ export default function NewInvoice() {
             Payment Terms
           </span>
           <div
-            className="flex justify-between items-center
+            className={`flex justify-between items-center
             px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]
+            border rounded-[0.4rem]
             text-[1.5rem]
-            font-bold leading-[1.5rem] tracking-[-0.25px]"
+            font-bold leading-[1.5rem] tracking-[-0.25px]
+            cursor-pointer ${
+              isOpenNetDay ? "border-[#9277ff]" : "border-[#dfe3fa]"
+            }`}
+            onClick={() => setIsOpenNetDay((prev) => !prev)}
           >
             {paymentTermsArray.includes(selectedPaymentTerms) ? (
               <span>Net {selectedPaymentTerms} Days</span>
@@ -533,7 +553,8 @@ export default function NewInvoice() {
           Project Description
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
+            border border-[#dfe3fa] rounded-[0.4rem]
+            focus-within:border-[#9277ff]"
           >
             <input
               type="text"
@@ -565,24 +586,25 @@ export default function NewInvoice() {
                 <label
                   htmlFor={`item-name-${index}`}
                   className="flex flex-col
-                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
                 >
                   Item Name
                   <div
                     className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                  border border-[#dfe3fa] rounded-[0.4rem]"
+                    border border-[#dfe3fa] rounded-[0.4rem]
+                    focus-within:border-[#9277ff]"
                   >
                     <input
                       type="text"
                       id={`item-name-${index}`}
-                      placeholder={item.name}
+                      placeholder="Banner Design"
                       {...register(`items.${index}.name`)}
                       className="text-[1.5rem]
-                    font-bold leading-[1.5rem]
-                    tracking-[-0.25px]
-                    text-[#0c0e16] outline-none
-                    w-full"
+                      font-bold leading-[1.5rem]
+                      tracking-[-0.25px]
+                      text-[#0c0e16] outline-none
+                      w-full"
                     />
                   </div>
                 </label>
@@ -597,21 +619,20 @@ export default function NewInvoice() {
                     <div
                       className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
                       border border-[#dfe3fa] rounded-[0.4rem]
-                      w-[6.4rem]"
+                      w-[6.4rem] focus-within:border-[#9277ff]"
                     >
                       <input
                         type="text"
-                        id="clientCountry"
-                        placeholder={item.quantity.toString()}
+                        id={`item-quantity-${index}`}
                         {...register(`items.${index}.quantity`, {
                           valueAsNumber: true,
                         })}
                         className="text-[1.5rem]
-                      font-bold leading-[1.5rem]
-                      tracking-[-0.25px]
-                      text-[#0c0e16]
-                      outline-none
-                      w-full"
+                        font-bold leading-[1.5rem]
+                        tracking-[-0.25px]
+                        text-[#0c0e16]
+                        outline-none
+                        w-full"
                       />
                     </div>
                   </label>
@@ -625,13 +646,12 @@ export default function NewInvoice() {
                     Price
                     <div
                       className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                    border border-[#dfe3fa] rounded-[0.4rem]
-                    w-[10rem]"
+                      border border-[#dfe3fa] rounded-[0.4rem]
+                      w-[10rem] focus-within:border-[#9277ff]"
                     >
                       <input
-                        type="number"
+                        type="text"
                         id={`item-price-${index}`}
-                        placeholder={"item.price.toString()"}
                         {...register(`items.${index}.price`, {
                           valueAsNumber: true,
                         })}
@@ -657,9 +677,9 @@ export default function NewInvoice() {
                     </span>
                     <div
                       className="pt-[1.8rem] pb-[1.5rem]
-                    text-[1.5rem] font-bold leading-[1.5rem]
-                    tracking-[-0.25px] text-[#888eb0]
-                    flex items-center gap-[5.5rem]"
+                      text-[1.5rem] font-bold leading-[1.5rem]
+                      tracking-[-0.25px] text-[#888eb0]
+                      flex items-center gap-[5.5rem]"
                     >
                       <span>{itemTotal.toFixed(2)}</span>
                       <svg
@@ -711,6 +731,7 @@ export default function NewInvoice() {
         gap-[0.8rem]"
       >
         <button
+          type="button"
           className="flex items-center
           pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
           bg-[#f9fafe] rounded-[2.4rem]
@@ -722,17 +743,19 @@ export default function NewInvoice() {
           Discard
         </button>
         <button
+          type="button"
           className="flex items-center
           pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
-          bg-[#f9fafe] rounded-[2.4rem]
+          bg-[#373b53] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#7e88c3]
+          tracking-[-0.25px] text-[#888eb0]
           cursor-pointer"
+          onClick={handleSaveAsDraft}
         >
-          Discard
+          Save as Draft
         </button>
         <button
-          type="submit"
+          type="button"
           form="newInvoiceForm"
           className="flex items-center
           pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
@@ -740,6 +763,7 @@ export default function NewInvoice() {
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-white
           cursor-pointer"
+          onClick={handleSaveAndSend}
         >
           Save & Send
         </button>

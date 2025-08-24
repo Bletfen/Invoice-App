@@ -26,7 +26,7 @@ interface IInvoice {
   paymentTerms: number;
   clientName: string;
   clientEmail: string;
-  status: string;
+  status: "Pending" | "Draft" | "Paid";
   senderAddress: IAddress;
   clientAddress: IAddress;
   items: IItems[];

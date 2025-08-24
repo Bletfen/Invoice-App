@@ -11,12 +11,13 @@ interface IFormDate {
 
 const DataContext = createContext<IDataContext | undefined>(undefined);
 const FormDateContext = createContext<IFormDate | undefined>(undefined);
+
 export default function InvoicesProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [data, setData] = useState<IInvoice[]>(DataBase);
+  const [data, setData] = useState<IInvoice[]>(DataBase as IInvoice[]);
   const formDate = (dateStr: string | undefined) => {
     if (!dateStr) return "";
     const date = new Date(dateStr);
@@ -29,6 +30,7 @@ export default function InvoicesProvider({
       year: "numeric",
     });
   };
+
   return (
     <DataContext.Provider value={{ data, setData }}>
       <FormDateContext.Provider value={{ formDate }}>

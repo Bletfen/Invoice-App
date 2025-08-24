@@ -1,19 +1,18 @@
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
+import { useState } from "react";
+import Delete from "../components/Delete";
 export default function Invoice() {
-  const navigate = useNavigate();
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data, setData } = useDataContext();
   const { formDate } = useFormDate();
   const getInvoice = data.find((item) => item.id === id)!;
-
   const goBack = () => {
     navigate("/");
   };
-  const handleDelete = () => {
-    setData((prev) => prev.filter((invoiceObj) => invoiceObj.id !== id));
-    navigate("/");
-  };
+  const [showDelete, setShowDelete] = useState<boolean>(false);
+
   const handleMarkAsPaid = (invoiceId: string) => {
     setData((prev) =>
       prev.map(
@@ -54,7 +53,7 @@ export default function Invoice() {
             <path
               d="M4.3418 0.885742L0.113895 5.11364L4.3418 9.34155"
               stroke="#7C5DFA"
-              stroke-width="2"
+              strokeWidth="2"
             />
           </svg>
           <span
@@ -320,7 +319,7 @@ export default function Invoice() {
             pl-[2.5rem] pr-[2.4rem]
             rounded-[2.4rem]
             cursor-pointer"
-            onClick={handleDelete}
+            onClick={() => setShowDelete(true)}
           >
             Delete
           </button>
@@ -337,6 +336,11 @@ export default function Invoice() {
           </button>
         </div>
       </div>
+      {showDelete && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <Delete invoiceId={getInvoice.id} setShowDelete={setShowDelete} />
+        </div>
+      )}
       <Outlet />
     </div>
   );

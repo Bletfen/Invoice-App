@@ -58,13 +58,13 @@ export default function ({
               <path
                 d="M1 1L5.2279 5.2279L9.4558 1"
                 stroke="#7C5DFA"
-                stroke-width="2"
+                strokeWidth="2"
               />
             ) : (
               <path
                 d="M1 6.22754L5.2279 1.99964L9.4558 6.22754"
                 stroke="#7C5DFA"
-                stroke-width="2"
+                strokeWidth="2"
               />
             )}
           </svg>

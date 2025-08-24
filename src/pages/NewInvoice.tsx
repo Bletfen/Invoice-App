@@ -10,7 +10,7 @@ export default function NewInvoice() {
   const [isOpenCalendar, setIsOpenCalendar] = useState<boolean>(false);
   const [isOpenNetDay, setIsOpenNetDay] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedPaymentTerms, setSelectedPaymentTerms] = useState<number>(30);
+  const [selectedPaymentTerms, setSelectedPaymentTerms] = useState<number>(0);
 
   const navigate = useNavigate();
 
@@ -68,20 +68,20 @@ export default function NewInvoice() {
   const { register, control, handleSubmit, watch } = useForm<Inputs>({
     defaultValues: {
       senderAddress: {
-        street: "19 Union Terrace",
-        city: "London",
-        postCode: "E1 3EZ",
-        country: "United Kingdom",
+        street: "",
+        city: "",
+        postCode: "",
+        country: "",
       },
-      clientName: "Alex Grim",
-      clientEmail: "alexgrim@mail.com",
+      clientName: "",
+      clientEmail: "",
       clientAddress: {
-        street: "84 Church Way",
-        city: "Bradford",
-        postCode: "BD1 9PB",
-        country: "United Kingdom",
+        street: "",
+        city: "",
+        postCode: "",
+        country: "",
       },
-      description: "Graphic Design",
+      description: "",
       items: [{ name: "", quantity: 1, price: 0, total: 0 }],
     },
   });
@@ -100,7 +100,7 @@ export default function NewInvoice() {
 
   return (
     <div
-      className="absolute top-0 left-0
+      className="absolute -top-13.5 left-0
         bg-white pt-[3.3rem]
         w-full
         min-h-full"
@@ -166,7 +166,7 @@ export default function NewInvoice() {
             <input
               type="text"
               id="address"
-              defaultValue="19 Union Terrace"
+              placeholder="19 Union Terrace"
               {...register("senderAddress.street")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -194,7 +194,7 @@ export default function NewInvoice() {
               <input
                 type="text"
                 id="city"
-                defaultValue="London"
+                placeholder="London"
                 {...register("senderAddress.city")}
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
@@ -218,7 +218,7 @@ export default function NewInvoice() {
               <input
                 type="text"
                 id="postCode"
-                defaultValue="E1 3EZ"
+                placeholder="E1 3EZ"
                 {...register("senderAddress.postCode")}
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
@@ -243,7 +243,7 @@ export default function NewInvoice() {
             <input
               type="text"
               id="country"
-              defaultValue="United Kingdom"
+              placeholder="United Kingdom"
               {...register("senderAddress.country")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -276,7 +276,7 @@ export default function NewInvoice() {
             <input
               type="text"
               id="clientName"
-              defaultValue="Alex Grim"
+              placeholder="Alex Grim"
               {...register("clientName")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -300,7 +300,7 @@ export default function NewInvoice() {
             <input
               type="email"
               id="email"
-              defaultValue="alexgrim@mail.com"
+              placeholder="alexgrim@mail.com"
               {...register("clientEmail")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -324,7 +324,7 @@ export default function NewInvoice() {
             <input
               type="text"
               id="clientAddress"
-              defaultValue="84 Church Way"
+              placeholder="84 Church Way"
               {...register("clientAddress.street")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -352,7 +352,7 @@ export default function NewInvoice() {
               <input
                 type="text"
                 id="clientCity"
-                defaultValue="Bradford"
+                placeholder="Bradford"
                 {...register("clientAddress.city")}
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
@@ -376,7 +376,7 @@ export default function NewInvoice() {
               <input
                 type="text"
                 id="clientPostCode"
-                defaultValue="BD1 9PB"
+                placeholder="BD1 9PB"
                 {...register("clientAddress.postCode")}
                 className="text-[1.5rem]
                 font-bold leading-[1.5rem]
@@ -401,7 +401,7 @@ export default function NewInvoice() {
             <input
               type="text"
               id="clientCountry"
-              defaultValue="United Kingdom"
+              placeholder="United Kingdom"
               {...register("clientAddress.country")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -428,7 +428,11 @@ export default function NewInvoice() {
               className="text-[1.5rem]
               font-bold leading-[1.5rem] tracking-[-0.25px]"
             >
-              {formDate(selectedDate) || "Select Date"}
+              {selectedDate ? (
+                <span>{formDate(selectedDate)}</span>
+              ) : (
+                <span className="opacity-[0.5]">Select Date</span>
+              )}
             </span>
             <svg
               width="16"
@@ -470,7 +474,12 @@ export default function NewInvoice() {
             text-[1.5rem]
             font-bold leading-[1.5rem] tracking-[-0.25px]"
           >
-            Net {selectedPaymentTerms} Days
+            {paymentTermsArray.includes(selectedPaymentTerms) ? (
+              <span>Net {selectedPaymentTerms} Days</span>
+            ) : (
+              <span className="opacity-[0.5]">Select Payment Terms</span>
+            )}
+
             <svg
               width="11"
               height="7"
@@ -529,7 +538,7 @@ export default function NewInvoice() {
             <input
               type="text"
               id="description"
-              defaultValue="Graphic Design"
+              placeholder="Graphic Design"
               {...register("description")}
               className="text-[1.5rem]
               font-bold leading-[1.5rem]
@@ -567,7 +576,7 @@ export default function NewInvoice() {
                     <input
                       type="text"
                       id={`item-name-${index}`}
-                      defaultValue={item.name}
+                      placeholder={item.name}
                       {...register(`items.${index}.name`)}
                       className="text-[1.5rem]
                     font-bold leading-[1.5rem]
@@ -591,9 +600,9 @@ export default function NewInvoice() {
                       w-[6.4rem]"
                     >
                       <input
-                        type="number"
+                        type="text"
                         id="clientCountry"
-                        defaultValue={item.quantity}
+                        placeholder={item.quantity.toString()}
                         {...register(`items.${index}.quantity`, {
                           valueAsNumber: true,
                         })}
@@ -622,7 +631,7 @@ export default function NewInvoice() {
                       <input
                         type="number"
                         id={`item-price-${index}`}
-                        defaultValue={item.price}
+                        placeholder={"item.price.toString()"}
                         {...register(`items.${index}.price`, {
                           valueAsNumber: true,
                         })}
@@ -710,11 +719,21 @@ export default function NewInvoice() {
           cursor-pointer"
           onClick={goBack}
         >
-          Cancel
+          Discard
+        </button>
+        <button
+          className="flex items-center
+          pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
+          bg-[#f9fafe] rounded-[2.4rem]
+          text-[1.5rem] font-bold leading-[1.5rem]
+          tracking-[-0.25px] text-[#7e88c3]
+          cursor-pointer"
+        >
+          Discard
         </button>
         <button
           type="submit"
-          form="editInvoiceForm"
+          form="newInvoiceForm"
           className="flex items-center
           pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
           bg-[#7c5dfa] rounded-[2.4rem]
@@ -722,7 +741,7 @@ export default function NewInvoice() {
           tracking-[-0.25px] text-white
           cursor-pointer"
         >
-          Save Changes
+          Save & Send
         </button>
       </div>
     </div>

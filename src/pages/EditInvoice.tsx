@@ -55,30 +55,7 @@ export default function EditInvoice() {
     updateInvoice(invoice.id, updatedInvoice);
     navigate(-1);
   };
-  type Inputs = {
-    senderAddress: {
-      street: string;
-      city: string;
-      postCode: string;
-      country: string;
-    };
-    clientName: string;
-    clientEmail: string;
-    clientAddress: {
-      street: string;
-      city: string;
-      postCode: string;
-      country: string;
-    };
-    description: string;
-    items: itemsInput[];
-  };
-  type itemsInput = {
-    name: string;
-    quantity: number;
-    price: number;
-    total: number;
-  };
+
   const { register, control, handleSubmit, watch } = useForm<Inputs>({
     defaultValues: {
       senderAddress: invoice.senderAddress,
@@ -86,7 +63,7 @@ export default function EditInvoice() {
       clientEmail: invoice.clientEmail,
       clientAddress: invoice.clientAddress,
       description: invoice.description,
-      items: invoice.items, // Initialize with existing items
+      items: invoice.items,
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -591,8 +568,8 @@ export default function EditInvoice() {
                     w-[6.4rem]"
                     >
                       <input
-                        type={`item-quantity-${index}`}
-                        id="clientCountry"
+                        type="text"
+                        id={`item-quantity-${index}`}
                         defaultValue={item.quantity}
                         {...register(`items.${index}.quantity`, {
                           valueAsNumber: true,

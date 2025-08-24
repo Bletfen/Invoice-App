@@ -4,32 +4,6 @@ import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
 import { useState } from "react";
 
-type Inputs = {
-  senderAddress: {
-    street: string;
-    city: string;
-    postCode: string;
-    country: string;
-  };
-  clientName: string;
-  clientEmail: string;
-  clientAddress: {
-    street: string;
-    city: string;
-    postCode: string;
-    country: string;
-  };
-  description: string;
-  items: ItemsInput[];
-};
-
-type ItemsInput = {
-  name: string;
-  quantity: number;
-  price: number;
-  total: number;
-};
-
 export default function NewInvoice() {
   const { setData } = useDataContext();
   const { formDate } = useFormDate();

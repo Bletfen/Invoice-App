@@ -33,4 +33,29 @@ interface IInvoice {
   total: number;
 }
 
+type Inputs = {
+  senderAddress: {
+    street: string;
+    city: string;
+    postCode: string;
+    country: string;
+  };
+  clientName: string;
+  clientEmail: string;
+  clientAddress: {
+    street: string;
+    city: string;
+    postCode: string;
+    country: string;
+  };
+  description: string;
+  items: itemsInput[];
+};
+type itemsInput = {
+  name: string;
+  quantity: number;
+  price: number;
+  total: number;
+};
+
 type TInvoices = IInvoice[];

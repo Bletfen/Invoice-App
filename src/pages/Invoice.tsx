@@ -3,11 +3,15 @@ import { useDataContext, useFormDate } from "../context/InvoicesContext";
 export default function Invoice() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data } = useDataContext();
+  const { data, setData } = useDataContext();
   const { formDate } = useFormDate();
   const getInvoice = data.find((item) => item.id === id)!;
-  console.log(getInvoice);
+
   const goBack = () => {
+    navigate("/");
+  };
+  const handleDelete = () => {
+    setData((prev) => prev.filter((invoiceObj) => invoiceObj.id !== id));
     navigate("/");
   };
   return (
@@ -302,6 +306,7 @@ export default function Invoice() {
             pl-[2.5rem] pr-[2.4rem]
             rounded-[2.4rem]
             cursor-pointer"
+            onClick={handleDelete}
           >
             Delete
           </button>

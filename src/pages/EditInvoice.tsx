@@ -3,6 +3,8 @@ import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 export default function EditInvoice() {
   const { data, setData } = useDataContext();
   const { formDate } = useFormDate();
@@ -59,7 +61,13 @@ export default function EditInvoice() {
     navigate(-1);
   };
 
-  const { register, control, handleSubmit, watch } = useForm<Inputs>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>({
     defaultValues: {
       senderAddress: invoice.senderAddress,
       clientName: invoice.clientName,

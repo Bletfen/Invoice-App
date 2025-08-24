@@ -3,6 +3,8 @@ import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useForm, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
 import { useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 export default function NewInvoice() {
   const { setData } = useDataContext();
@@ -65,7 +67,49 @@ export default function NewInvoice() {
     navigate("/");
   };
 
-  const { register, control, handleSubmit, watch } = useForm<Inputs>({
+  const schema = yup.object({
+    senderAddress: yup.object({
+      street: yup.string().required("can't be empty"),
+      city: yup.string().required("can't be empty"),
+      postCode: yup.string().required("can't be empty"),
+      country: yup.string().required("can't be empty"),
+    }),
+    clientName: yup.string().required("can't be empty"),
+    clientEmail: yup.string().email("Invalid email").required("can't be empty"),
+    clientAddress: yup.object({
+      street: yup.string().required("can't be empty"),
+      city: yup.string().required("can't be empty"),
+      postCode: yup.string().required("can't be empty"),
+      country: yup.string().required("can't be empty"),
+    }),
+    description: yup.string().required("can't be empty"),
+    items: yup
+      .array()
+      .of(
+        yup.object({
+          name: yup.string().required("can't be empty"),
+          quantity: yup
+            .number()
+            .positive("Quantity must be more than 0")
+            .required("can't be empty"),
+          price: yup
+            .number()
+            .positive("Quantity must be more than 0")
+            .required("can't be empty"),
+          total: yup.number().required(),
+        })
+      )
+      .required()
+      .min(1, "An item must be added"),
+  });
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>({
     defaultValues: {
       senderAddress: {
         street: "",
@@ -84,6 +128,7 @@ export default function NewInvoice() {
       description: "",
       items: [{ name: "", quantity: 0, price: 0, total: 0 }],
     },
+    resolver: yupResolver(schema),
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -159,10 +204,28 @@ export default function NewInvoice() {
           htmlFor="address"
           className="flex flex-col
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3]
           gap-[0.9rem] mb-[2.5rem]"
         >
-          Street Address
+          <div className="flex justify-between">
+            <span
+              className={
+                errors.senderAddress?.street
+                  ? "text-[#ec5757]"
+                  : "text-[#7e88c3]"
+              }
+            >
+              Street Address
+            </span>
+            {errors.senderAddress?.street && (
+              <span
+                className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+              >
+                {errors.senderAddress.street.message}
+              </span>
+            )}
+          </div>
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
             border border-[#dfe3fa] rounded-[0.4rem]
@@ -191,7 +254,26 @@ export default function NewInvoice() {
             text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
             text-[#7e88c3] gap-[0.9rem]"
           >
-            City
+            <div className="flex justify-between">
+              <span
+                className={
+                  errors.senderAddress?.city
+                    ? "text-[#ec5757]"
+                    : "text-[#7e88c3]"
+                }
+              >
+                City
+              </span>
+              {errors.senderAddress?.city && (
+                <span
+                  className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+                >
+                  {errors.senderAddress.city.message}
+                </span>
+              )}
+            </div>
             <div
               className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
               border border-[#dfe3fa] rounded-[0.4rem]
@@ -216,7 +298,26 @@ export default function NewInvoice() {
             text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
             text-[#7e88c3] gap-[0.9rem]"
           >
-            Post Code
+            <div className="flex justify-between">
+              <span
+                className={
+                  errors.senderAddress?.postCode
+                    ? "text-[#ec5757]"
+                    : "text-[#7e88c3]"
+                }
+              >
+                Post Code
+              </span>
+              {errors.senderAddress?.postCode && (
+                <span
+                  className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+                >
+                  {errors.senderAddress.postCode.message}
+                </span>
+              )}
+            </div>
             <div
               className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
               border border-[#dfe3fa] rounded-[0.4rem]
@@ -242,7 +343,26 @@ export default function NewInvoice() {
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
           text-[#7e88c3] gap-[0.9rem] mb-[4.1rem]"
         >
-          Country
+          <div className="flex justify-between">
+            <span
+              className={
+                errors.senderAddress?.country
+                  ? "text-[#ec5757]"
+                  : "text-[#7e88c3]"
+              }
+            >
+              Country
+            </span>
+            {errors.senderAddress?.country && (
+              <span
+                className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+              >
+                {errors.senderAddress.country.message}
+              </span>
+            )}
+          </div>
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
             border border-[#dfe3fa] rounded-[0.4rem]
@@ -276,7 +396,24 @@ export default function NewInvoice() {
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
           text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
         >
-          Client's Name
+          <div className="flex justify-between">
+            <span
+              className={
+                errors.clientName ? "text-[#ec5757]" : "text-[#7e88c3]"
+              }
+            >
+              Client's Name
+            </span>
+            {errors.clientName && (
+              <span
+                className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+              >
+                {errors.clientName.message}
+              </span>
+            )}
+          </div>
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
             border border-[#dfe3fa] rounded-[0.4rem]
@@ -301,7 +438,24 @@ export default function NewInvoice() {
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
           text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
         >
-          Client's Email
+          <div className="flex justify-between">
+            <span
+              className={
+                errors.clientEmail ? "text-[#ec5757]" : "text-[#7e88c3]"
+              }
+            >
+              Client's Email
+            </span>
+            {errors.clientEmail && (
+              <span
+                className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+              >
+                {errors.clientEmail.message}
+              </span>
+            )}
+          </div>
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
             border border-[#dfe3fa] rounded-[0.4rem]
@@ -326,7 +480,26 @@ export default function NewInvoice() {
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
           text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
         >
-          Street Address
+          <div className="flex justify-between">
+            <span
+              className={
+                errors.clientAddress?.street
+                  ? "text-[#ec5757]"
+                  : "text-[#7e88c3]"
+              }
+            >
+              Street Address
+            </span>
+            {errors.clientAddress?.street && (
+              <span
+                className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+              >
+                {errors.clientAddress?.street.message}
+              </span>
+            )}
+          </div>
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
             border border-[#dfe3fa] rounded-[0.4rem]
@@ -355,7 +528,26 @@ export default function NewInvoice() {
             text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
             text-[#7e88c3] gap-[0.9rem]"
           >
-            City
+            <div className="flex justify-between">
+              <span
+                className={
+                  errors.clientAddress?.city
+                    ? "text-[#ec5757]"
+                    : "text-[#7e88c3]"
+                }
+              >
+                City
+              </span>
+              {errors.clientAddress?.city && (
+                <span
+                  className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+                >
+                  {errors.clientAddress?.city.message}
+                </span>
+              )}
+            </div>
             <div
               className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
               border border-[#dfe3fa] rounded-[0.4rem]
@@ -380,7 +572,26 @@ export default function NewInvoice() {
             text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
             text-[#7e88c3] gap-[0.9rem]"
           >
-            Post Code
+            <div className="flex justify-between">
+              <span
+                className={
+                  errors.clientAddress?.postCode
+                    ? "text-[#ec5757]"
+                    : "text-[#7e88c3]"
+                }
+              >
+                Post Code
+              </span>
+              {errors.clientAddress?.postCode && (
+                <span
+                  className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+                >
+                  {errors.clientAddress?.postCode.message}
+                </span>
+              )}
+            </div>
             <div
               className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
               border border-[#dfe3fa] rounded-[0.4rem]
@@ -406,7 +617,26 @@ export default function NewInvoice() {
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
           text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
         >
-          Country
+          <div className="flex justify-between">
+            <span
+              className={
+                errors.clientAddress?.country
+                  ? "text-[#ec5757]"
+                  : "text-[#7e88c3]"
+              }
+            >
+              Country
+            </span>
+            {errors.clientAddress?.country && (
+              <span
+                className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+              >
+                {errors.clientAddress?.country.message}
+              </span>
+            )}
+          </div>
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
             border border-[#dfe3fa] rounded-[0.4rem]
@@ -428,9 +658,18 @@ export default function NewInvoice() {
         <div className="relative flex flex-col gap-[0.9rem] mb-[2.5rem]">
           <span
             className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3]"
+            "
           >
-            Invoice Date
+            <div className="flex justify-between">
+              <span
+                className={!selectedDate ? "text-[#ec5757]" : "text-[#7e88c3]"}
+              >
+                Invoice Date
+              </span>
+              {!selectedDate && (
+                <span className="text-[#ec5757]">can't be empty</span>
+              )}
+            </div>
           </span>
           <div
             className={`flex justify-between items-center
@@ -477,12 +716,20 @@ export default function NewInvoice() {
           className="relative 
           flex flex-col gap-[0.9rem] mb-[2.5rem]"
         >
-          <span
-            className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+          <div
+            className="flex justify-between
+            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
             text-[#7e88c3]"
           >
-            Payment Terms
-          </span>
+            <span
+              className={!selectedDate ? "text-[#ec5757]" : "text-[#7e88c3]"}
+            >
+              Payment Terms
+            </span>
+            {!selectedDate && (
+              <span className="text-[#ec5757]">can't be empty</span>
+            )}
+          </div>
           <div
             className={`flex justify-between items-center
             px-[2rem] pt-[1.8rem] pb-[1.5rem]
@@ -550,7 +797,24 @@ export default function NewInvoice() {
           text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
           text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
         >
-          Project Description
+          <div className="flex justify-between">
+            <span
+              className={
+                errors.description ? "text-[#ec5757]" : "text-[#7e88c3]"
+              }
+            >
+              Project Description
+            </span>
+            {errors.description && (
+              <span
+                className="text-[1.3rem]
+                font-[500] leading-[1.5rem]
+                tracking-[-0.1px] text-[#ec5757]"
+              >
+                {errors.description.message}
+              </span>
+            )}
+          </div>
           <div
             className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
             border border-[#dfe3fa] rounded-[0.4rem]
@@ -589,7 +853,26 @@ export default function NewInvoice() {
                   text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
                   text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
                 >
-                  Item Name
+                  <div className="flex justify-between">
+                    <span
+                      className={
+                        errors.items?.[index]?.name
+                          ? "text-[#ec5757]"
+                          : "text-[#7e88c3]"
+                      }
+                    >
+                      Item Name
+                    </span>
+                    {errors.items?.[index]?.name && (
+                      <span
+                        className="text-[1.3rem]
+                        font-[500] leading-[1.5rem]
+                        tracking-[-0.1px] text-[#ec5757]"
+                      >
+                        {errors.items?.[index]?.name?.message}
+                      </span>
+                    )}
+                  </div>
                   <div
                     className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
                     border border-[#dfe3fa] rounded-[0.4rem]
@@ -615,7 +898,26 @@ export default function NewInvoice() {
                     text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
                     text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
                   >
-                    Qty.
+                    <div className="flex justify-between">
+                      <span
+                        className={
+                          errors.items?.[index]?.quantity
+                            ? "text-[#ec5757]"
+                            : "text-[#7e88c3]"
+                        }
+                      >
+                        Qty.
+                      </span>
+                      {errors.items?.[index]?.quantity && (
+                        <span
+                          className="text-[1.3rem]
+                        font-[500] leading-[1.5rem]
+                        tracking-[-0.1px] text-[#ec5757]"
+                        >
+                          {errors.items?.[index]?.quantity?.message}
+                        </span>
+                      )}
+                    </div>
                     <div
                       className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
                       border border-[#dfe3fa] rounded-[0.4rem]
@@ -643,7 +945,26 @@ export default function NewInvoice() {
                     text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
                     text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
                   >
-                    Price
+                    <div className="flex justify-between">
+                      <span
+                        className={
+                          errors.items?.[index]?.price
+                            ? "text-[#ec5757]"
+                            : "text-[#7e88c3]"
+                        }
+                      >
+                        Price
+                      </span>
+                      {errors.items?.[index]?.price && (
+                        <span
+                          className="text-[1.3rem]
+                        font-[500] leading-[1.5rem]
+                        tracking-[-0.1px] text-[#ec5757]"
+                        >
+                          {errors.items?.[index]?.price?.message}
+                        </span>
+                      )}
+                    </div>
                     <div
                       className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
                       border border-[#dfe3fa] rounded-[0.4rem]

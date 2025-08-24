@@ -16,19 +16,36 @@ export default function Delete({
   return (
     <div
       className="absolute pt-[3.4rem] pb-[3.2rem]
-        px-[3.2rem] bg-white
+        px-[3.2rem] bg-white rounded-[0.8rem]
+        shadow-[0_10px_10px_-10px_rgba(72,84,159,0.10)]
         "
     >
-      <h1 className="">Confirm Deletion</h1>
-      <p>
-        Are you sure you want to delete invoice #{invoiceId}? This action cannot
-        be undone.
+      <h1
+        className="text-[2.4rem]
+        font-bold leading-[3.2rem]
+        tracking-[-0.5px]
+        text-[#0c0e16]
+        mb-[0.8rem]"
+      >
+        Confirm Deletion
+      </h1>
+      <p
+        className="text-[1.3rem]
+        font-[500] leading-[2.2rem]
+        tracking-[-0.1px]
+        text-[#888eb0] mb-[2.2rem]"
+      >
+        Are you sure you want to delete invoice #{invoiceId}? <br />
+        This action cannot be undone.
       </p>
-      <div>
+      <div
+        className="flex
+        justify-end"
+      >
         <button
           type="button"
           className="flex items-center
-          pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
+          pt-[1.8rem] pb-[1.5rem] px-[2.4rem]
           bg-[#f9fafe] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-[#7e88c3]
@@ -40,10 +57,10 @@ export default function Delete({
         <button
           type="button"
           className="flex items-center
-          pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
-          bg-[#373b53] rounded-[2.4rem]
+          pt-[1.8rem] pb-[1.5rem] px-[2.4rem]
+          bg-[#ec5757] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#888eb0]
+          tracking-[-0.25px] text-white
           cursor-pointer"
           onClick={handleDelete}
         >

@@ -58,22 +58,22 @@ export default function Invoice() {
           </svg>
           <span
             className="text-[1.5rem] text-invoiceHeaderText-light
-          font-bold leading-[1.5rem] tracking-[-0.25px]"
+            font-bold leading-[1.5rem] tracking-[-0.25px]"
           >
             Go back
           </span>
         </div>
         <div
           className="pt-[2.4rem] px-[2.4rem] pb-[2.7rem]
-        flex items-center justify-between bg-white
-        rounded-[0.8rem] mt-[3.1rem]
-        shadow-[0_10px_10px_-10px_rgba(72,84,159,0.1)]
+          flex items-center justify-between bg-white
+          rounded-[0.8rem] mt-[3.1rem]
+          shadow-[0_10px_10px_-10px_rgba(72,84,159,0.1)]
         "
         >
           <span
             className="
-          text-[1.3rem] font-[500] leading-[1.5rem]
-          tracking-[-0.1px] text-[#858bb2]"
+            text-[1.3rem] font-[500] leading-[1.5rem]
+            tracking-[-0.1px] text-[#858bb2]"
           >
             Status
           </span>
@@ -105,8 +105,8 @@ export default function Invoice() {
         </div>
         <div
           className="p-[2.4rem] bg-white rounded-[0.8rem]
-        shadow-[0_10px_10px_-10px_rgba(72,84,159,0.1)]
-        mt-[1.6rem]"
+          shadow-[0_10px_10px_-10px_rgba(72,84,159,0.1)]
+          mt-[1.6rem]"
         >
           <div>
             <div className="flex flex-col gap-[0.4rem] mb-[3rem]">

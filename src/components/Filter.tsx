@@ -15,7 +15,7 @@ export default function ({
   return (
     <div
       className="flex justify-between
-        mb-[3.2rem] mt-[3.6rem]"
+        pb-[3.2rem] pt-[3.6rem]"
     >
       <div className="flex flex-col gap-[0.3rem]">
         <h1

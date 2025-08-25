@@ -59,7 +59,7 @@ const Calendar = ({
 
   return (
     <div
-      className="w-full pt-[2.6rem] pl-[1.95rem] 
+      className="absolute z-50 top-33 w-full pt-[2.6rem] pl-[1.95rem] 
       pr-[1.85rem] pb-[3.1rem] bg-white rounded-[0.8rem]
       shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
       transition-all duration-300"

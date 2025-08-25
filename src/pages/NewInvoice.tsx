@@ -970,14 +970,17 @@ export default function NewInvoice() {
                             viewBox="0 0 13 16"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="cursor-pointer"
+                            className={`cursor-pointer ${
+                              errors.items?.length && errors.items?.length > 0
+                                ? "fill-[#ec5757]"
+                                : "fill-[#888EB0]"
+                            }`}
                             onClick={() => remove(index)}
                           >
                             <path
                               fillRule="evenodd"
                               clipRule="evenodd"
                               d="M8.44442 0L9.33333 0.888875H12.4444V2.66667H0V0.888875H3.11108L4 0H8.44442ZM2.66667 16C1.68442 16 0.888875 15.2045 0.888875 14.2222V3.55554H11.5555V14.2222C11.5555 15.2045 10.76 16 9.77779 16H2.66667Z"
-                              fill="#888EB0"
                             />
                           </svg>
                         </div>
@@ -1012,7 +1015,7 @@ export default function NewInvoice() {
             <p
               className="text-[1rem] font-[600] leading-[1.5rem]
           tracking-[0.208px] text-[#ec5757]
-          pl-[2.4rem]"
+          pl-[2.4rem] md:pl-[5.6rem]"
             >
               - All fields must be added <br /> - An item must be added
             </p>
@@ -1037,11 +1040,13 @@ export default function NewInvoice() {
             <button
               type="button"
               className="flex items-center
-          pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
-          bg-[#f9fafe] rounded-[2.4rem]
-          text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#7e88c3]
-          cursor-pointer self-start"
+              pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
+              bg-[#f9fafe] rounded-[2.4rem]
+              text-[1.5rem] font-bold leading-[1.5rem]
+              tracking-[-0.25px] text-[#7e88c3]
+              cursor-pointer
+              transition-all duration-300
+              "
               onClick={goBack}
             >
               Discard
@@ -1050,11 +1055,12 @@ export default function NewInvoice() {
               <button
                 type="button"
                 className="flex items-center
-          pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
-          bg-[#373b53] rounded-[2.4rem]
-          text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#888eb0]
-          cursor-pointer"
+                pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
+                bg-[#373b53] rounded-[2.4rem]
+                text-[1.5rem] font-bold leading-[1.5rem]
+                tracking-[-0.25px] text-[#888eb0]
+                cursor-pointer transition-all duration-300
+                hover:bg-[#0c0e16]"
                 onClick={handleSaveAsDraft}
               >
                 Save as Draft
@@ -1063,11 +1069,12 @@ export default function NewInvoice() {
                 type="button"
                 form="newInvoiceForm"
                 className="flex items-center
-          pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
-          bg-[#7c5dfa] rounded-[2.4rem]
-          text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-white
-          cursor-pointer"
+                pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
+                bg-[#7c5dfa] rounded-[2.4rem]
+                text-[1.5rem] font-bold leading-[1.5rem]
+                tracking-[-0.25px] text-white
+                cursor-pointer transition-all duration-300
+                hover:bg-[#9277ff]"
                 onClick={handleSaveAndSend}
               >
                 Save & Send

@@ -32,7 +32,9 @@ export default function InvoiceButtons({
             pl-[2.4rem] pr-[2.3rem]
             rounded-[2.4rem]
             text-[#7e88c3]
-            cursor-pointer"
+            cursor-pointer
+            transition-all duration-300
+            hover:bg-[#dfe3fa]"
         >
           Edit
         </Link>
@@ -42,7 +44,9 @@ export default function InvoiceButtons({
             bg-[#ec5757]
             pl-[2.5rem] pr-[2.4rem]
             rounded-[2.4rem]
-            cursor-pointer"
+            cursor-pointer
+            transition-all duration-300
+            hover:bg-[#ff9797]"
           onClick={() => setShowDelete(true)}
         >
           Delete
@@ -53,7 +57,9 @@ export default function InvoiceButtons({
             bg-[#7c5dfa]
             pl-[2.7rem] pr-[2.8rem]
             rounded-[2.4rem]
-            cursor-pointer"
+            cursor-pointer
+            transition-all duration-300
+            hover:bg-[#9277ff]"
           onClick={() => handleMarkAsPaid(invoiceId)}
         >
           Mark as Paid

@@ -38,7 +38,8 @@ export default function ({
     <div
       className="flex justify-between
         pb-[3.2rem] pt-[3.6rem]
-        md:pt-[6.2rem] md:pb-[5.5rem]"
+        md:pt-[6.2rem] md:pb-[5.5rem]
+        xl:pb-[6.4rem]"
     >
       <div className="flex flex-col gap-[0.3rem]">
         <h1
@@ -118,8 +119,7 @@ export default function ({
                   id={`checkbox-${item}`}
                   className="w-[1.6rem] h-[1.6rem]
                   bg-[#dfe3fa] rounded-[0.2rem] cursor-pointer
-                  border-0 outline-none
-                  hover:border hover:border-[#7c6dfa]"
+                  outline-none"
                   checked={!!filter[item as keyof IFilter]}
                   onChange={() =>
                     setFilter((prev) => ({
@@ -144,7 +144,8 @@ export default function ({
             leading-[1.5rem] tracking-[-0.25px]
             items-center gap-[0.8rem]
             cursor-pointer
-            transition-all duration-300"
+            transition-all duration-300
+            hover:bg-[#9277ff]"
         >
           <div
             className="bg-white rounded-full w-[3.2rem] h-[3.2rem]

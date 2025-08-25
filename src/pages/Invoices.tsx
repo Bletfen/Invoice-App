@@ -43,7 +43,8 @@ export default function Invoices() {
               shadow-[0_10px_10px_-10px_rgba(72,84,159,0.1)]
               md:flex md:justify-between
               md:items-center xl:p-[unset] xl:px-[2.4rem] xl:py-[1.6rem]
-              transition-all duration-300
+              transition-all duration-300 border border-transparent
+              hover:border-[#7c5dfa]
               "
               >
                 <div

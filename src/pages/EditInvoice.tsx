@@ -623,8 +623,8 @@ export default function EditInvoice() {
               </div>
               <div
                 className="relative 
-              flex flex-col gap-[0.9rem] mb-[2.5rem] cursor-pointer
-              md:mb-[unset]"
+                flex flex-col gap-[0.9rem] mb-[2.5rem] cursor-pointer
+                md:mb-[unset]"
                 onClick={() => setIsOpenNetDay((prev) => !prev)}
               >
                 <span
@@ -635,10 +635,10 @@ export default function EditInvoice() {
                 </span>
                 <div
                   className="flex justify-between items-center
-                px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                border border-[#dfe3fa] rounded-[0.4rem]
-                text-[1.5rem]
-                font-bold leading-[1.5rem] tracking-[-0.25px]"
+                  px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                  border border-[#dfe3fa] rounded-[0.4rem]
+                  text-[1.5rem]
+                  font-bold leading-[1.5rem] tracking-[-0.25px]"
                 >
                   Net {selectedPaymentTerms} Days
                   <svg
@@ -658,12 +658,13 @@ export default function EditInvoice() {
                 {isOpenNetDay ? (
                   <div
                     className="
-                  flex flex-col py-[1.6rem]
-                  bg-white rounded-[0.8rem]
-                  shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
-                  text-[1.5rem] font-bold leading-[1.5rem]
-                  tracking-[-0.25px] text-[#0c0e16]
-                  z-[1] gap-[1.5rem]"
+                    absolute top-33 w-full
+                    flex flex-col py-[1.6rem]
+                    bg-white rounded-[0.8rem]
+                    shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
+                    text-[1.5rem] font-bold leading-[1.5rem]
+                    tracking-[-0.25px] text-[#0c0e16]
+                    gap-[1.5rem]"
                   >
                     {paymentTermsArray.map((net, index) => (
                       <div key={net}>
@@ -897,7 +898,11 @@ export default function EditInvoice() {
                             viewBox="0 0 13 16"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="cursor-pointer"
+                            className={`cursor-pointer ${
+                              errors.items?.length && errors.items?.length > 0
+                                ? "fill-[#ec5757]"
+                                : "fill-[#888EB0]"
+                            }`}
                             onClick={() => remove(index)}
                           >
                             <path
@@ -939,7 +944,7 @@ export default function EditInvoice() {
             <p
               className="text-[1rem] font-[600] leading-[1.5rem]
           tracking-[0.208px] text-[#ec5757]
-          pl-[2.4rem]"
+          pl-[2.4rem] md:pl-[5.6rem]"
             >
               - All fields must be added <br /> - An item must be added
             </p>

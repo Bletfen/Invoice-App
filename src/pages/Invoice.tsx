@@ -47,6 +47,8 @@ export default function Invoice() {
         <div
           className="flex gap-[2.3rem]
           items-center cursor-pointer
+          group transition-all duration-300
+          w-[9rem]
         "
           onClick={goBack}
         >
@@ -65,7 +67,9 @@ export default function Invoice() {
           </svg>
           <span
             className="text-[1.5rem] text-invoiceHeaderText-light
-            font-bold leading-[1.5rem] tracking-[-0.25px]"
+            font-bold leading-[1.5rem] tracking-[-0.25px]
+            group-hover:text-[#7e88c3]
+            transition-all duration-300"
           >
             Go back
           </span>

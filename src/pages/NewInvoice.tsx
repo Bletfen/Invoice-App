@@ -137,7 +137,7 @@ export default function NewInvoice() {
           <div
             className="flex gap-[2.3rem]
             items-center cursor-pointer
-            mb-[2.6rem] px-[2.4rem] xl:px-[4.8rem]
+            mb-[2.6rem] px-[2.4rem]
             md:hidden"
             onClick={goBack}
           >
@@ -164,7 +164,7 @@ export default function NewInvoice() {
           <h6
             className="text-[2.4rem]
             font-bold leading-[3.2rem] tracking-[-0.5px]
-            mb-[2.2rem] px-[2.4rem] xl:px-[4.8rem]
+            mb-[2.2rem] px-[2.4rem]
             md:px-[5.6rem] md:mb-[4.6rem]"
           >
             New Invoice
@@ -172,7 +172,6 @@ export default function NewInvoice() {
           <form
             id="newInvoiceForm"
             className="flex flex-col px-[2.4rem]
-            xl:px-[4.8rem]
             md:px-[5.6rem]"
           >
             <span
@@ -422,8 +421,8 @@ export default function NewInvoice() {
               </div>
               <div
                 className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]
-            focus-within:border-[#9277ff]"
+                border border-[#dfe3fa] rounded-[0.4rem]
+                focus-within:border-[#9277ff]"
               >
                 <input
                   type="email"
@@ -431,10 +430,10 @@ export default function NewInvoice() {
                   placeholder="alexgrim@mail.com"
                   {...register("clientEmail")}
                   className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
+                  font-bold leading-[1.5rem]
+                  tracking-[-0.25px]
+                  text-[#0c0e16] outline-none
+                  w-full"
                 />
               </div>
             </label>
@@ -480,7 +479,8 @@ export default function NewInvoice() {
             </label>
             <div
               className="grid grid-cols-2 gap-[2.3rem]
-          mb-[2.5rem]"
+              md:grid-cols-3
+              mb-[2.5rem]"
             >
               <label
                 htmlFor="clientCity"
@@ -562,59 +562,134 @@ export default function NewInvoice() {
                   />
                 </div>
               </label>
-            </div>
-            <label
-              htmlFor="clientCountry"
-              className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
-            >
-              <div className="flex justify-between">
-                <span
-                  className={
-                    errors.clientAddress?.country
-                      ? "text-[#ec5757]"
-                      : "text-[#7e88c3]"
-                  }
-                >
-                  Country
-                </span>
-                {errors.clientAddress?.country && (
-                  <span className="text-[1rem] text-[#ec5757]">
-                    {errors.clientAddress?.country.message}
-                  </span>
-                )}
-              </div>
-              <div
-                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]
-            focus-within:border-[#9277ff]"
-              >
-                <input
-                  type="text"
-                  id="clientCountry"
-                  placeholder="United Kingdom"
-                  {...register("clientAddress.country")}
-                  className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-                />
-              </div>
-            </label>
-            <div className="relative flex flex-col gap-[0.9rem] mb-[2.5rem]">
-              <span
-                className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            "
+              <label
+                htmlFor="clientCountry"
+                className="flex flex-col
+                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]
+                col-span-2 md:col-span-1"
               >
                 <div className="flex justify-between">
+                  <span
+                    className={
+                      errors.clientAddress?.country
+                        ? "text-[#ec5757]"
+                        : "text-[#7e88c3]"
+                    }
+                  >
+                    Country
+                  </span>
+                  {errors.clientAddress?.country && (
+                    <span className="text-[1rem] text-[#ec5757]">
+                      {errors.clientAddress?.country.message}
+                    </span>
+                  )}
+                </div>
+                <div
+                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                  border border-[#dfe3fa] rounded-[0.4rem]
+                  focus-within:border-[#9277ff]
+                  "
+                >
+                  <input
+                    type="text"
+                    id="clientCountry"
+                    placeholder="United Kingdom"
+                    {...register("clientAddress.country")}
+                    className="text-[1.5rem]
+                    font-bold leading-[1.5rem]
+                    tracking-[-0.25px]
+                    text-[#0c0e16] outline-none
+                    w-full"
+                  />
+                </div>
+              </label>
+            </div>
+
+            <div
+              className="grid grid-cols-1 md:grid-cols-2
+              md:gap-[2.4rem] md:mb-[2.5rem]"
+            >
+              <div
+                className="relative flex flex-col gap-[0.9rem] mb-[2.5rem]
+                md:mb-[unset]"
+              >
+                <span
+                  className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                "
+                >
+                  <div className="flex justify-between">
+                    <span
+                      className={
+                        !selectedDate ? "text-[#ec5757]" : "text-[#7e88c3]"
+                      }
+                    >
+                      Invoice Date
+                    </span>
+                    {!selectedDate && (
+                      <span className="text-[#ec5757] text-[1rem]">
+                        can't be empty
+                      </span>
+                    )}
+                  </div>
+                </span>
+                <div
+                  className={`flex justify-between items-center
+                px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                border rounded-[0.4rem]
+                cursor-pointer ${
+                  isOpenCalendar ? "border-[#9277ff]" : "border-[#dfe3fa]"
+                }`}
+                  onClick={() => setIsOpenCalendar((prev) => !prev)}
+                >
+                  <span
+                    className="text-[1.5rem]
+                font-bold leading-[1.5rem] tracking-[-0.25px]"
+                  >
+                    {selectedDate ? (
+                      <span>{formDate(selectedDate)}</span>
+                    ) : (
+                      <span className="opacity-[0.5]">Select Date</span>
+                    )}
+                  </span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M13.3334 2H14C15.1027 2 16 2.89734 16 4V14C16 15.1027 15.1027 16 14 16H2C0.897339 16 0 15.1027 0 14V4C0 2.89734 0.897339 2 2 2H2.66663V0.666626C2.66663 0.298706 2.96533 0 3.33337 0H4C4.36804 0 4.66663 0.298706 4.66663 0.666626V2H11.3334V0.666626C11.3334 0.298706 11.632 0 12 0H12.6666C13.0347 0 13.3334 0.298706 13.3334 0.666626V2ZM14 14.6666C14.3673 14.6666 14.6666 14.3673 14.6666 14V6.69336H1.33337V14C1.33337 14.3673 1.63269 14.6666 2 14.6666H14Z"
+                      fill="#7E88C3"
+                    />
+                  </svg>
+                </div>
+                {isOpenCalendar ? (
+                  <Calendar
+                    setSelectedDate={setSelectedDate}
+                    setIsOpenCalendar={setIsOpenCalendar}
+                  />
+                ) : null}
+              </div>
+              <div
+                className="relative 
+                flex flex-col gap-[0.9rem] mb-[2.5rem]
+                md:mb-[unset]"
+              >
+                <div
+                  className="flex justify-between
+                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                text-[#7e88c3]"
+                >
                   <span
                     className={
                       !selectedDate ? "text-[#ec5757]" : "text-[#7e88c3]"
                     }
                   >
-                    Invoice Date
+                    Payment Terms
                   </span>
                   {!selectedDate && (
                     <span className="text-[#ec5757] text-[1rem]">
@@ -622,136 +697,75 @@ export default function NewInvoice() {
                     </span>
                   )}
                 </div>
-              </span>
-              <div
-                className={`flex justify-between items-center
-            px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border rounded-[0.4rem]
-            cursor-pointer ${
-              isOpenCalendar ? "border-[#9277ff]" : "border-[#dfe3fa]"
-            }`}
-                onClick={() => setIsOpenCalendar((prev) => !prev)}
-              >
-                <span
-                  className="text-[1.5rem]
-              font-bold leading-[1.5rem] tracking-[-0.25px]"
-                >
-                  {selectedDate ? (
-                    <span>{formDate(selectedDate)}</span>
-                  ) : (
-                    <span className="opacity-[0.5]">Select Date</span>
-                  )}
-                </span>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M13.3334 2H14C15.1027 2 16 2.89734 16 4V14C16 15.1027 15.1027 16 14 16H2C0.897339 16 0 15.1027 0 14V4C0 2.89734 0.897339 2 2 2H2.66663V0.666626C2.66663 0.298706 2.96533 0 3.33337 0H4C4.36804 0 4.66663 0.298706 4.66663 0.666626V2H11.3334V0.666626C11.3334 0.298706 11.632 0 12 0H12.6666C13.0347 0 13.3334 0.298706 13.3334 0.666626V2ZM14 14.6666C14.3673 14.6666 14.6666 14.3673 14.6666 14V6.69336H1.33337V14C1.33337 14.3673 1.63269 14.6666 2 14.6666H14Z"
-                    fill="#7E88C3"
-                  />
-                </svg>
-              </div>
-              {isOpenCalendar ? (
-                <Calendar
-                  setSelectedDate={setSelectedDate}
-                  setIsOpenCalendar={setIsOpenCalendar}
-                />
-              ) : null}
-            </div>
-            <div
-              className="relative 
-          flex flex-col gap-[0.9rem] mb-[2.5rem]"
-            >
-              <div
-                className="flex justify-between
-            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3]"
-              >
-                <span
-                  className={
-                    !selectedDate ? "text-[#ec5757]" : "text-[#7e88c3]"
-                  }
-                >
-                  Payment Terms
-                </span>
-                {!selectedDate && (
-                  <span className="text-[#ec5757] text-[1rem]">
-                    can't be empty
-                  </span>
-                )}
-              </div>
-              <div
-                className={`flex justify-between items-center
-            px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border rounded-[0.4rem]
-            text-[1.5rem]
-            font-bold leading-[1.5rem] tracking-[-0.25px]
-            cursor-pointer ${
-              isOpenNetDay ? "border-[#9277ff]" : "border-[#dfe3fa]"
-            }`}
-                onClick={() => setIsOpenNetDay((prev) => !prev)}
-              >
-                {paymentTermsArray.includes(selectedPaymentTerms) ? (
-                  <span>Net {selectedPaymentTerms} Days</span>
-                ) : (
-                  <span className="opacity-[0.5]">Select Payment Terms</span>
-                )}
-
-                <svg
-                  width="11"
-                  height="7"
-                  viewBox="0 0 11 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1 1L5.2279 5.2279L9.4558 1"
-                    stroke="#7C5DFA"
-                    strokeWidth="2"
-                  />
-                </svg>
-              </div>
-              {isOpenNetDay ? (
                 <div
-                  className="
-              flex flex-col py-[1.6rem]
-              bg-white rounded-[0.8rem]
-              shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
-              text-[1.5rem] font-bold leading-[1.5rem]
-              tracking-[-0.25px] text-[#0c0e16]
-              z-[1] gap-[1.5rem]"
+                  className={`flex justify-between items-center
+                px-[2rem] pt-[1.8rem] pb-[1.5rem]
+                border rounded-[0.4rem]
+                text-[1.5rem]
+                font-bold leading-[1.5rem] tracking-[-0.25px]
+                cursor-pointer ${
+                  isOpenNetDay ? "border-[#9277ff]" : "border-[#dfe3fa]"
+                }`}
+                  onClick={() => setIsOpenNetDay((prev) => !prev)}
                 >
-                  {paymentTermsArray.map((net, index) => (
-                    <div key={net}>
-                      <p
-                        className="pl-[2.4rem] hover:text-[#7c5dfa] hover:opacity-[1]
-                    "
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePaymentTermSelect(net);
-                        }}
-                      >
-                        Net {net} Day{net !== 1 ? "s" : ""}
-                      </p>
-                      {index < paymentTermsArray.length - 1 ? (
-                        <div className="w-full h-px bg-[#dfe3fa] mt-[1.5rem]"></div>
-                      ) : null}
-                    </div>
-                  ))}
+                  {paymentTermsArray.includes(selectedPaymentTerms) ? (
+                    <span>Net {selectedPaymentTerms} Days</span>
+                  ) : (
+                    <span className="opacity-[0.5]">Select Payment Terms</span>
+                  )}
+
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 1L5.2279 5.2279L9.4558 1"
+                      stroke="#7C5DFA"
+                      strokeWidth="2"
+                    />
+                  </svg>
                 </div>
-              ) : null}
+                {isOpenNetDay ? (
+                  <div
+                    className="
+                  flex flex-col py-[1.6rem]
+                  bg-white rounded-[0.8rem]
+                  shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
+                  text-[1.5rem] font-bold leading-[1.5rem]
+                  tracking-[-0.25px] text-[#0c0e16]
+                  z-[1] gap-[1.5rem]"
+                  >
+                    {paymentTermsArray.map((net, index) => (
+                      <div key={net}>
+                        <p
+                          className="pl-[2.4rem] hover:text-[#7c5dfa] hover:opacity-[1]
+                    "
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePaymentTermSelect(net);
+                          }}
+                        >
+                          Net {net} Day{net !== 1 ? "s" : ""}
+                        </p>
+                        {index < paymentTermsArray.length - 1 ? (
+                          <div className="w-full h-px bg-[#dfe3fa] mt-[1.5rem]"></div>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
             </div>
+
             <label
               htmlFor="description"
               className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+              text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+              text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]
+              md:mb-[2.7rem]"
             >
               <div className="flex justify-between">
                 <span
@@ -769,8 +783,8 @@ export default function NewInvoice() {
               </div>
               <div
                 className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]
-            focus-within:border-[#9277ff]"
+                border border-[#dfe3fa] rounded-[0.4rem]
+                focus-within:border-[#9277ff]"
               >
                 <input
                   type="text"
@@ -778,32 +792,40 @@ export default function NewInvoice() {
                   placeholder="Graphic Design"
                   {...register("description")}
                   className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
+                  font-bold leading-[1.5rem]
+                  tracking-[-0.25px]
+                  text-[#0c0e16] outline-none
+                  w-full"
                 />
               </div>
             </label>
             <span
               className="text-[1.8rem] font-bold
-          leading-[3.2rem] tracking-[-0.375px]
-          text-[#777f98] mb-[2.2rem]"
+              leading-[3.2rem] tracking-[-0.375px]
+              text-[#777f98] mb-[2.2rem]"
             >
               Item List
             </span>
-            <div className="mb-[4.8rem]">
+            <div
+              className="mb-[4.8rem]
+              md:mb-[1.8rem]"
+            >
               {fields.map((item, index) => {
                 const watchedQuantity = watch(`items.${index}.quantity`) || 0;
                 const watchedPrice = watch(`items.${index}.price`) || 0;
                 const itemTotal = watchedQuantity * watchedPrice;
                 return (
-                  <div key={item.id}>
+                  <div
+                    key={item.id}
+                    className="md:grid md:grid-cols-5
+                    md:gap-[1.6rem]"
+                  >
                     <label
                       htmlFor={`item-name-${index}`}
                       className="flex flex-col
-                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                      text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                      text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]
+                      md:col-span-2 md:mb-[unset]"
                     >
                       <div className="flex justify-between">
                         <span
@@ -823,8 +845,8 @@ export default function NewInvoice() {
                       </div>
                       <div
                         className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                    border border-[#dfe3fa] rounded-[0.4rem]
-                    focus-within:border-[#9277ff]"
+                        border border-[#dfe3fa] rounded-[0.4rem]
+                        focus-within:border-[#9277ff]"
                       >
                         <input
                           type="text"
@@ -844,7 +866,8 @@ export default function NewInvoice() {
                         htmlFor={`item-quantity-${index}`}
                         className="flex flex-col
                     text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                    text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                    text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]
+                    md:mb-[unset]"
                       >
                         <span
                           className={
@@ -885,7 +908,8 @@ export default function NewInvoice() {
                         htmlFor={`item-price-${index}`}
                         className="flex flex-col
                     text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                    text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]"
+                    text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]
+                    md:mb-[unset]"
                       >
                         <span
                           className={
@@ -936,7 +960,8 @@ export default function NewInvoice() {
                           className="pt-[1.8rem] pb-[1.5rem]
                       text-[1.5rem] font-bold leading-[1.5rem]
                       tracking-[-0.25px] text-[#888eb0]
-                      flex items-center gap-[5.5rem]"
+                      flex items-center gap-[5.5rem]
+                      md:gap-[4rem]"
                         >
                           <span>{itemTotal.toFixed(2)}</span>
                           <svg
@@ -964,11 +989,11 @@ export default function NewInvoice() {
             </div>
             <div
               className="flex justify-center
-          pt-[1.8rem] pb-[1.5rem]
-          bg-[#f9fafe] rounded-[2.4rem]
-          text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#7e88c3] mb-[2.4rem]
-          cursor-pointer"
+              pt-[1.8rem] pb-[1.5rem]
+              bg-[#f9fafe] rounded-[2.4rem]
+              text-[1.5rem] font-bold leading-[1.5rem]
+              tracking-[-0.25px] text-[#7e88c3] mb-[2.4rem]
+              cursor-pointer"
               onClick={() =>
                 append({
                   id: generateInvoiceId(),
@@ -1006,7 +1031,8 @@ export default function NewInvoice() {
             className="flex justify-between
             pt-[2.1rem] pb-[2.2rem] px-[2.4rem]
             gap-[0.8rem]
-            xl:pl-[4.8rem]"
+            md:px-[5.6rem]
+            "
           >
             <button
               type="button"

@@ -1,7 +1,8 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useState } from "react";
 import Delete from "../components/Delete";
+import InvoiceButtons from "../components/InvoiceButtons";
 
 export default function Invoice() {
   const { id } = useParams();
@@ -290,53 +291,11 @@ export default function Invoice() {
           </div>
         </div>
       </div>
-      <div
-        className="bg-white py-[2.1rem]
-        flex justify-center mt-[5.6rem] items-center"
-      >
-        <div
-          className="px-[2.4rem]
-          flex gap-[0.8rem]
-          text-[1.5rem] font-bold
-          leading-[1.5rem] tracking-[-0.25px]
-          text-white"
-        >
-          <Link
-            to={"edit"}
-            className="
-            pt-[1.8rem] pb-[1.5rem]
-            bg-[#f9fafe]
-            pl-[2.4rem] pr-[2.3rem]
-            rounded-[2.4rem]
-            text-[#7e88c3]
-            cursor-pointer"
-          >
-            Edit
-          </Link>
-          <button
-            className="
-            pt-[1.8rem] pb-[1.5rem]
-            bg-[#ec5757]
-            pl-[2.5rem] pr-[2.4rem]
-            rounded-[2.4rem]
-            cursor-pointer"
-            onClick={() => setShowDelete(true)}
-          >
-            Delete
-          </button>
-          <button
-            className="
-            pt-[1.8rem] pb-[1.5rem]
-            bg-[#7c5dfa]
-            pl-[2.7rem] pr-[2.8rem]
-            rounded-[2.4rem]
-            cursor-pointer"
-            onClick={() => handleMarkAsPaid(getInvoice.id)}
-          >
-            Mark as Paid
-          </button>
-        </div>
-      </div>
+      <InvoiceButtons
+        setShowDelete={setShowDelete}
+        handleMarkAsPaid={handleMarkAsPaid}
+        invoiceId={getInvoice.id}
+      />
       {showDelete && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <Delete invoiceId={getInvoice.id} setShowDelete={setShowDelete} />

@@ -5,6 +5,7 @@ interface IFilter {
 }
 
 interface IItems {
+  id: string;
   name: string;
   quantity: number;
   price: number;

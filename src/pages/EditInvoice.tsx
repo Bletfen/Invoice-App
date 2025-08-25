@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { schema } from "../yup/schema";
 import Invoice from "./Invoice";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { generateInvoiceId } from "../idGenerator";
 export default function EditInvoice() {
   const { data, setData } = useDataContext();
   const { formDate } = useFormDate();
@@ -96,6 +97,7 @@ export default function EditInvoice() {
         overflow-y-auto
         h-screen z-50
         "
+        onClick={() => navigate(-1)}
       >
         <div
           className="absolute
@@ -107,6 +109,7 @@ export default function EditInvoice() {
           top-29
           xl:top-0 xl:left-20
           xl:w-[71.9rem]"
+          onClick={(e) => e.stopPropagation()}
         >
           <div
             className="flex gap-[2.3rem]
@@ -888,7 +891,13 @@ export default function EditInvoice() {
           tracking-[-0.25px] text-[#7e88c3] mb-[2.4rem]
           cursor-pointer"
               onClick={() =>
-                append({ name: "", quantity: 1, price: 0, total: 0 })
+                append({
+                  id: generateInvoiceId(),
+                  name: "",
+                  quantity: 1,
+                  price: 0,
+                  total: 0,
+                })
               }
             >
               + Add New Item

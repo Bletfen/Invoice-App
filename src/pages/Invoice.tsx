@@ -32,9 +32,12 @@ export default function Invoice() {
   };
   return (
     <div
-      className="bg-[#f8f8fb]
+      className="
       relative min-h-screen flex flex-col
-      justify-between"
+      xl:max-w-[73rem]
+      xl:mx-auto
+      md:pb-[13.5rem]
+      xl:pb-[5.3rem]"
     >
       <div
         className="mt-[3.3rem]

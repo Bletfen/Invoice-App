@@ -6,6 +6,7 @@ import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "../yup/schema";
 import Invoices from "./Invoices";
+import { generateInvoiceId } from "../idGenerator";
 export default function NewInvoice() {
   const { setData } = useDataContext();
   const { formDate } = useFormDate();
@@ -18,15 +19,6 @@ export default function NewInvoice() {
 
   const goBack = () => {
     navigate("/");
-  };
-
-  const generateInvoiceId = (): string => {
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const randomLetters =
-      letters.charAt(Math.floor(Math.random() * letters.length)) +
-      letters.charAt(Math.floor(Math.random() * letters.length));
-    const randomNumbers = Math.floor(1000 + Math.random() * 9000);
-    return randomLetters + randomNumbers;
   };
 
   const calculatePaymentDue = (
@@ -90,7 +82,9 @@ export default function NewInvoice() {
         country: "",
       },
       description: "",
-      items: [{ name: "", quantity: 0, price: 0, total: 0 }],
+      items: [
+        { id: generateInvoiceId(), name: "", quantity: 0, price: 0, total: 0 },
+      ],
     },
     resolver: yupResolver(schema),
   });
@@ -123,6 +117,7 @@ export default function NewInvoice() {
         overflow-y-auto
         h-screen z-50
         "
+        onClick={() => navigate("/")}
       >
         <div
           className="absolute top-29 left-0
@@ -134,12 +129,16 @@ export default function NewInvoice() {
           transition-all duration-300
           top-29
           xl:top-0 xl:left-20
-          xl:w-[71.9rem]"
+          xl:w-[71.9rem]
+          md:pt-[5.9rem]
+          "
+          onClick={(e) => e.stopPropagation()}
         >
           <div
             className="flex gap-[2.3rem]
             items-center cursor-pointer
-            mb-[2.6rem] px-[2.4rem] xl:px-[4.8rem]"
+            mb-[2.6rem] px-[2.4rem] xl:px-[4.8rem]
+            md:hidden"
             onClick={goBack}
           >
             <svg
@@ -164,15 +163,17 @@ export default function NewInvoice() {
           </div>
           <h6
             className="text-[2.4rem]
-        font-bold leading-[3.2rem] tracking-[-0.5px]
-        mb-[2.2rem] px-[2.4rem] xl:px-[4.8rem]"
+            font-bold leading-[3.2rem] tracking-[-0.5px]
+            mb-[2.2rem] px-[2.4rem] xl:px-[4.8rem]
+            md:px-[5.6rem] md:mb-[4.6rem]"
           >
             New Invoice
           </h6>
           <form
             id="newInvoiceForm"
             className="flex flex-col px-[2.4rem]
-            xl:px-[4.8rem]"
+            xl:px-[4.8rem]
+            md:px-[5.6rem]"
           >
             <span
               className="text-[1.5rem]
@@ -224,13 +225,16 @@ export default function NewInvoice() {
             </label>
             <div
               className="grid grid-cols-2 gap-[2.3rem]
-          mb-[2.5rem]"
+              mb-[2.5rem]
+              md:grid-cols-3
+              md:mb-[4.9rem]
+              "
             >
               <label
                 htmlFor="city"
                 className="flex flex-col
-            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3] gap-[0.9rem]"
+                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                text-[#7e88c3] gap-[0.9rem]"
               >
                 <div className="flex justify-between">
                   <span
@@ -306,47 +310,49 @@ export default function NewInvoice() {
                   />
                 </div>
               </label>
-            </div>
-            <label
-              htmlFor="country"
-              className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[4.1rem]"
-            >
-              <div className="flex justify-between">
-                <span
-                  className={
-                    errors.senderAddress?.country
-                      ? "text-[#ec5757]"
-                      : "text-[#7e88c3]"
-                  }
-                >
-                  Country
-                </span>
-                {errors.senderAddress?.country && (
-                  <span className="text-[1rem] text-[#ec5757]">
-                    {errors.senderAddress.country.message}
-                  </span>
-                )}
-              </div>
-              <div
-                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]
-            focus-within:border-[#9277ff]"
+              <label
+                htmlFor="country"
+                className="flex flex-col
+                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
+                text-[#7e88c3] gap-[0.9rem] mb-[4.1rem]
+                col-span-2 md:col-span-1
+                md:mb-[unset]"
               >
-                <input
-                  type="text"
-                  id="country"
-                  placeholder="United Kingdom"
-                  {...register("senderAddress.country")}
-                  className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-                />
-              </div>
-            </label>
+                <div className="flex justify-between">
+                  <span
+                    className={
+                      errors.senderAddress?.country
+                        ? "text-[#ec5757]"
+                        : "text-[#7e88c3]"
+                    }
+                  >
+                    Country
+                  </span>
+                  {errors.senderAddress?.country && (
+                    <span className="text-[1rem] text-[#ec5757]">
+                      {errors.senderAddress.country.message}
+                    </span>
+                  )}
+                </div>
+                <div
+                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
+              border border-[#dfe3fa] rounded-[0.4rem]
+              focus-within:border-[#9277ff]"
+                >
+                  <input
+                    type="text"
+                    id="country"
+                    placeholder="United Kingdom"
+                    {...register("senderAddress.country")}
+                    className="text-[1.5rem]
+                    font-bold leading-[1.5rem]
+                    tracking-[-0.25px]
+                    text-[#0c0e16] outline-none
+                    w-full"
+                  />
+                </div>
+              </label>
+            </div>
 
             <span
               className="text-[1.5rem]
@@ -964,7 +970,13 @@ export default function NewInvoice() {
           tracking-[-0.25px] text-[#7e88c3] mb-[2.4rem]
           cursor-pointer"
               onClick={() =>
-                append({ name: "", quantity: 1, price: 0, total: 0 })
+                append({
+                  id: generateInvoiceId(),
+                  name: "",
+                  quantity: 1,
+                  price: 0,
+                  total: 0,
+                })
               }
             >
               + Add New Item
@@ -987,12 +999,14 @@ export default function NewInvoice() {
                 "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%)",
             }}
             className="w-full h-[6.4rem]
+            md:hidden
           "
           ></div>
           <div
-            className="flex justify-end
-        pt-[2.1rem] pb-[2.2rem] pr-[2.4rem]
-        gap-[0.8rem]"
+            className="flex justify-between
+            pt-[2.1rem] pb-[2.2rem] px-[2.4rem]
+            gap-[0.8rem]
+            xl:pl-[4.8rem]"
           >
             <button
               type="button"
@@ -1001,36 +1015,38 @@ export default function NewInvoice() {
           bg-[#f9fafe] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-[#7e88c3]
-          cursor-pointer"
+          cursor-pointer self-start"
               onClick={goBack}
             >
               Discard
             </button>
-            <button
-              type="button"
-              className="flex items-center
+            <div className="flex gap-[0.8rem]">
+              <button
+                type="button"
+                className="flex items-center
           pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
           bg-[#373b53] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-[#888eb0]
           cursor-pointer"
-              onClick={handleSaveAsDraft}
-            >
-              Save as Draft
-            </button>
-            <button
-              type="button"
-              form="newInvoiceForm"
-              className="flex items-center
+                onClick={handleSaveAsDraft}
+              >
+                Save as Draft
+              </button>
+              <button
+                type="button"
+                form="newInvoiceForm"
+                className="flex items-center
           pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
           bg-[#7c5dfa] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-white
           cursor-pointer"
-              onClick={handleSaveAndSend}
-            >
-              Save & Send
-            </button>
+                onClick={handleSaveAndSend}
+              >
+                Save & Send
+              </button>
+            </div>
           </div>
         </div>
       </div>

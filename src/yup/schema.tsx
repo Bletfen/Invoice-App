@@ -30,6 +30,7 @@ export const schema = yup.object({
     .array()
     .of(
       yup.object({
+        id: yup.string().required(),
         name: yup
           .string()
           .required("can't be empty")

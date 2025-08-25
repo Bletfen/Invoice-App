@@ -53,6 +53,7 @@ type Inputs = {
   items: itemsInput[];
 };
 type itemsInput = {
+  id: string;
   name: string;
   quantity: number;
   price: number;

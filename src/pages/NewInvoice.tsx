@@ -128,7 +128,7 @@ export default function NewInvoice() {
           md:rounded-r-[2rem]
           transition-all duration-300
           top-29
-          xl:top-0 xl:left-20
+          xl:top-0 xl:left-30
           xl:w-[71.9rem]
           md:pt-[5.9rem]
           "

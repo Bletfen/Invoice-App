@@ -8,7 +8,7 @@ export default function Header() {
         flex justify-between
         pr-[2.4rem] xl:flex-col xl:top-0
         xl:p-[unset] xl:pb-[2.4rem]
-        xl:rounded-r-[2rem]
+        xl:rounded-r-[3rem]
         transition-all duration-300
         relative z-[100]
         ${isEditPage ? "xl:h-full" : "xl:min-h-screen"}`}
@@ -20,6 +20,9 @@ export default function Header() {
           viewBox="0 0 72 72"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className="w-[7.2rem] h-[7.2rem]
+            md:w-[8rem] md:h-[8rem]
+            xl:w-[10.3rem] xl:h-[10.3rem]"
         >
           <path
             d="M0 0H52C63.0457 0 72 8.95431 72 20V52C72 63.0457 63.0457 72 52 72H0V0Z"

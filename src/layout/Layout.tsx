@@ -12,7 +12,6 @@ export default function Layout() {
       <Header />
       <main
         className="
-        bg-[#f8f8f8]
         w-full xl:overflow-auto"
       >
         <Outlet />

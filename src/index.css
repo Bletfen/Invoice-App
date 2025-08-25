@@ -15,4 +15,9 @@ html {
 body {
   font-family: "League Spartan", sans-serif;
   background-color: #f8f8f8;
+  transition: all 0.3s ease;
+}
+
+html.dark body {
+  background-color: #141625;
 }

@@ -45,13 +45,17 @@ export default function ({
         <h1
           className="text-[2.4rem] font-bold tracking-[-0.75px]
             text-invoiceHeaderText-light
-            md:text-[3.6rem] md:tracking-[-1.125px]"
+            md:text-[3.6rem] md:tracking-[-1.125px]
+            transition-all duration-300
+            dark:text-white"
         >
           Invoices
         </h1>
         <p
           className="text-[1.3rem] font-[500] leading-[1.5rem]
-            tracking-[-0.1px] text-[#888eb0]"
+            tracking-[-0.1px] text-[#888eb0]
+            transition-all duration-300
+            dark:text-[#dfe3fa]"
         >
           {renderInvoiceCount()}
         </p>
@@ -69,7 +73,8 @@ export default function ({
           <p
             className="text-[1.5rem] font-bold tracking-[-0.25px]
               leading-[1.5rem] text-invoiceHeaderText-light
-              flex gap-[0.3rem]
+              flex gap-[0.3rem] transition-all duration-300
+              dark:text-white
               "
           >
             Filter <span className="hidden md:block">by status</span>
@@ -103,6 +108,8 @@ export default function ({
               bg-white top-20 -left-10 rounded-[0.8rem]
               shadow-[0_10px_20px_0_rgba(72,84,159,0.25)]
               flex flex-col gap-[1.5rem]
+              transition-all duration-300
+              dark:bg-[#252945]
               "
           >
             {filterWords.map((item) => (
@@ -112,7 +119,9 @@ export default function ({
                 flex gap-[1.3rem] items-center
                 text-invoiceHeaderText-light
                 text-[1.5rem] font-bold leading-[1.5rem]
-                tracking-[-0.25px]"
+                tracking-[-0.25px]
+                transition-all duration-300
+                dark:text-white"
               >
                 <input
                   type="checkbox"

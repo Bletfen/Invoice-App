@@ -45,6 +45,7 @@ export default function Invoices() {
               md:items-center xl:p-[unset] xl:px-[2.4rem] xl:py-[1.6rem]
               transition-all duration-300 border border-transparent
               hover:border-[#7c5dfa]
+              transition-all duration-300 dark:bg-[#1e2139]
               "
               >
                 <div
@@ -60,7 +61,9 @@ export default function Invoices() {
                       className="text-[1.5rem]
                     font-bold leading-[1.5rem]
                     tracking-[-0.25px]
-                    text-invoiceHeaderText-light"
+                    text-invoiceHeaderText-light
+                    transition-all duration-300
+                    text-white"
                     >
                       <span className="text-[#7e88c3]">#</span>
                       {item.id}
@@ -70,9 +73,16 @@ export default function Invoices() {
                     font-[500] leading-[1.5rem]
                     tracking-[-0.1px]
                     text-invoicePText-light
-                    hidden md:block"
+                    hidden md:block
+                    transition-all duration-300 dark:text-[#dfe3fa]
+                    "
                     >
-                      <span className="text-[#888eb0]">Due </span>
+                      <span
+                        className="text-[#888eb0]
+                        transition-all duration-300 dark:text-[#dfe3fa]"
+                      >
+                        Due{" "}
+                      </span>
                       {formDate(item.createdAt)}
                     </p>
                   </div>
@@ -80,7 +90,8 @@ export default function Invoices() {
                     className="text-[1.3rem]
                     font-[500] leading-[1.5rem]
                     tracking-[-0.1px]
-                    text-invoicePText-light"
+                    text-invoicePText-light
+                    transition-all duration-300 dark:text-white"
                   >
                     {item.clientName}
                   </span>
@@ -101,32 +112,39 @@ export default function Invoices() {
                     font-[500] leading-[1.5rem]
                     tracking-[-0.1px]
                     text-invoicePText-light
-                    md:hidden"
+                    md:hidden
+                    transition-all duration-300 dark:text-[#dfe3fa]"
                     >
-                      <span className="text-[#888eb0]">Due </span>
+                      <span
+                        className="text-[#888eb0]
+                        transition-all duration-300 dark:text-[#dfe3fa]"
+                      >
+                        Due{" "}
+                      </span>
                       {formDate(item.createdAt)}
                     </p>
                     <p
                       className="text-[1.5rem]
                     font-bold leading-[2.4rem]
                     tracking-[-0.25px]
-                    text-invoiceHeaderText-light"
+                    text-invoiceHeaderText-light
+                    transition-all duration-300 dark:text-white"
                     >
                       £{item.total.toLocaleString()}
                     </p>
                   </div>
                   <div
-                    className={`px-[3rem] pt-[1.4rem] pb-[1.1rem]
+                    className={`pt-[1.4rem] pb-[1.1rem]
                   rounded-[0.6rem]
                   text-[1.5rem] font-bold leading-[1.5rem]
                   tracking-[-0.25px]
-                  flex items-center gap-[0.8rem]
-                  md:mr-[2rem] ${
+                  flex items-center justify-center gap-[0.8rem]
+                  md:mr-[2rem] w-[10.4rem] ${
                     item.status.toLowerCase() === "paid"
                       ? "bg-paidButton-light/5 text-paidButton-light"
                       : item.status.toLowerCase() === "pending"
                       ? "bg-pendingButton-light/5 text-pendingButton-light"
-                      : "bg-[#373b53]/5 text-header-light"
+                      : "bg-[#f8f8fb]/90 text-[#373b53]"
                   }`}
                   >
                     <div

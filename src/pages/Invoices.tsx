@@ -25,7 +25,10 @@ export default function Invoices() {
       className="px-[2.4rem]
       pb-[10.5rem] relative
       min-h-screen
-      md:px-[4.8rem]"
+      md:px-[4.8rem]
+      xl:max-w-[73rem]
+      xl:mx-auto
+      xl:p-[unset]"
     >
       <Filter filter={filter} setFilter={setFilter} />
       {data.length === 0 ? (
@@ -38,14 +41,20 @@ export default function Invoices() {
                 className="pt-[2.4rem] pb-[2.2rem]
               px-[2.4rem] bg-white rounded-[0.8rem]
               shadow-[0_10px_10px_-10px_rgba(72,84,159,0.1)]
+              md:flex md:justify-between
+              md:items-center xl:p-[unset] xl:px-[2.4rem] xl:py-[1.6rem]
+              transition-all duration-300
               "
               >
                 <div
                   className="flex
-                justify-between
-                mb-[2.4rem]"
+                justify-between md:justify-start
+                md:flex md:gap-[5.1rem]
+                mb-[2.4rem]
+                md:mb-[unset]
+                "
                 >
-                  <div>
+                  <div className="flex gap-[2.8rem]">
                     <h2
                       className="text-[1.5rem]
                     font-bold leading-[1.5rem]
@@ -60,7 +69,7 @@ export default function Invoices() {
                     font-[500] leading-[1.5rem]
                     tracking-[-0.1px]
                     text-invoicePText-light
-                    hidden"
+                    hidden md:block"
                     >
                       <span className="text-[#888eb0]">Due </span>
                       {formDate(item.createdAt)}
@@ -78,14 +87,20 @@ export default function Invoices() {
                 <div
                   className="flex
                 items-center
-                justify-between"
+                justify-between
+                md:justify-start
+                "
                 >
-                  <div className="flex flex-col gap-[0.9rem]">
+                  <div
+                    className="flex flex-col gap-[0.9rem]
+                  md:mr-[4rem]"
+                  >
                     <p
                       className="text-[1.3rem]
                     font-[500] leading-[1.5rem]
                     tracking-[-0.1px]
-                    text-invoicePText-light"
+                    text-invoicePText-light
+                    md:hidden"
                     >
                       <span className="text-[#888eb0]">Due </span>
                       {formDate(item.createdAt)}
@@ -96,7 +111,7 @@ export default function Invoices() {
                     tracking-[-0.25px]
                     text-invoiceHeaderText-light"
                     >
-                      £{item.total}
+                      £{item.total.toLocaleString()}
                     </p>
                   </div>
                   <div
@@ -104,7 +119,8 @@ export default function Invoices() {
                   rounded-[0.6rem]
                   text-[1.5rem] font-bold leading-[1.5rem]
                   tracking-[-0.25px]
-                  flex items-center gap-[0.8rem] ${
+                  flex items-center gap-[0.8rem]
+                  md:mr-[2rem] ${
                     item.status.toLowerCase() === "paid"
                       ? "bg-paidButton-light/5 text-paidButton-light"
                       : item.status.toLowerCase() === "pending"
@@ -124,6 +140,16 @@ export default function Invoices() {
                     ></div>
                     {item.status}
                   </div>
+                  <svg
+                    width="7"
+                    height="10"
+                    viewBox="0 0 7 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="hidden md:block"
+                  >
+                    <path d="M1 1L5 5L1 9" stroke="#7C5DFA" stroke-width="2" />
+                  </svg>
                 </div>
               </div>
             </Link>

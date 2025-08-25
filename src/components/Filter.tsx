@@ -12,6 +12,11 @@ export default function ({
   const { data } = useDataContext();
   const filterWords = ["Draft", "Pending", "Paid"];
   const [showFilter, setShowFilter] = useState<boolean>(false);
+  const renderInvoiceCount = () => {
+    if (data.length === 0) return <span>No invoices</span>;
+    if (data.length === 1) return <span>1 invoice</span>;
+    return <span>{data.length} invoices</span>;
+  };
   return (
     <div
       className="flex justify-between
@@ -28,7 +33,7 @@ export default function ({
           className="text-[1.3rem] font-[500] leading-[1.5rem]
             tracking-[-0.1px] text-[#888eb0]"
         >
-          {data.length} invoices
+          {renderInvoiceCount()}
         </span>
       </div>
       <div

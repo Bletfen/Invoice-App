@@ -133,13 +133,13 @@ export default function NewInvoice() {
           md:rounded-r-[2rem]
           transition-all duration-300
           top-29
-          xl:top-0 xl:left-29
+          xl:top-0 xl:left-20
           xl:w-[71.9rem]"
         >
           <div
             className="flex gap-[2.3rem]
             items-center cursor-pointer
-            mb-[2.6rem] px-[2.4rem]"
+            mb-[2.6rem] px-[2.4rem] xl:px-[4.8rem]"
             onClick={goBack}
           >
             <svg
@@ -165,11 +165,15 @@ export default function NewInvoice() {
           <h6
             className="text-[2.4rem]
         font-bold leading-[3.2rem] tracking-[-0.5px]
-        mb-[2.2rem] px-[2.4rem]"
+        mb-[2.2rem] px-[2.4rem] xl:px-[4.8rem]"
           >
             New Invoice
           </h6>
-          <form id="newInvoiceForm" className="flex flex-col px-[2.4rem]">
+          <form
+            id="newInvoiceForm"
+            className="flex flex-col px-[2.4rem]
+            xl:px-[4.8rem]"
+          >
             <span
               className="text-[1.5rem]
           font-bold leading-[1.5rem]

@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useState } from "react";
 import Delete from "../components/Delete";
+
 export default function Invoice() {
   const { id } = useParams();
   const navigate = useNavigate();

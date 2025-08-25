@@ -24,7 +24,8 @@ export default function Invoices() {
     <div
       className="px-[2.4rem]
       pb-[10.5rem] relative
-      min-h-screen"
+      min-h-screen
+      md:px-[4.8rem]"
     >
       <Filter filter={filter} setFilter={setFilter} />
       {data.length === 0 ? (

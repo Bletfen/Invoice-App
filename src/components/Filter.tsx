@@ -13,32 +13,52 @@ export default function ({
   const filterWords = ["Draft", "Pending", "Paid"];
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const renderInvoiceCount = () => {
-    if (data.length === 0) return <span>No invoices</span>;
-    if (data.length === 1) return <span>1 invoice</span>;
-    return <span>{data.length} invoices</span>;
+    if (data.length === 0)
+      return (
+        <span>
+          <span className="hidden md:inline">There are </span>No invoices
+        </span>
+      );
+    if (data.length === 1)
+      return (
+        <span>
+          <span className="hidden md:inliine">There are </span>1
+          <span className="hidden md:inline"> total</span> invoice
+        </span>
+      );
+    return (
+      <span>
+        <span className="hidden md:inline">There are </span>
+        {data.length}
+        <span className="hidden md:inline"> total</span> invoices
+      </span>
+    );
   };
   return (
     <div
       className="flex justify-between
-        pb-[3.2rem] pt-[3.6rem]"
+        pb-[3.2rem] pt-[3.6rem]
+        md:pt-[6.2rem] md:pb-[5.5rem]"
     >
       <div className="flex flex-col gap-[0.3rem]">
         <h1
           className="text-[2.4rem] font-bold tracking-[-0.75px]
-            text-invoiceHeaderText-light"
+            text-invoiceHeaderText-light
+            md:text-[3.6rem] md:tracking-[-1.125px]"
         >
           Invoices
         </h1>
-        <span
+        <p
           className="text-[1.3rem] font-[500] leading-[1.5rem]
             tracking-[-0.1px] text-[#888eb0]"
         >
           {renderInvoiceCount()}
-        </span>
+        </p>
       </div>
       <div
         className="flex items-center
-        gap-[1.9rem] relative"
+        gap-[1.9rem] relative
+        "
       >
         <div
           className="flex gap-[1.2rem]
@@ -48,9 +68,10 @@ export default function ({
           <p
             className="text-[1.5rem] font-bold tracking-[-0.25px]
               leading-[1.5rem] text-invoiceHeaderText-light
-              flex gap-[0.3rem]"
+              flex gap-[0.3rem]
+              "
           >
-            Filter <span className="hidden xl:block">by status</span>
+            Filter <span className="hidden md:block">by status</span>
           </p>
           <svg
             width="10"
@@ -115,7 +136,6 @@ export default function ({
           </div>
         ) : null}
         <Link
-          // ამაზე გავჩერდი
           to={"create-new-invoice"}
           className="flex
             py-[0.6rem] pl-[0.6rem] pr-[1.5rem]
@@ -123,7 +143,8 @@ export default function ({
             text-white text-[1.5rem] font-bold
             leading-[1.5rem] tracking-[-0.25px]
             items-center gap-[0.8rem]
-            cursor-pointer"
+            cursor-pointer
+            transition-all duration-300"
         >
           <div
             className="bg-white rounded-full w-[3.2rem] h-[3.2rem]
@@ -142,7 +163,9 @@ export default function ({
               />
             </svg>
           </div>
-          New
+          <p className="flex gap-[0.4rem]">
+            New<span className="hidden md:block">Invoice</span>
+          </p>
         </Link>
       </div>
     </div>

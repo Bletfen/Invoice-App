@@ -5,8 +5,12 @@ export default function Nothing() {
         justify-center items-center
         mt-[10.2rem]"
     >
-      <div className="">
-        <img src="/assets/illustration-empty.svg" alt="illustration-empty" />
+      <div>
+        <img
+          src="/assets/illustration-empty.svg"
+          alt="illustration-empty"
+          className="md:w-[24.1rem] md:h-[20rem]"
+        />
       </div>
       <div
         className="flex flex-col gap-[2.3rem]

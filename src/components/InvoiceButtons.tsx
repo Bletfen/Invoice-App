@@ -12,14 +12,17 @@ export default function InvoiceButtons({
   return (
     <div
       className="bg-white py-[2.1rem]
-        flex justify-center mt-[5.6rem] items-center"
+        flex justify-center mt-[5.6rem] items-center
+        md:mt-[unset] md:py-[unset]
+        "
     >
       <div
         className="px-[2.4rem]
           flex gap-[0.8rem]
           text-[1.5rem] font-bold
           leading-[1.5rem] tracking-[-0.25px]
-          text-white"
+          text-white
+          md:px-[unset]"
       >
         <Link
           to={"edit"}

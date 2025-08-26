@@ -69,7 +69,8 @@ export default function Invoice() {
             className="text-[1.5rem] text-invoiceHeaderText-light
             font-bold leading-[1.5rem] tracking-[-0.25px]
             group-hover:text-[#7e88c3]
-            transition-all duration-300"
+            transition-all duration-300
+            dark:text-white"
           >
             Go back
           </span>

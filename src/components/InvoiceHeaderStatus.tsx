@@ -15,6 +15,8 @@ export default function InvoiceHeaderStatus({
           md:flex md:justify-between
           md:items-center
           md:py-[2rem] md:px-[3.2rem]
+          transition-all duration-300
+          dark:bg-[#1e2139]
         "
     >
       <div
@@ -25,7 +27,8 @@ export default function InvoiceHeaderStatus({
         <span
           className="
             text-[1.3rem] font-[500] leading-[1.5rem]
-            tracking-[-0.1px] text-[#858bb2]"
+            tracking-[-0.1px] text-[#858bb2]
+            transition-all duration-300 dark:text-[#dfe3fa]"
         >
           Status
         </span>
@@ -39,7 +42,7 @@ export default function InvoiceHeaderStatus({
                       ? "bg-paidButton-light/5 text-paidButton-light"
                       : getInvoice.status.toLowerCase() === "pending"
                       ? "bg-pendingButton-light/5 text-pendingButton-light"
-                      : "bg-[#373b53]/5 text-header-light"
+                      : "bg-[#f8f8fb]/90 text-[#373b53]"
                   }`}
         >
           <div

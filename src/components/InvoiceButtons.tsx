@@ -14,6 +14,8 @@ export default function InvoiceButtons({
       className="bg-white py-[2.1rem]
         flex justify-center mt-[5.6rem] items-center
         md:mt-[unset] md:py-[unset]
+        transition-all duration-300
+        dark:bg-[#1e2139]
         "
     >
       <div
@@ -34,7 +36,11 @@ export default function InvoiceButtons({
             text-[#7e88c3]
             cursor-pointer
             transition-all duration-300
-            hover:bg-[#dfe3fa]"
+            hover:bg-[#dfe3fa]
+            dark:bg-[#252945]
+            dark:text-[#dfe3fa]
+            hover:dark:bg-white
+            hover:dark:text-[#7e88c3]"
         >
           Edit
         </Link>

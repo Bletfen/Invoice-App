@@ -6,7 +6,7 @@ import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "../yup/schema";
 import Invoices from "./Invoices";
-import { generateInvoiceId } from "../idGenerator";
+import { generateInvoiceId } from "../seperateFuncs";
 export default function NewInvoice() {
   const { setData } = useDataContext();
   const { formDate } = useFormDate();

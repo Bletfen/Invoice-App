@@ -7,6 +7,7 @@
   --color-paidButton-light: #33d69f;
   --color-pendingButton-light: #ff8f00;
 }
+@custom-variant dark (&:where(.dark, .dark *));
 
 html {
   font-size: 62.5%;

@@ -18,7 +18,10 @@ export const schema = yup.object({
   clientAddress: yup.object({
     street: yup.string().required("can't be empty"),
     city: yup.string().required("can't be empty"),
-    postCode: yup.string().required("can't be empty"),
+    postCode: yup
+      .string()
+      .required("can't be empty")
+      .matches(/^\d{4,6}$/, "Invalid postal code"),
     country: yup.string().required("can't be empty"),
   }),
   description: yup
@@ -30,7 +33,7 @@ export const schema = yup.object({
     .array()
     .of(
       yup.object({
-        id: yup.string().required(),
+        id: yup.string(),
         name: yup
           .string()
           .required("can't be empty")

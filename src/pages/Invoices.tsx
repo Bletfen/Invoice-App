@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import Filter from "../components/Filter";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useState } from "react";
@@ -175,6 +175,7 @@ export default function Invoices() {
           ))}
         </div>
       )}
+      <Outlet />
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
-import { useForm, type SubmitHandler, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { schema } from "../yup/schema";
-import Invoice from "./Invoice";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { generateInvoiceId } from "../idGenerator";
+import { generateInvoiceId } from "../seperateFuncs";
+import Input from "../components/Input";
+import PaymentTerms from "../components/PaymentTerms";
 export default function EditInvoice() {
   const { data, setData } = useDataContext();
   const { formDate } = useFormDate();
@@ -14,8 +15,20 @@ export default function EditInvoice() {
   const [isOpenNetDay, setIsOpenNetDay] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedPaymentTerms, setSelectedPaymentTerms] = useState<number>(30);
+
   const { id } = useParams();
+  const location = useLocation();
+  const isEdit = location.pathname.includes("/edit");
+  console.log(isEdit);
+  const invoice = data.find((item) => item.id === id);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isEdit && !invoice) {
+      navigate("/");
+    }
+  }, [isEdit, invoice, navigate]);
+
   const goBack = () => {
     navigate(-1);
   };
@@ -30,37 +43,59 @@ export default function EditInvoice() {
     return dueDate.toISOString().split("T")[0];
   };
 
-  const invoice = data.find((item) => item.id === id);
-  if (!invoice) {
-    navigate("/");
-    return null;
-  }
+  const defaultInvoiceValues = invoice
+    ? {
+        senderAddress: invoice.senderAddress,
+        clientName: invoice.clientName,
+        clientEmail: invoice.clientEmail,
+        clientAddress: invoice.clientAddress,
+        description: invoice.description,
+        items: invoice.items,
+      }
+    : {
+        senderAddress: { street: "", city: "", postCode: "", country: "" },
+        clientName: "",
+        clientEmail: "",
+        clientAddress: { street: "", city: "", postCode: "", country: "" },
+        description: "",
+        items: [],
+      };
+
   const updateInvoice = (id: string, updated: IInvoice) => {
     setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
   };
-  const onSubmit: SubmitHandler<Inputs> = (values) => {
-    if (!invoice) return;
+  const onSubmit = (values: Inputs, status: "Paid" | "Pending" | "Draft") => {
     const newTotal = values.items.reduce(
       (sum, item) => sum + item.quantity * item.price,
       0
     );
-    const invoiceDate = selectedDate || invoice.createdAt;
+    const invoiceDate =
+      selectedDate ||
+      invoice?.createdAt ||
+      new Date().toISOString().split("T")[0];
     const paymentDue = calculatePaymentDue(invoiceDate, selectedPaymentTerms);
-    const updatedInvoice: IInvoice = {
-      ...invoice,
-      senderAddress: values.senderAddress,
+
+    const newInvoice: IInvoice = {
+      id: invoice?.id || generateInvoiceId(),
+      createdAt: invoiceDate,
+      paymentDue: paymentDue,
+      description: values.description,
+      paymentTerms: selectedPaymentTerms,
       clientName: values.clientName,
       clientEmail: values.clientEmail,
+      status: status,
+      senderAddress: values.senderAddress,
       clientAddress: values.clientAddress,
-      description: values.description,
       items: values.items,
       total: newTotal,
-      createdAt: selectedDate || invoice.createdAt,
-      paymentTerms: selectedPaymentTerms,
-      paymentDue: paymentDue,
     };
-    updateInvoice(invoice.id, updatedInvoice);
-    navigate(-1);
+    if (isEdit && invoice) {
+      updateInvoice(invoice.id, newInvoice);
+      navigate(-1);
+    } else {
+      setData((prev) => [newInvoice, ...prev]);
+      navigate("/");
+    }
   };
 
   const {
@@ -70,38 +105,44 @@ export default function EditInvoice() {
     watch,
     formState: { errors },
   } = useForm<Inputs>({
-    defaultValues: {
-      senderAddress: invoice.senderAddress,
-      clientName: invoice.clientName,
-      clientEmail: invoice.clientEmail,
-      clientAddress: invoice.clientAddress,
-      description: invoice.description,
-      items: invoice.items,
-    },
+    defaultValues: defaultInvoiceValues,
     resolver: yupResolver(schema),
   });
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
   });
-  const paymentTermsArray: number[] = [1, 7, 14, 30];
-  const handlePaymentTermSelect = (terms: number) => {
-    setSelectedPaymentTerms(terms);
-    setIsOpenNetDay(false);
+
+  const handleSaveAsDraft = () => {
+    handleSubmit((values) => onSubmit(values, "Draft"))();
   };
+
+  const handleSaveAndSend = () => {
+    handleSubmit((values) => onSubmit(values, "Pending"))();
+  };
+
+  const handleSaveChanges = () => {
+    const currentStatus = invoice?.status || "Pending";
+    handleSubmit((values) => onSubmit(values, currentStatus))();
+  };
+
   return (
     <>
-      <Invoice />
       <div
         className="fixed w-full bg-black/50 inset-0
         overflow-y-auto
         h-screen z-50
         "
-        onClick={() => navigate(-1)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            navigate(-1);
+          }
+        }}
       >
         <div
           className="absolute
           bg-white pt-[3.3rem]
+          dark:bg-[#141625]
           w-full
           min-h-screen md:w-[61.6rem]
           md:rounded-r-[2rem]
@@ -109,8 +150,8 @@ export default function EditInvoice() {
           top-29
           xl:top-0 xl:left-32
           xl:w-[71.9rem]
-          md:pt-[5.9rem]"
-          onClick={(e) => e.stopPropagation()}
+          md:pt-[5.9rem]
+          "
         >
           <div
             className="flex gap-[2.3rem]
@@ -134,7 +175,8 @@ export default function EditInvoice() {
             </svg>
             <span
               className="text-[1.5rem] text-invoiceHeaderText-light
-            font-bold leading-[1.5rem] tracking-[-0.25px]"
+            font-bold leading-[1.5rem] tracking-[-0.25px]
+            transition-all duration-300 dark:text-white"
             >
               Go back
             </span>
@@ -144,13 +186,14 @@ export default function EditInvoice() {
             font-bold leading-[3.2rem] tracking-[-0.5px]
             mb-[2.2rem] px-[2.4rem]
             md:px-[5.6rem]
-            md:mb-[4.6rem]"
+            md:mb-[4.6rem]
+            transition-all duration-300 dark:text-white"
           >
-            Edit #{invoice?.id}
+            Edit <span className="text-[#888eb0]">#</span>
+            {invoice?.id || "New Invoice"}
           </h6>
           <form
             id="editInvoiceForm"
-            onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col px-[2.4rem]
             md:px-[5.6rem]"
           >
@@ -162,169 +205,42 @@ export default function EditInvoice() {
             >
               Bill From
             </span>
-            <label
-              htmlFor="address"
-              className="flex flex-col
-              text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-              text-[#7e88c3]
-              gap-[0.9rem] mb-[2.5rem]"
-            >
-              <div className="flex justify-between">
-                <span
-                  className={
-                    errors.senderAddress?.street
-                      ? "text-[#ec5757]"
-                      : "text-[#7e88c3]"
-                  }
-                >
-                  Street Address
-                </span>
-                {errors.senderAddress?.street && (
-                  <span className="text-[1rem] text-[#ec5757]">
-                    {errors.senderAddress.street.message}
-                  </span>
-                )}
-              </div>
-              <div
-                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                border border-[#dfe3fa] rounded-[0.4rem]"
-              >
-                <input
-                  type="text"
-                  id="address"
-                  defaultValue={invoice.senderAddress.street}
-                  {...register("senderAddress.street")}
-                  className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-                />
-              </div>
-            </label>
+            <Input
+              id={"senderAddress.street"}
+              label={"Street Address"}
+              register={register}
+              errors={errors.senderAddress?.street}
+              errorsMessage={errors.senderAddress?.street?.message}
+              defaultValue={invoice?.senderAddress.street || ""}
+            />
             <div
               className="grid grid-cols-2 gap-[2.3rem]
               mb-[2.5rem] md:grid-cols-3 md:mb-[4.9rem]"
             >
-              <label
-                htmlFor="city"
-                className="flex flex-col
-                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                text-[#7e88c3] gap-[0.9rem]"
-              >
-                <div className="flex justify-between">
-                  <span
-                    className={
-                      errors.senderAddress?.city
-                        ? "text-[#ec5757]"
-                        : "text-[#7e88c3]"
-                    }
-                  >
-                    City
-                  </span>
-                  {errors.senderAddress?.city && (
-                    <span className="text-[1rem] text-[#ec5757]">
-                      {errors.senderAddress.city.message}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                  border border-[#dfe3fa] rounded-[0.4rem]"
-                >
-                  <input
-                    type="text"
-                    id="city"
-                    defaultValue={invoice.senderAddress.city}
-                    {...register("senderAddress.city")}
-                    className="text-[1.5rem]
-                    font-bold leading-[1.5rem]
-                    tracking-[-0.25px]
-                    text-[#0c0e16] outline-none
-                    w-full"
-                  />
-                </div>
-              </label>
-              <label
-                htmlFor="postCode"
-                className="flex flex-col
-                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                text-[#7e88c3] gap-[0.9rem]"
-              >
-                <div className="flex justify-between">
-                  <span
-                    className={
-                      errors.senderAddress?.postCode
-                        ? "text-[#ec5757]"
-                        : "text-[#7e88c3]"
-                    }
-                  >
-                    Post Code
-                  </span>
-                  {errors.senderAddress?.postCode && (
-                    <span className="text-[1rem] text-[#ec5757]">
-                      {errors.senderAddress.postCode.message}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-              border border-[#dfe3fa] rounded-[0.4rem]"
-                >
-                  <input
-                    type="text"
-                    id="postCode"
-                    defaultValue={invoice.senderAddress.postCode}
-                    {...register("senderAddress.postCode")}
-                    className="text-[1.5rem]
-                font-bold leading-[1.5rem]
-                tracking-[-0.25px]
-                text-[#0c0e16] outline-none
-                w-full"
-                  />
-                </div>
-              </label>
-              <label
-                htmlFor="country"
-                className="flex flex-col
-                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                text-[#7e88c3] gap-[0.9rem] mb-[4.1rem]
-                col-span-2 md:col-span-1
-                md:mb-[unset]"
-              >
-                <div className="flex justify-between">
-                  <span
-                    className={
-                      errors.senderAddress?.country
-                        ? "text-[#ec5757]"
-                        : "text-[#7e88c3]"
-                    }
-                  >
-                    Country
-                  </span>
-                  {errors.senderAddress?.country && (
-                    <span className="text-[1rem] text-[#ec5757]">
-                      {errors.senderAddress.country.message}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                  border border-[#dfe3fa] rounded-[0.4rem]"
-                >
-                  <input
-                    type="text"
-                    id="country"
-                    defaultValue={invoice.senderAddress.country}
-                    {...register("senderAddress.country")}
-                    className="text-[1.5rem]
-                  font-bold leading-[1.5rem]
-                  tracking-[-0.25px]
-                  text-[#0c0e16] outline-none
-                  w-full"
-                  />
-                </div>
-              </label>
+              <Input
+                id={"senderAddress.city"}
+                label={"City"}
+                register={register}
+                errors={errors.senderAddress?.city}
+                errorsMessage={errors.senderAddress?.city?.message}
+                defaultValue={invoice?.senderAddress.city || ""}
+              />
+              <Input
+                id={"senderAddress.postCode"}
+                label={"Post Code"}
+                register={register}
+                errors={errors.senderAddress?.postCode}
+                errorsMessage={errors.senderAddress?.postCode?.message}
+                defaultValue={invoice?.senderAddress.postCode || ""}
+              />
+              <Input
+                id={"senderAddress.country"}
+                label={"Country"}
+                register={register}
+                errors={errors.senderAddress?.country}
+                errorsMessage={errors.senderAddress?.country?.message}
+                defaultValue={invoice?.senderAddress.country || ""}
+              />
             </div>
 
             <span
@@ -335,241 +251,58 @@ export default function EditInvoice() {
             >
               Bill To
             </span>
-            <label
-              htmlFor="clientName"
-              className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
-            >
-              <div className="flex justify-between">
-                <span
-                  className={
-                    errors.clientName ? "text-[#ec5757]" : "text-[#7e88c3]"
-                  }
-                >
-                  Client's Name
-                </span>
-                {errors.clientName && (
-                  <span className="text-[1rem] text-[#ec5757]">
-                    {errors.clientName.message}
-                  </span>
-                )}
-              </div>
-              <div
-                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-              >
-                <input
-                  type="text"
-                  id="clientName"
-                  defaultValue={invoice.clientName}
-                  {...register("clientName")}
-                  className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-                />
-              </div>
-            </label>
-            <label
-              htmlFor="email"
-              className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
-            >
-              <div className="flex justify-between">
-                <span
-                  className={
-                    errors.clientEmail ? "text-[#ec5757]" : "text-[#7e88c3]"
-                  }
-                >
-                  Client's Email
-                </span>
-                {errors.clientEmail && (
-                  <span className="text-[1rem] text-[#ec5757]">
-                    {errors.clientEmail.message}
-                  </span>
-                )}
-              </div>
-              <div
-                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-              >
-                <input
-                  type="text"
-                  id="email"
-                  defaultValue={invoice.clientEmail}
-                  {...register("clientEmail")}
-                  className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-                />
-              </div>
-            </label>
-            <label
-              htmlFor="clientAddress"
-              className="flex flex-col
-          text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-          text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]"
-            >
-              <div className="flex justify-between">
-                <span
-                  className={
-                    errors.clientAddress?.street
-                      ? "text-[#ec5757]"
-                      : "text-[#7e88c3]"
-                  }
-                >
-                  Street Address
-                </span>
-                {errors.clientAddress?.street && (
-                  <span className="text-[1rem] text-[#ec5757]">
-                    {errors.clientAddress?.street.message}
-                  </span>
-                )}
-              </div>
-              <div
-                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-            border border-[#dfe3fa] rounded-[0.4rem]"
-              >
-                <input
-                  type="text"
-                  id="clientAddress"
-                  defaultValue={invoice.clientAddress.street}
-                  {...register("clientAddress.street")}
-                  className="text-[1.5rem]
-              font-bold leading-[1.5rem]
-              tracking-[-0.25px]
-              text-[#0c0e16] outline-none
-              w-full"
-                />
-              </div>
-            </label>
+            <Input
+              id={"clientName"}
+              label={"Client's Name"}
+              register={register}
+              errors={errors.clientName}
+              errorsMessage={errors.clientName?.message}
+              defaultValue={invoice?.clientName || ""}
+            />
+            <Input
+              id={"clientEmail"}
+              label={"Client's Email"}
+              register={register}
+              errors={errors.clientEmail}
+              errorsMessage={errors.clientEmail?.message}
+              defaultValue={invoice?.clientEmail || ""}
+            />
+            <Input
+              id={"clientAddress.street"}
+              label={"Street Address"}
+              register={register}
+              errors={errors.clientAddress?.street}
+              errorsMessage={errors.clientAddress?.street?.message}
+              defaultValue={invoice?.clientAddress.street || ""}
+            />
             <div
               className="grid grid-cols-2 gap-[2.3rem]
             mb-[2.5rem] md:grid-cols-3"
             >
-              <label
-                htmlFor="clientCity"
-                className="flex flex-col
-            text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-            text-[#7e88c3] gap-[0.9rem]"
-              >
-                <div className="flex justify-between">
-                  <span
-                    className={
-                      errors.clientAddress?.city
-                        ? "text-[#ec5757]"
-                        : "text-[#7e88c3]"
-                    }
-                  >
-                    City
-                  </span>
-                  {errors.clientAddress?.city && (
-                    <span className="text-[1rem] text-[#ec5757]">
-                      {errors.clientAddress?.city.message}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                  border border-[#dfe3fa] rounded-[0.4rem]"
-                >
-                  <input
-                    type="text"
-                    id="clientCity"
-                    defaultValue={invoice.clientAddress.city}
-                    {...register("clientAddress.city")}
-                    className="text-[1.5rem]
-                    font-bold leading-[1.5rem]
-                    tracking-[-0.25px]
-                    text-[#0c0e16] outline-none
-                    w-full"
-                  />
-                </div>
-              </label>
-              <label
-                htmlFor="clientPostCode"
-                className="flex flex-col
-                text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                text-[#7e88c3] gap-[0.9rem]"
-              >
-                <div className="flex justify-between">
-                  <span
-                    className={
-                      errors.clientAddress?.postCode
-                        ? "text-[#ec5757]"
-                        : "text-[#7e88c3]"
-                    }
-                  >
-                    Post Code
-                  </span>
-                  {errors.clientAddress?.postCode && (
-                    <span className="text-[1rem] text-[#ec5757]">
-                      {errors.clientAddress?.postCode.message}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                  border border-[#dfe3fa] rounded-[0.4rem]"
-                >
-                  <input
-                    type="text"
-                    id="clientPostCode"
-                    defaultValue={invoice.clientAddress.postCode}
-                    {...register("clientAddress.postCode")}
-                    className="text-[1.5rem]
-                    font-bold leading-[1.5rem]
-                    tracking-[-0.25px]
-                    text-[#0c0e16] outline-none
-                    w-full"
-                  />
-                </div>
-              </label>
-              <label
-                htmlFor="clientCountry"
-                className="flex flex-col
-              text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-              text-[#7e88c3] gap-[0.9rem] mb-[2.5rem]
-              col-span-2 md:col-span-1"
-              >
-                <div className="flex justify-between">
-                  <span
-                    className={
-                      errors.clientAddress?.country
-                        ? "text-[#ec5757]"
-                        : "text-[#7e88c3]"
-                    }
-                  >
-                    Country
-                  </span>
-                  {errors.clientAddress?.country && (
-                    <span className="text-[1rem] text-[#ec5757]">
-                      {errors.clientAddress?.country.message}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                border border-[#dfe3fa] rounded-[0.4rem]"
-                >
-                  <input
-                    type="text"
-                    id="clientCountry"
-                    defaultValue={invoice.clientAddress.country}
-                    {...register("clientAddress.country")}
-                    className="text-[1.5rem]
-                  font-bold leading-[1.5rem]
-                  tracking-[-0.25px]
-                  text-[#0c0e16] outline-none
-                  w-full"
-                  />
-                </div>
-              </label>
+              <Input
+                id={"clientAddress.city"}
+                label={"City"}
+                register={register}
+                errors={errors.clientAddress?.city}
+                errorsMessage={errors.clientAddress?.city?.message}
+                defaultValue={invoice?.clientAddress.city || ""}
+              />
+              <Input
+                id={"clientAddress.postCode"}
+                label={"Post Code"}
+                register={register}
+                errors={errors.clientAddress?.postCode}
+                errorsMessage={errors.clientAddress?.postCode?.message}
+                defaultValue={invoice?.clientAddress.postCode || ""}
+              />
+              <Input
+                id={"clientAddress.country"}
+                label={"Country"}
+                register={register}
+                errors={errors.clientAddress?.country}
+                errorsMessage={errors.clientAddress?.country?.message}
+                defaultValue={invoice?.clientAddress.country || ""}
+              />
             </div>
 
             <div
@@ -596,7 +329,7 @@ export default function EditInvoice() {
                     className="text-[1.5rem]
                   font-bold leading-[1.5rem] tracking-[-0.25px]"
                   >
-                    {formDate(selectedDate || invoice?.createdAt) ||
+                    {formDate(selectedDate || invoice?.createdAt || "") ||
                       "Select Date"}
                   </span>
                   <svg
@@ -656,75 +389,21 @@ export default function EditInvoice() {
                   </svg>
                 </div>
                 {isOpenNetDay ? (
-                  <div
-                    className="
-                    absolute top-33 w-full
-                    flex flex-col py-[1.6rem]
-                    bg-white rounded-[0.8rem]
-                    shadow-[0_10px_20px_0px_rgba(72,84,159,0.25)]
-                    text-[1.5rem] font-bold leading-[1.5rem]
-                    tracking-[-0.25px] text-[#0c0e16]
-                    gap-[1.5rem]"
-                  >
-                    {paymentTermsArray.map((net, index) => (
-                      <div key={net}>
-                        <p
-                          className="pl-[2.4rem] hover:text-[#7c5dfa] hover:opacity-[1]
-                    "
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePaymentTermSelect(net);
-                          }}
-                        >
-                          Net {net} Day{net !== 1 ? "s" : ""}
-                        </p>
-                        {index < paymentTermsArray.length - 1 ? (
-                          <div className="w-full h-px bg-[#dfe3fa] mt-[1.5rem]"></div>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
+                  <PaymentTerms
+                    setSelectedPaymentTerms={setSelectedPaymentTerms}
+                    setIsOpenNetDay={setIsOpenNetDay}
+                  />
                 ) : null}
               </div>
             </div>
-            <label
-              htmlFor="description"
-              className="flex flex-col
-              text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-              text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]
-              md:mb-[2.7rem]"
-            >
-              <div className="flex justify-between">
-                <span
-                  className={
-                    errors.description ? "text-[#ec5757]" : "text-[#7e88c3]"
-                  }
-                >
-                  Project Description
-                </span>
-                {errors.description && (
-                  <span className="text-[1rem] text-[#ec5757]">
-                    {errors.description.message}
-                  </span>
-                )}
-              </div>
-              <div
-                className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                border border-[#dfe3fa] rounded-[0.4rem]"
-              >
-                <input
-                  type="text"
-                  id="description"
-                  defaultValue={invoice.description}
-                  {...register("description")}
-                  className="text-[1.5rem]
-                  font-bold leading-[1.5rem]
-                  tracking-[-0.25px]
-                  text-[#0c0e16] outline-none
-                  w-full"
-                />
-              </div>
-            </label>
+            <Input
+              id={"description"}
+              label={"Project Description"}
+              register={register}
+              errors={errors.description}
+              errorsMessage={errors.description?.message}
+              defaultValue={invoice?.description || ""}
+            />
             <span
               className="text-[1.8rem] font-bold
               leading-[3.2rem] tracking-[-0.375px]
@@ -742,137 +421,36 @@ export default function EditInvoice() {
                 const itemTotal = watchedQuantity * watchedPrice;
                 return (
                   <div
-                    key={item.id}
+                    key={item.id || index}
                     className="md:grid
                     md:grid-cols-5 md:gap-[1.6rem]
                     md:mb-[1.8rem]"
                   >
-                    <label
-                      htmlFor={`item-name-${index}`}
-                      className="flex flex-col
-                      text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                      text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]
-                      col-span-2 md:mb-[unset]"
-                    >
-                      <div className="flex justify-between">
-                        <span
-                          className={
-                            errors.items?.[index]?.name
-                              ? "text-[#ec5757]"
-                              : "text-[#7e88c3]"
-                          }
-                        >
-                          Item Name
-                        </span>
-                        {errors.items?.[index]?.name && (
-                          <span className="text-[1rem] text-[#ec5757]">
-                            {errors.items?.[index]?.name?.message}
-                          </span>
-                        )}
-                      </div>
-                      <div
-                        className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                        border border-[#dfe3fa] rounded-[0.4rem]"
-                      >
-                        <input
-                          type="text"
-                          id={`item-name-${index}`}
-                          defaultValue={item.name}
-                          {...register(`items.${index}.name`)}
-                          className="text-[1.5rem]
-                          font-bold leading-[1.5rem]
-                          tracking-[-0.25px]
-                          text-[#0c0e16] outline-none
-                          w-full"
-                        />
-                      </div>
-                    </label>
+                    <Input
+                      id={`items.${index}.name`}
+                      label={"Item Name"}
+                      register={register}
+                      errors={errors.items?.[index]?.name}
+                      errorsMessage={errors.items?.[index]?.name?.message}
+                      defaultValue={item.name}
+                    />
                     <div className="flex gap-[1.6rem]">
-                      <label
-                        htmlFor={`item-quantity-${index}`}
-                        className="flex flex-col
-                        text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                        text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]
-                        md:mb-[unset]"
-                      >
-                        <span
-                          className={
-                            errors.items?.[index]?.quantity
-                              ? "text-[#ec5757]"
-                              : "text-[#7e88c3]"
-                          }
-                        >
-                          Qty.
-                        </span>
-                        <div
-                          className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                          border border-[#dfe3fa] rounded-[0.4rem]
-                          w-[6.4rem]"
-                        >
-                          <input
-                            type="text"
-                            id={`item-quantity-${index}`}
-                            defaultValue={item.quantity}
-                            {...register(`items.${index}.quantity`, {
-                              valueAsNumber: true,
-                            })}
-                            className="text-[1.5rem]
-                            font-bold leading-[1.5rem]
-                            tracking-[-0.25px]
-                            text-[#0c0e16]
-                            outline-none
-                            w-full"
-                          />
-                        </div>
-                        {errors.items?.[index]?.quantity && (
-                          <span className="text-[1rem] text-[#ec5757]">
-                            {errors.items?.[index]?.quantity?.message}
-                          </span>
-                        )}
-                      </label>
-
-                      <label
-                        htmlFor={`item-price-${index}`}
-                        className="flex flex-col
-                  text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                  text-[#7e88c3] gap-[0.9rem] mb-[6.9rem]
-                  md:mb-[unset]"
-                      >
-                        <span
-                          className={
-                            errors.items?.[index]?.price
-                              ? "text-[#ec5757]"
-                              : "text-[#7e88c3]"
-                          }
-                        >
-                          Price
-                        </span>
-                        <div
-                          className="px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                    border border-[#dfe3fa] rounded-[0.4rem]
-                    w-[10rem]"
-                        >
-                          <input
-                            type="text"
-                            id={`item-price-${index}`}
-                            defaultValue={item.price}
-                            {...register(`items.${index}.price`, {
-                              valueAsNumber: true,
-                            })}
-                            className="text-[1.5rem]
-                      font-bold leading-[1.5rem]
-                      tracking-[-0.25px]
-                      text-[#0c0e16]
-                      outline-none
-                      w-full"
-                          />
-                        </div>
-                        {errors.items?.[index]?.price && (
-                          <span className="text-[1rem] text-[#ec5757]">
-                            {errors.items?.[index]?.price?.message}
-                          </span>
-                        )}
-                      </label>
+                      <Input
+                        id={`items.${index}.quantity`}
+                        label={"Qty."}
+                        register={register}
+                        errors={errors.items?.[index]?.quantity}
+                        errorsMessage={errors.items?.[index]?.quantity?.message}
+                        defaultValue={item.quantity.toString()}
+                      />
+                      <Input
+                        id={`items.${index}.price`}
+                        label={"Price"}
+                        register={register}
+                        errors={errors.items?.[index]?.price}
+                        errorsMessage={errors.items?.[index]?.price?.message}
+                        defaultValue={item.price.toString()}
+                      />
                       <div
                         className="flex flex-col gap-[0.9rem]
                   ml-[1.6rem]"
@@ -959,33 +537,59 @@ export default function EditInvoice() {
           "
           ></div>
           <div
-            className="flex justify-end
-        pt-[2.1rem] pb-[2.2rem] pr-[2.4rem]
-        gap-[0.8rem] md:pr-[5.6rem]"
+            className={`flex ${isEdit ? "justify-end" : "justify-between"}
+            pt-[2.1rem] pb-[2.2rem] px-[2.4rem]
+            md:px-[5.6rem]`}
           >
-            <button
-              className="flex items-center
-          pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
-          bg-[#f9fafe] rounded-[2.4rem]
-          text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-[#7e88c3]
-          cursor-pointer"
-              onClick={goBack}
+            {!isEdit && (
+              <button
+                type="button"
+                className="flex items-center
+              pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
+              bg-[#f9fafe] rounded-[2.4rem]
+              text-[1.5rem] font-bold leading-[1.5rem]
+              tracking-[-0.25px] text-[#7e88c3]
+              cursor-pointer
+              transition-all duration-300
+              
+              
+              "
+                onClick={goBack}
+              >
+                Discard
+              </button>
+            )}
+            <div
+              className="flex
+             gap-[0.8rem] items-center
+             "
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              form="editInvoiceForm"
-              className="flex items-center
-          pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
-          bg-[#7c5dfa] rounded-[2.4rem]
-          text-[1.5rem] font-bold leading-[1.5rem]
-          tracking-[-0.25px] text-white
-          cursor-pointer"
-            >
-              Save Changes
-            </button>
+              <button
+                type="button"
+                className="flex items-center
+              pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
+              bg-[#f9fafe] rounded-[2.4rem]
+              text-[1.5rem] font-bold leading-[1.5rem]
+              tracking-[-0.25px] text-[#7e88c3]
+              cursor-pointer"
+                onClick={isEdit ? goBack : handleSaveAsDraft}
+              >
+                {isEdit ? "Cancel" : "Save as Draft"}
+              </button>
+              <button
+                type="button"
+                className="flex items-center
+              pt-[1.8rem] pb-[1.5rem] pl-[2.4rem] pr-[2.3rem]
+              bg-[#7c5dfa] rounded-[2.4rem]
+              text-[1.5rem] font-bold leading-[1.5rem]
+              tracking-[-0.25px] text-white
+              cursor-pointer
+              "
+                onClick={isEdit ? handleSaveChanges : handleSaveAndSend}
+              >
+                {isEdit ? "Save Changes" : "Save & Send"}
+              </button>
+            </div>
           </div>
         </div>
       </div>

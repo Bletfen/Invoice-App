@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useState } from "react";
 import Delete from "../components/Delete";
@@ -87,7 +87,9 @@ export default function Invoice() {
           shadow-[0_10px_10px_-10px_rgba(72,84,159,0.1)]
           mt-[1.6rem] md:mt-[2.4rem]
           md:pt-[3.3rem] md:pb-[4.8rem]
-          md:px-[3.2rem]"
+          md:px-[3.2rem]
+          transition-all duration-300
+          dark:bg-[#1e2139]"
         >
           <div>
             <div
@@ -102,15 +104,22 @@ export default function Invoice() {
                 <h3
                   className="text-[1.5rem] font-bold
                 leading-[1.5rem] tracking-[-0.25px]
-                text-[#0c0e16]"
+                text-[#0c0e16]
+                transition-all duration-300 dark:text-white"
                 >
-                  <span className="text-[#7e88c3]">#</span>
+                  <span
+                    className="text-[#7e88c3]
+                  "
+                  >
+                    #
+                  </span>
                   {getInvoice.id}
                 </h3>
                 <span
                   className="text-[1.5rem] font-[500]
                 leading-[1.5rem] tracking-[-0.25px]
-                text-[#7e88c3]"
+                text-[#7e88c3] transition-all duration-300
+                dark:text-[#dfe3fa]"
                 >
                   {getInvoice.description}
                 </span>
@@ -119,7 +128,8 @@ export default function Invoice() {
                 className="flex flex-col
               text-[1.3rem] font-[500]
               leading-[1.8rem] tracking-[-0.1px]
-              text-[#7e88c3] mb-[3.1rem] md:mb-[unset]"
+              text-[#7e88c3] mb-[3.1rem] md:mb-[unset]
+              transition-all duration-300 dark:text-[#dfe3fa]"
               >
                 <span>{getInvoice.senderAddress.street}</span>
                 <span>{getInvoice.senderAddress.city}</span>
@@ -143,14 +153,16 @@ export default function Invoice() {
                   <span
                     className="text-[1.5rem] font-[500]
                   leading-[1.5rem] tracking-[-0.25px]
-                  text-[#7e88c3]"
+                  text-[#7e88c3]
+                  transition-all duration-300 dark:text-[#dfe3fa]"
                   >
                     Invoice Date
                   </span>
                   <span
                     className="text-[1.5rem] font-bold
                     leading-[2rem] tracking-[-0.25px]
-                    text-[#0c0e16]"
+                    text-[#0c0e16]
+                    transition-all duration-300 dark:text-white"
                   >
                     {formDate(getInvoice.createdAt)}
                   </span>
@@ -159,14 +171,16 @@ export default function Invoice() {
                   <span
                     className="text-[1.5rem] font-[500]
                     leading-[1.5rem] tracking-[-0.25px]
-                    text-[#7e88c3]"
+                    text-[#7e88c3]
+                    transition-all duration-300 dark:text-[#dfe3fa]"
                   >
                     Payment Due
                   </span>
                   <span
                     className="text-[1.5rem] font-bold
                     leading-[2rem] tracking-[-0.25px]
-                    text-[#0c0e16]"
+                    text-[#0c0e16]
+                    transition-all duration-300 dark:text-white"
                   >
                     {formDate(getInvoice.paymentDue)}
                   </span>
@@ -177,14 +191,16 @@ export default function Invoice() {
                   <span
                     className="text-[1.5rem] font-[500]
                     leading-[1.5rem] tracking-[-0.25px]
-                    text-[#7e88c3]"
+                    text-[#7e88c3]
+                    transition-all duration-300 dark:text-[#dfe3fa]"
                   >
                     Bill to
                   </span>
                   <span
                     className="text-[1.5rem] font-bold
                     leading-[2rem] tracking-[-0.25px]
-                    text-[#0c0e16]"
+                    text-[#0c0e16]
+                    transition-all duration-300 dark:text-white"
                   >
                     {getInvoice.clientName}
                   </span>
@@ -193,7 +209,8 @@ export default function Invoice() {
                   className="flex flex-col
                   text-[1.5rem] font-[500]
                   leading-[1.8rem] tracking-[-0.25px]
-                  text-[#7e88c3]"
+                  text-[#7e88c3]
+                  transition-all duration-300 dark:text-[#dfe3fa]"
                 >
                   <span>{getInvoice.clientAddress.street}</span>
                   <span>{getInvoice.clientAddress.city}</span>
@@ -208,14 +225,16 @@ export default function Invoice() {
                 <span
                   className="text-[1.5rem] font-[500]
                 leading-[1.8rem] tracking-[-0.25px]
-                text-[#7e88c3]"
+                text-[#7e88c3]
+                transition-all duration-300 dark:text-[#dfe3fa]"
                 >
                   Sent to
                 </span>
                 <span
                   className="text-[1.5rem] font-bold
                 leading-[2rem] tracking-[-0.25px]
-                text-[#0c0e16]"
+                text-[#0c0e16]
+                transition-all duration-300 dark:text-white"
                 >
                   {getInvoice.clientEmail}
                 </span>
@@ -227,7 +246,8 @@ export default function Invoice() {
               bg-[#f9fafe] rounded-t-[0.8rem]
               md:p-[unset] md:pt-[3.3rem]
               md:pl-[3.2rem] md:pr-[3.4rem]
-              md:pb-[3.9rem]"
+              md:pb-[3.9rem]
+              transition-all duration-300 dark:bg-[#252945]"
             >
               <div
                 className="flex flex-col pb-[2.3rem]
@@ -237,7 +257,8 @@ export default function Invoice() {
                   className="hidden md:flex
                   md:justify-between
                   text-[1.3rem] font-[500]
-                  leading-[1.8rem] tracking-[-0.1px] text-[#7e8cc3]"
+                  leading-[1.8rem] tracking-[-0.1px] text-[#7e8cc3]
+                  transition-all duration-300 dark:text-[#dfe3fa]"
                 >
                   <span>Item Name</span>
                   <div className="flex gap-[13rem]">
@@ -261,7 +282,8 @@ export default function Invoice() {
                       <h4
                         className="text-[1.5rem] font-bold 
                         leading-[1.5rem] tracking-[-0.25px] 
-                        text-[#0c0e16]"
+                        text-[#0c0e16]
+                        transition-all duration-300 dark:text-white"
                       >
                         {item.name}
                       </h4>
@@ -275,6 +297,7 @@ export default function Invoice() {
                           md:w-[1rem]
                           text-[1.5rem] font-bold text-[#7e88c3]
                           flex gap-[0.3rem] md:gap-[unset]
+                          transition-all duration-300 dark:text-[#dfe3fa]
                         "
                         >
                           {item.quantity}{" "}
@@ -288,7 +311,8 @@ export default function Invoice() {
                         >
                           <p
                             className="
-                        hidden md:flex text-[1.5rem] font-bold text-[#7e88c3]"
+                            hidden md:flex text-[1.5rem] font-bold text-[#7e88c3]
+                            transition-all duration-300 dark:text-[#dfe3fa]"
                           >
                             <span>£</span> <span>{item.price.toFixed(2)}</span>
                           </p>
@@ -301,6 +325,7 @@ export default function Invoice() {
                             className="
                           md:w-[12rem]
                         hidden md:flex text-[1.5rem] font-bold text-[#0c0e16]
+                        transition-all duration-300 dark:text-white
                         "
                           >
                             <span>£</span>
@@ -315,7 +340,8 @@ export default function Invoice() {
                       <p
                         className="text-[1.5rem] font-bold
                         leading-[1.5rem] tracking-[-0.25px]
-                        text-[#0c0e16] text-end"
+                        text-[#0c0e16] text-end
+                        transition-all duration-300 dark:text-white"
                       >
                         £ {(item.quantity * item.price).toFixed(2)}
                       </p>
@@ -328,19 +354,22 @@ export default function Invoice() {
               className="px-[2.4rem] pt-[2.6rem]
               bg-[#373b53] rounded-b-[0.8rem] pb-[2.2rem]
               flex justify-between items-center
-              md:px-[3.2rem] md:pt-[2.7rem] md:pb-[2.1rem]"
+              md:px-[3.2rem] md:pt-[2.7rem] md:pb-[2.1rem]
+              transition-all duration-300 dark:bg-[#0c0e16]"
             >
               <span
                 className="text-[1.3rem] font-[500]
                 leading-[1.8rem] tracking-[-0.1px]
-                text-white"
+                text-white
+                transition-all duration-300"
               >
                 Grand Total
               </span>
               <h5
                 className="text-[2.4rem] font-bold
                 leading-[3.2rem] tracking-[-0.5px]
-                text-white"
+                text-white
+                transition-all duration-300"
               >
                 £ {getInvoice.total.toFixed(2)}
               </h5>
@@ -360,6 +389,7 @@ export default function Invoice() {
           <Delete invoiceId={getInvoice.id} setShowDelete={setShowDelete} />
         </div>
       )}
+      <Outlet />
     </div>
   );
 }

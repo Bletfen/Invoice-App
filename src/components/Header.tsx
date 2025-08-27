@@ -1,29 +1,14 @@
-import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-export default function Header() {
-  const [isDark, setIsDark] = useState<boolean>(false);
+import { handleThemeSwitch } from "../seperateFuncs";
+export default function Header({
+  isDark,
+  setIsDark,
+}: {
+  isDark: boolean;
+  setIsDark: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const location = useLocation();
   const isEditPage = location.pathname.includes("/edit");
-  const handleThemeSwitch = () => {
-    if (document.documentElement.classList.contains("dark")) {
-      document.documentElement.classList.remove("dark");
-      localStorage.removeItem("theme");
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    }
-  };
-
-  useEffect(() => {
-    const theme = localStorage.getItem("theme");
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-      setIsDark(true);
-    } else {
-      document.documentElement.classList.remove("dark");
-      setIsDark(false);
-    }
-  }, []);
 
   return (
     <div
@@ -91,8 +76,7 @@ export default function Header() {
             xmlns="http://www.w3.org/2000/svg"
             className="cursor-pointer"
             onClick={() => {
-              handleThemeSwitch();
-              setIsDark(false);
+              handleThemeSwitch(setIsDark);
             }}
           >
             <path
@@ -109,8 +93,7 @@ export default function Header() {
             xmlns="http://www.w3.org/2000/svg"
             className="cursor-pointer"
             onClick={() => {
-              handleThemeSwitch();
-              setIsDark(true);
+              handleThemeSwitch(setIsDark);
             }}
           >
             <path

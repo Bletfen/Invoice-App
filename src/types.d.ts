@@ -5,7 +5,7 @@ interface IFilter {
 }
 
 interface IItems {
-  id: string;
+  id?: string;
   name: string;
   quantity: number;
   price: number;
@@ -53,7 +53,7 @@ type Inputs = {
   items: itemsInput[];
 };
 type itemsInput = {
-  id: string;
+  id?: string;
   name: string;
   quantity: number;
   price: number;

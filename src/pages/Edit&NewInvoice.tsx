@@ -1,13 +1,17 @@
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
-import { useForm, useFieldArray } from "react-hook-form";
 import Calendar from "../components/Calendar";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { schema } from "../yup/schema";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate, useParams } from "react-router-dom";
 import { generateInvoiceId } from "../seperateFuncs";
 import Input from "../components/Input";
 import PaymentTerms from "../components/PaymentTerms";
+import {
+  updateInvoice,
+  isEdit,
+  createSubmitHandler,
+  useInvoiceForm,
+} from "../hookFormFunctions";
+import { goBack } from "../hookFormFunctions";
 export default function EditInvoice() {
   const { data, setData } = useDataContext();
   const { formDate } = useFormDate();
@@ -17,9 +21,6 @@ export default function EditInvoice() {
   const [selectedPaymentTerms, setSelectedPaymentTerms] = useState<number>(30);
 
   const { id } = useParams();
-  const location = useLocation();
-  const isEdit = location.pathname.includes("/edit");
-  console.log(isEdit);
   const invoice = data.find((item) => item.id === id);
   const navigate = useNavigate();
 
@@ -29,102 +30,29 @@ export default function EditInvoice() {
     }
   }, [isEdit, invoice, navigate]);
 
-  const goBack = () => {
-    navigate(-1);
-  };
-
-  const calculatePaymentDue = (
-    createdAt: string,
-    paymentTerms: number
-  ): string => {
-    const createdDate = new Date(createdAt);
-    const dueDate = new Date(createdDate);
-    dueDate.setDate(createdDate.getDate() + paymentTerms);
-    return dueDate.toISOString().split("T")[0];
-  };
-
-  const defaultInvoiceValues = invoice
-    ? {
-        senderAddress: invoice.senderAddress,
-        clientName: invoice.clientName,
-        clientEmail: invoice.clientEmail,
-        clientAddress: invoice.clientAddress,
-        description: invoice.description,
-        items: invoice.items,
-      }
-    : {
-        senderAddress: { street: "", city: "", postCode: "", country: "" },
-        clientName: "",
-        clientEmail: "",
-        clientAddress: { street: "", city: "", postCode: "", country: "" },
-        description: "",
-        items: [],
-      };
-
-  const updateInvoice = (id: string, updated: IInvoice) => {
-    setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
-  };
-  const onSubmit = (values: Inputs, status: "Paid" | "Pending" | "Draft") => {
-    const newTotal = values.items.reduce(
-      (sum, item) => sum + item.quantity * item.price,
-      0
-    );
-    const invoiceDate =
-      selectedDate ||
-      invoice?.createdAt ||
-      new Date().toISOString().split("T")[0];
-    const paymentDue = calculatePaymentDue(invoiceDate, selectedPaymentTerms);
-
-    const newInvoice: IInvoice = {
-      id: invoice?.id || generateInvoiceId(),
-      createdAt: invoiceDate,
-      paymentDue: paymentDue,
-      description: values.description,
-      paymentTerms: selectedPaymentTerms,
-      clientName: values.clientName,
-      clientEmail: values.clientEmail,
-      status: status,
-      senderAddress: values.senderAddress,
-      clientAddress: values.clientAddress,
-      items: values.items,
-      total: newTotal,
-    };
-    if (isEdit && invoice) {
-      updateInvoice(invoice.id, newInvoice);
-      navigate(-1);
-    } else {
-      setData((prev) => [newInvoice, ...prev]);
-      navigate("/");
-    }
-  };
-
   const {
     register,
-    control,
-    handleSubmit,
     watch,
-    formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: defaultInvoiceValues,
-    resolver: yupResolver(schema),
-  });
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "items",
-  });
+    handleSubmit,
+    errors,
+    fields,
+    append,
+    remove,
+    onSubmit,
+  } = useInvoiceForm(
+    isEdit,
+    invoice ?? null,
+    selectedDate,
+    selectedPaymentTerms,
+    updateInvoice,
+    setData,
+    navigate
+  );
 
-  const handleSaveAsDraft = () => {
-    handleSubmit((values) => onSubmit(values, "Draft"))();
-  };
-
-  const handleSaveAndSend = () => {
-    handleSubmit((values) => onSubmit(values, "Pending"))();
-  };
-
-  const handleSaveChanges = () => {
-    const currentStatus = invoice?.status || "Pending";
-    handleSubmit((values) => onSubmit(values, currentStatus))();
-  };
+  const submitHandler = createSubmitHandler(handleSubmit, onSubmit);
+  const handleSaveAsDraft = submitHandler("Draft");
+  const handleSaveAndSend = submitHandler("Pending");
+  const handleSaveChanges = submitHandler(invoice?.status || "Pending");
 
   return (
     <>
@@ -135,7 +63,7 @@ export default function EditInvoice() {
         "
         onClick={(e) => {
           if (e.target === e.currentTarget) {
-            navigate(-1);
+            goBack(navigate);
           }
         }}
       >
@@ -158,7 +86,7 @@ export default function EditInvoice() {
             items-center cursor-pointer
             mb-[2.6rem] px-[2.4rem]
             md:hidden"
-            onClick={goBack}
+            onClick={() => goBack(navigate)}
           >
             <svg
               width="6"
@@ -189,8 +117,14 @@ export default function EditInvoice() {
             md:mb-[4.6rem]
             transition-all duration-300 dark:text-white"
           >
-            Edit <span className="text-[#888eb0]">#</span>
-            {invoice?.id || "New Invoice"}
+            {isEdit ? (
+              <p>
+                Edit <span className="text-[#888eb0]">#</span>
+                {invoice?.id}
+              </p>
+            ) : (
+              <p>New Invoice</p>
+            )}
           </h6>
           <form
             id="editInvoiceForm"
@@ -554,7 +488,7 @@ export default function EditInvoice() {
               
               
               "
-                onClick={goBack}
+                onClick={() => goBack(navigate)}
               >
                 Discard
               </button>
@@ -572,7 +506,7 @@ export default function EditInvoice() {
               text-[1.5rem] font-bold leading-[1.5rem]
               tracking-[-0.25px] text-[#7e88c3]
               cursor-pointer"
-                onClick={isEdit ? goBack : handleSaveAsDraft}
+                onClick={isEdit ? () => goBack(navigate) : handleSaveAsDraft}
               >
                 {isEdit ? "Cancel" : "Save as Draft"}
               </button>

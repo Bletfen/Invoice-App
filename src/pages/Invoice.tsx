@@ -2,7 +2,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import { useState } from "react";
 import Delete from "../components/Delete";
-import InvoiceButtons from "../components/InvoiceButtons";
+import InvoiceButtons from "../components/InvoiceButtonsHeaders";
 import InvoiceHeaderStatus from "../components/InvoiceHeaderStatus";
 
 export default function Invoice() {

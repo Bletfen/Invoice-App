@@ -20,16 +20,3 @@ export const handleThemeSwitch = (
     setIsDark(true);
   }
 };
-// const updatedInvoice: IInvoice = {
-//   ...invoice,
-//   senderAddress: values.senderAddress,
-//   clientName: values.clientName,
-//   clientEmail: values.clientEmail,
-//   clientAddress: values.clientAddress,
-//   description: values.description,
-//   items: values.items,
-//   total: newTotal,
-//   createdAt: selectedDate || invoice.createdAt,
-//   paymentTerms: selectedPaymentTerms,
-//   paymentDue: paymentDue,
-// };

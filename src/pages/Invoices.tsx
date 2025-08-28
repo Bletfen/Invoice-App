@@ -167,7 +167,7 @@ export default function Invoices() {
                     xmlns="http://www.w3.org/2000/svg"
                     className="hidden md:block"
                   >
-                    <path d="M1 1L5 5L1 9" stroke="#7C5DFA" stroke-width="2" />
+                    <path d="M1 1L5 5L1 9" stroke="#7C5DFA" strokeWidth="2" />
                   </svg>
                 </div>
               </div>

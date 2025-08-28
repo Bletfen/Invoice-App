@@ -40,7 +40,7 @@ export default function InvoiceButtons({
             dark:bg-[#252945]
             dark:text-[#dfe3fa]
             hover:dark:bg-white
-            hover:dark:text-[#7e88c3]"
+            dark:hover:text-[#7e88c3]"
         >
           Edit
         </Link>

@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Invoices from "./pages/Invoices";
 import Invoice from "./pages/Invoice";
 import InvoicesProvider from "./context/InvoicesContext";
-import EditInvoice from "./pages/EditInvoice";
+import EditandNewInvoice from "./pages/EditandNewInvoice";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "create-new-invoice",
-            element: <EditInvoice />,
+            element: <EditandNewInvoice />,
           },
         ],
       },
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "edit",
-            element: <EditInvoice />,
+            element: <EditandNewInvoice />,
           },
         ],
       },

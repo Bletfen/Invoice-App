@@ -1,18 +1,13 @@
 import { useDataContext, useFormDate } from "../context/InvoicesContext";
 import Calendar from "../components/Calendar";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { generateInvoiceId } from "../seperateFuncs";
 import Input from "../components/Input";
 import PaymentTerms from "../components/PaymentTerms";
-import {
-  updateInvoice,
-  isEdit,
-  createSubmitHandler,
-  useInvoiceForm,
-} from "../hookFormFunctions";
+import { createSubmitHandler, useInvoiceForm } from "../hookFormFunctions";
 import { goBack } from "../hookFormFunctions";
-export default function EditInvoice() {
+export default function EditandNewInvoice() {
   const { data, setData } = useDataContext();
   const { formDate } = useFormDate();
   const [isOpenCalendar, setIsOpenCalendar] = useState<boolean>(false);
@@ -23,6 +18,13 @@ export default function EditInvoice() {
   const { id } = useParams();
   const invoice = data.find((item) => item.id === id);
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const isEdit = location.pathname.includes("/edit");
+
+  const updateInvoice = (id: string, updated: IInvoice) => {
+    setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
+  };
 
   useEffect(() => {
     if (isEdit && !invoice) {
@@ -249,7 +251,7 @@ export default function EditInvoice() {
               >
                 <span
                   className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                text-[#7e88c3]"
+                text-[#7e88c3] transition-all duration-300 dark:text-[#dfedfa]"
                 >
                   Invoice Date
                 </span>
@@ -261,7 +263,8 @@ export default function EditInvoice() {
                 >
                   <span
                     className="text-[1.5rem]
-                  font-bold leading-[1.5rem] tracking-[-0.25px]"
+                  font-bold leading-[1.5rem] tracking-[-0.25px]
+                  transition-all duration-300 dark:text-white"
                   >
                     {formDate(selectedDate || invoice?.createdAt || "") ||
                       "Select Date"}
@@ -296,7 +299,8 @@ export default function EditInvoice() {
               >
                 <span
                   className="text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                text-[#7e88c3]"
+                text-[#7e88c3]
+                transition-all duration-300 dark:text-[#dfedfa]"
                 >
                   Payment Terms
                 </span>
@@ -305,7 +309,8 @@ export default function EditInvoice() {
                   px-[2rem] pt-[1.8rem] pb-[1.5rem]
                   border border-[#dfe3fa] rounded-[0.4rem]
                   text-[1.5rem]
-                  font-bold leading-[1.5rem] tracking-[-0.25px]"
+                  font-bold leading-[1.5rem] tracking-[-0.25px]
+                  transition-all duration-300 dark:text-white"
                 >
                   Net {selectedPaymentTerms} Days
                   <svg
@@ -392,7 +397,8 @@ export default function EditInvoice() {
                         <span
                           className="
                     text-[1.3rem] font-[500] leading-[1.5rem] tracking-[-0.1px]
-                    text-[#7e88c3]"
+                    text-[#7e88c3]
+                    transition-all duration-300 dark:text-[#dfe3fa]"
                         >
                           Total
                         </span>
@@ -401,7 +407,8 @@ export default function EditInvoice() {
                     text-[1.5rem] font-bold leading-[1.5rem]
                     tracking-[-0.25px] text-[#888eb0]
                     flex items-center gap-[5.5rem]
-                    md:gap-[4rem]"
+                    md:gap-[4rem]
+                    transition-all duration-300 dark:text-[#dfe3fa]"
                         >
                           <span>{itemTotal.toFixed(2)}</span>
                           <svg
@@ -437,7 +444,9 @@ export default function EditInvoice() {
           bg-[#f9fafe] rounded-[2.4rem]
           text-[1.5rem] font-bold leading-[1.5rem]
           tracking-[-0.25px] text-[#7e88c3] mb-[2.4rem]
-          cursor-pointer"
+          cursor-pointer
+          transition-all duration-300 dark:bg-[#252945]
+          dark:text-[#dfe3fa]"
               onClick={() =>
                 append({
                   id: generateInvoiceId(),
@@ -500,12 +509,17 @@ export default function EditInvoice() {
             >
               <button
                 type="button"
-                className="flex items-center
+                className={`flex items-center
               pt-[1.8rem] pb-[1.5rem] px-[2.65rem]
               bg-[#f9fafe] rounded-[2.4rem]
               text-[1.5rem] font-bold leading-[1.5rem]
               tracking-[-0.25px] text-[#7e88c3]
-              cursor-pointer"
+              cursor-pointer
+              transition-all
+              duration-300
+              dark:text-[#dfe3fa]
+              hover:bg-[#1e2139]
+              ${isEdit ? " dark:bg-[#252945]" : "dark:bg-[#373b53]"}`}
                 onClick={isEdit ? () => goBack(navigate) : handleSaveAsDraft}
               >
                 {isEdit ? "Cancel" : "Save as Draft"}
@@ -518,6 +532,8 @@ export default function EditInvoice() {
               text-[1.5rem] font-bold leading-[1.5rem]
               tracking-[-0.25px] text-white
               cursor-pointer
+              transition-all duration-300
+              hover:bg-[#9277ff]
               "
                 onClick={isEdit ? handleSaveChanges : handleSaveAndSend}
               >

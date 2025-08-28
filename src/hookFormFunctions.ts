@@ -1,5 +1,4 @@
-import { useLocation, type NavigateFunction } from "react-router-dom";
-import { useDataContext } from "./context/InvoicesContext";
+import { type NavigateFunction } from "react-router-dom";
 import {
   useFieldArray,
   useForm,
@@ -8,10 +7,6 @@ import {
 import { schema } from "./yup/schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { generateInvoiceId } from "./seperateFuncs";
-
-const { setData } = useDataContext();
-const location = useLocation();
-export const isEdit = location.pathname.includes("/edit");
 
 export function useInvoiceForm(
   isEdit: boolean,
@@ -29,7 +24,7 @@ export function useInvoiceForm(
     watch,
     formState: { errors },
   } = useForm<Inputs>({
-    defaultValues: getDefaultInvoiceValues(),
+    defaultValues: getDefaultInvoiceValues(invoice ?? undefined),
     resolver: yupResolver(schema),
   });
 
@@ -119,10 +114,6 @@ export const calculatePaymentDue = (
 
 export const goBack = (navigate: NavigateFunction) => {
   navigate(-1);
-};
-
-export const updateInvoice = (id: string, updated: IInvoice) => {
-  setData((prev) => prev.map((inv) => (inv.id === id ? updated : inv)));
 };
 
 export const createSubmitHandler = (

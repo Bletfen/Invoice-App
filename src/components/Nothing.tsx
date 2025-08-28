@@ -19,14 +19,18 @@ export default function Nothing() {
         <h1
           className="text-[2.4rem]
         font-bold tracking-[-0.75px]
-        text-[#0c0e16]"
+        text-[#0c0e16]
+        transition-all duration-300
+        dark:text-white"
         >
           There is nothing here
         </h1>
         <p
           className="text-[1.3rem] font-[500] leading-[1.5rem]
             tracking-[-0.1px] text-[#888eb0]
-            text-center"
+            text-center
+            transition-all duration-300
+            dark:text-[#dfe3fa]"
         >
           Create an invoice by clicking the <br />
           <span className="font-bold">

@@ -54,7 +54,10 @@ export default function Input<T extends Record<string, any>>({
       </div>
       <div
         className={`px-[2rem] pt-[1.8rem] pb-[1.5rem]
-                border border-[#dfe3fa] rounded-[0.4rem] 
+                border border-[#dfe3fa] rounded-[0.4rem]
+                transition-all duration-300
+                dark:border-[#252945]
+                hover:border-[#7c5dfa]
                 ${
                   id.startsWith("items.") && id.endsWith("quantity")
                     ? "w-[6.4rem]"
@@ -73,7 +76,8 @@ export default function Input<T extends Record<string, any>>({
               tracking-[-0.25px]
               text-[#0c0e16] outline-none
               w-full transition-all duration-300
-              dark:text-white w-full"
+              dark:text-white w-full
+              "
         />
       </div>
     </label>

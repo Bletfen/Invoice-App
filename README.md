@@ -59,9 +59,16 @@ The app will be available at http://localhost:5173 by default.
 ## Build
 
 To create a production build:
+
+```bash
 npm run build
+```
+
 To preview the production build locally:
+
+```bash
 npm run preview
+```
 
 ## Usage
 
@@ -82,6 +89,11 @@ The app uses local state for storing invoices. No backend is connected.
 Date selection is handled using a custom calendar component.
 
 Form validation ensures all required fields are completed before saving.
+
+## Live View
+
+You can view the live app deployed on Vercel here:
+https://invoice-app-gliy.vercel.app/
 
 ## License
 

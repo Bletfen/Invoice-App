@@ -1,69 +1,88 @@
-# React + TypeScript + Vite
+# Invoice App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive web application for creating, editing, and managing invoices. Built with React, TypeScript, Tailwind CSS, and React Hook Form.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Create new invoices with client and item details
+- Edit existing invoices
+- Save invoices as draft or mark as pending/paid
+- Calculate totals automatically based on item quantity and price
+- Select invoice date using a custom calendar component
+- Choose payment terms (e.g., Net 30, Net 60)
+- Responsive layout for mobile and desktop
+- Form validation using React Hook Form and Yup
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React
+- TypeScript
+- Tailwind CSS
+- React Router
+- React Hook Form
+- Yup (form validation)
+- Vite (project bundler)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Project Structure
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+src/
+├─ components/ # Reusable UI components (Input, Calendar, PaymentTerms, etc.)
+├─ context/ # Context API for managing invoice data and form state
+├─ pages/ # Page components (NewInvoice, EditInvoice, InvoiceList, etc.)
+├─ hookFormFunctions/ # Custom hooks and helpers for form handling
+├─ seperateFuncs/ # Utility functions like generateInvoiceId, calculatePaymentDue
+└─ App.tsx # Main app entry point
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Bletfen/Invoice-App.git
+cd Invoice-App
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2.Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+3.Run the development server:
+
+```bash
+npm run dev
+```
+
+The app will be available at http://localhost:5173 by default.
+
+## Build
+
+To create a production build:
+npm run build
+To preview the production build locally:
+npm run preview
+
+## Usage
+
+Navigate to the main page to see the list of invoices
+
+Click "New Invoice" to create a new invoice
+
+Fill in client details, items, and payment terms
+
+Save as draft or send
+
+Click on an existing invoice to edit its details
+
+## Notes
+
+The app uses local state for storing invoices. No backend is connected.
+
+Date selection is handled using a custom calendar component.
+
+Form validation ensures all required fields are completed before saving.
+
+## License
+
+This project is licensed under the MIT License.

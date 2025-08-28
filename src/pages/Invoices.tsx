@@ -24,6 +24,7 @@ export default function Invoices() {
     <div
       className="px-[2.4rem]
       pb-[10.5rem] relative
+      w-full
       min-h-screen
       md:px-[4.8rem]
       xl:max-w-[73rem]

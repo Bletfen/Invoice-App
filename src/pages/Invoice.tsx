@@ -33,6 +33,7 @@ export default function Invoice() {
   return (
     <div
       className="
+      relative
       relative min-h-screen flex flex-col
       xl:max-w-[73rem]
       xl:mx-auto
